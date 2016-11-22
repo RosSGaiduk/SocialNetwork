@@ -1,0 +1,29 @@
+.headForForms{
+    width:100%;
+    height: 0px;
+    /*margin-left: 20%;*/
+    margin-top: 30px;
+    background-color: black;
+    float: left;
+    /*border: 2px solid black;*/
+}
+
+.forms{
+    width: 60%;
+    height: auto;
+    margin-left: 20%;
+    margin-bottom: 50px;
+    /*border: 2px solid black;*/
+    border-radius: 0%;
+    float: left;
+    background-color: white;
+}
+.inputStyle{
+    width:220px;
+    font-size: 18px;
+    border-radius: 0px;
+    background: #F6F6f6;
+    padding: 6px 0 4px 10px;
+    margin-left: 40%;
+}
+/*press CTRL+F5 to refresh css files*/
