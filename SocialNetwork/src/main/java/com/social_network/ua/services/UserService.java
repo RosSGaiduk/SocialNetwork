@@ -15,5 +15,6 @@ public interface UserService {
     void edit(long id,String firstName, String lastName, Date birthDate, String email,String password);
     void edit(User user);
     User findOne(long id);
+    void addFriendToUser(long id1,long id2);
     List<User> findAll();
 }

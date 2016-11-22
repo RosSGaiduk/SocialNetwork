@@ -6,7 +6,6 @@ import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -62,4 +61,9 @@ public class UserController extends BaseMethods{
     }
 
 
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
+    public String goLogin(@PathVariable("id")String id,Model model){
+        model.addAttribute("user",userService.findOne(Long.parseLong(id)));
+        return "views-user-selected";
+    }
 }

@@ -26,7 +26,7 @@
             <a href="/" style="text-decoration: none"><h3 style="text-align: center">Моя сторінка</h3></a>
         </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/" style="text-decoration: none"><h3 style="text-align: center">Друзі</h3></a>
+            <a href="/friends" style="text-decoration: none"><h3 style="text-align: center">Друзі</h3></a>
         </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
             <a href="/messagePage" style="text-decoration: none"><h3 style="text-align: center">Повідомлення</h3></a>

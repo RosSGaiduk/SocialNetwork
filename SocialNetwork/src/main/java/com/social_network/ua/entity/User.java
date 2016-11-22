@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,23 @@ public class User {
     private String password;
     @Transient
     private String confirmPassword;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="subscribers",
+            joinColumns=@JoinColumn(name="subscriber_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
+    )
+    private List<User> friends = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="subscribers",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="subscriber_id")
+    )
+    private List<User> subscribers = new ArrayList<>();
+
+
 
     @OneToMany(mappedBy = "userFrom",fetch = FetchType.EAGER)
     private List<Message> messages;
@@ -108,5 +126,21 @@ public class User {
 
     public void setMessagesUserTo(List<Message> messagesUserTo) {
         this.messagesUserTo = messagesUserTo;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
+
+    public List<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<User> friendOf) {
+        this.subscribers = friendOf;
     }
 }

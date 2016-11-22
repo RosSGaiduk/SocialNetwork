@@ -2,6 +2,7 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.Message;
+import com.social_network.ua.entity.User;
 import com.social_network.ua.services.MessageService;
 import com.social_network.ua.services.UserService;
 import org.json.JSONArray;
@@ -85,7 +86,7 @@ public class AjaxController extends BaseMethods {
                 JSONObject jsonObject = new JSONObject();
                 //String from = stringUTF_8Encode(userService.findOne(messages.get(i).getUserFrom().getId()).getFirstName());
                 jsonObject.putOnce("data", messages.get(i).getDateOfMessage() + " FROM " + messages.get(i).getUserFrom().getFirstName());
-                jsonObject.put("text", messages.get(i).getText());
+                jsonObject.putOnce("text", messages.get(i).getText());
                 if (messages.get(i).getUserFrom().getId() == user2) jsonObject.putOnce("fromUser", true);
                 else jsonObject.putOnce("toUser", false);
                 jsonArray.put(jsonObject);
@@ -94,5 +95,35 @@ public class AjaxController extends BaseMethods {
         /*System.out.println("Length: "+jsonArray.length());
         System.out.println("-----------------------------------------------------------------");*/
         return jsonArray.toString();
+    }
+
+
+    @RequestMapping(value = "/findFriends",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String findFriends(@RequestParam String friend){
+        List<User> users = userService.findAll();
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (User u: users)
+            if (u.getFirstName().contains(friend) || u.getLastName().contains(friend)){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.putOnce("id",u.getId());
+                jsonObject.putOnce("name",u.getFirstName());
+                jsonObject.putOnce("lastName",u.getLastName());
+                jsonArray.put(jsonObject);
+            }
+
+
+        return jsonArray.toString();
+    }
+
+
+    @RequestMapping(value = "/addUserToFriendsZone",method = RequestMethod.GET)
+    @ResponseBody
+    public String addUserToFriendZone(@RequestParam String userId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
+        return "views-base-home";
     }
 }

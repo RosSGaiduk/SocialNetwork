@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void addFriendToUser(long id1, long id2) {
+        userDao.addFriendToUser(id1,id2);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }

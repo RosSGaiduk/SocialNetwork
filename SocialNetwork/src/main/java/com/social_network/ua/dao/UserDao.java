@@ -12,5 +12,6 @@ public interface UserDao {
     void delete(User user);
     void edit(User user);
     User findOne(long id);
+    void addFriendToUser(long idOfUser,long idOfFriend);
     List<User> findAll();
 }

@@ -38,6 +38,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Transactional
+    public void addFriendToUser(long idOfUser, long idOfFriend) {
+        User user = entityManager.find(User.class,idOfUser);
+        user.getFriends().add(entityManager.find(User.class,idOfFriend));
+    }
+
+    @Transactional
     public List<User> findAll() {
         return entityManager.createQuery("from User").getResultList();
     }
