@@ -17,8 +17,8 @@ public class Main {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
 
-        User user = entityManager.find(User.class,1l);
-        User user1 = entityManager.find(User.class,7l);
+        User user = entityManager.find(User.class,8l);
+
 
         System.out.println(user.getFirstName());
 
@@ -28,11 +28,9 @@ public class Main {
         //entityManager.merge(user);
         //entityManager.merge(user1);
 
-        System.out.println(user.getFriends().size());
         System.out.println(user.getSubscribers().size());
+        System.out.println(user.getFriends().size());
 
-        System.out.println(user1.getFriends().size());
-        System.out.println(user1.getSubscribers().size());
 
         entityManager.getTransaction().commit();
         entityManager.close();

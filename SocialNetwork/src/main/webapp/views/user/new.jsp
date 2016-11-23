@@ -21,7 +21,7 @@
     <%--<script src="/resources/scripts/autoScrollDown.js"></script>--%>
 </head>
 <body>
-<div class="forms" style="margin-top: 50px;">
+<div class="forms" style="margin-top: 50px; margin-left: 5%;">
     <form:form action="/createUser" method="post" modelAttribute="newUser">
 
         <form:label path="firstName"><h3 style="margin-left: 40%;">First name: </h3></form:label>

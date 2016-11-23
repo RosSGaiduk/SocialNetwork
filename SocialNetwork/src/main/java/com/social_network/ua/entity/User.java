@@ -5,15 +5,13 @@ import javax.persistence.Entity;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Rostyslav on 21.10.2016.
  */
 @Entity
-public class User {
+public class User implements Comparable<User>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -37,14 +35,14 @@ public class User {
             joinColumns=@JoinColumn(name="subscriber_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
-    private List<User> friends = new ArrayList<>();
+    private Set<User> friends = new TreeSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="subscribers",
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="subscriber_id")
     )
-    private List<User> subscribers = new ArrayList<>();
+    private Set<User> subscribers = new TreeSet<>();
 
 
 
@@ -128,19 +126,34 @@ public class User {
         this.messagesUserTo = messagesUserTo;
     }
 
-    public List<User> getFriends() {
+    public Set<User> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(Set<User> friends) {
         this.friends = friends;
     }
 
-    public List<User> getSubscribers() {
+    public Set<User> getSubscribers() {
         return subscribers;
     }
 
-    public void setSubscribers(List<User> friendOf) {
+    public void setSubscribers(Set<User> friendOf) {
         this.subscribers = friendOf;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        int compare = this.lastName.compareTo(o.getLastName());
+        if (compare == 0){
+            compare = this.firstName.compareTo(o.firstName);
+            if (compare == 0)
+                compare = this.birthDate.compareTo(o.getBirthDate());
+                if (compare == 0)
+                    compare = this.email.compareTo(o.email);
+                    if (compare == 0)
+                        compare = this.password.compareTo(o.password);
+        }
+        return compare;
     }
 }

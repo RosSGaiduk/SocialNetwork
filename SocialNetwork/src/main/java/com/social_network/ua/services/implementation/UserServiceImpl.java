@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User selectUser(long id1, long id2) {
+        return userDao.selectUser(id1,id2);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }

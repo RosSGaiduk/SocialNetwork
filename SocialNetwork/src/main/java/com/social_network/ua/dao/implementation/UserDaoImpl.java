@@ -43,6 +43,11 @@ public class UserDaoImpl implements UserDao {
         user.getFriends().add(entityManager.find(User.class,idOfFriend));
     }
 
+    @Override
+    public User selectUser(long id1, long id2) {
+        return (User)entityManager.createQuery("from subscribers where subscriber_id = ?1 and user_id = ?2").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+    }
+
     @Transactional
     public List<User> findAll() {
         return entityManager.createQuery("from User").getResultList();

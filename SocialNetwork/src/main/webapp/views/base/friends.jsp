@@ -28,7 +28,12 @@
 
 <div id = "myFriends" style="width: 60%; height: auto; background-color: white; float: left; overflow: scroll;">
     <c:forEach items="${friendsOfUser}" var="f">
-        <p>${f.id}</p>
+        <a href="/user/${f.id}" style="text-decoration: none;" >
+            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 25%; margin-top: 10px;">
+            <p>${f.firstName} ${f.lastName}</p>
+            <p>${f.birthDate}</p>
+            </div>
+        </a>
     </c:forEach>
 </div>
 

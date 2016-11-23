@@ -4,6 +4,8 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by Rostyslav on 21.10.2016.
@@ -62,8 +65,22 @@ public class UserController extends BaseMethods{
 
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
-    public String goLogin(@PathVariable("id")String id,Model model){
+    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton){
         model.addAttribute("user",userService.findOne(Long.parseLong(id)));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
+        boolean wasSubscriber = false;
+        for (User u: subscribersOfUser) {
+            if (wasSubscriber) break;
+            if (u.getId() == Long.parseLong(authentication.getName())) {
+                wasSubscriber = true;
+                break;
+            }
+        }
+        if (wasSubscriber)
+        modelForButton.addAttribute("friendOrNo","hidden");
+        else
+        modelForButton.addAttribute("friendOrNo","visible");
         return "views-user-selected";
     }
 }

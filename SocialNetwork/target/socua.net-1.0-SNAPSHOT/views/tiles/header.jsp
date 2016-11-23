@@ -11,7 +11,9 @@
     <title>Title</title>
 </head>
 <body>
-<div style="float: left;width: 100%; height: 100px; background-color: blueviolet"></div>
+<div style="float: left;width: 100%; height: 50px; background-color: blueviolet">
+    <h1 style="color: white; margin-left: 20%">SocUa.com</h1>
+</div>
         <%--<h1>header</h1>--%>
 </body>
 </html>

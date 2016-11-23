@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,16 +103,19 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String findFriends(@RequestParam String friend){
         List<User> users = userService.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         JSONArray jsonArray = new JSONArray();
 
         for (User u: users)
             if (u.getFirstName().contains(friend) || u.getLastName().contains(friend)){
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.putOnce("id",u.getId());
-                jsonObject.putOnce("name",u.getFirstName());
-                jsonObject.putOnce("lastName",u.getLastName());
-                jsonArray.put(jsonObject);
+                if (u.getId()!=Long.parseLong(authentication.getName())) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.putOnce("id", u.getId());
+                    jsonObject.putOnce("name", u.getFirstName());
+                    jsonObject.putOnce("lastName", u.getLastName());
+                    jsonArray.put(jsonObject);
+                }
             }
 
 
@@ -123,6 +127,19 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String addUserToFriendZone(@RequestParam String userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //User user = userService.selectUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
+        User user = userService.findOne(Long.parseLong(userId));
+        Set<User> subscribersOfUser = user.getSubscribers();
+        boolean was = false;
+        for (User u:subscribersOfUser) {
+            if (was) break;
+            if (u.getId()==Long.parseLong(authentication.getName())){
+                was = true;
+                break;
+            }
+        }
+
+        if (!was)
         userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
         return "views-base-home";
     }

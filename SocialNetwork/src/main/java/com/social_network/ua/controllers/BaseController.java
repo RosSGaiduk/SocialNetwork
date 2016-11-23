@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -26,7 +28,13 @@ public class BaseController {
     private UserService userService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(){
+    public String home(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            model.addAttribute("user", userService.findOne(Long.parseLong(authentication.getName())));
+        } catch (Exception e){
+            model.addAttribute("user","no user");
+        }
         return "views-base-home";
     }
 
@@ -44,7 +52,9 @@ public class BaseController {
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         //формуємо список всіх користувачів, на які підписався даний користувач(авторизований користувач)
         //ці користувачі МОЖУТЬ бути його друзями, а можуть зберігати його в підписниках
-        List<User> usersOfThis = user.getFriends();
+        Set<User> usersOfThis = user.getFriends();
+        Set<User> userOfThisSet = usersOfThis;
+        System.out.println(usersOfThis.size());
         //нам потрібно передати на сторінку всіх друзів даного користувача.
         //якщо ми просто передамо user.getFriends(); на сторінку, то серед цих "друзів" можуть трапитись
         //ті, на які даний користувач підписався, але вони заявку в друзі не прийняли.
@@ -52,18 +62,20 @@ public class BaseController {
         //другом user1, але user1 не буде другом user2, а тільки підписником. Якщо ж user2 так само після того
         //добавить в друзі user1, лише тоді вони будуть друзями між собою. Тому мені потрібно запрограмувати
         //передачу на сторінку юзерів, які по справжньому є друзями даного користувача.
+        //роблю treeset, бо при зв'язку many to many появляються баги і воно виводило по 20 разів 1 друга на сторінці
 
         //в цей список будуть збережені такі юзери
-        List<User> friendsWhichAcceptedUserApplication = new ArrayList<>();
+        Set<User> friendsWhichAcceptedUserApplication = new TreeSet<>();
         //спочатку пробігаємся циклом по всіх користувачах з тих, на які підписався даний користувач(залогінований)
-        for (User u: usersOfThis){
+        for (User u: userOfThisSet){
             //з кожного з них дістаєм ДРУЗІВ...
-            List<User> friendsOfU = u.getFriends();
+            Set<User> friendsOfU = u.getFriends();
+            Set<User> friendsOfUTreeSet = friendsOfU;
             //перебираємо їх
-            for (int i = 0; i < friendsOfU.size(); i++){
+            for (User friend: friendsOfUTreeSet){
                 //якщо серед них буде наш залогінований користувач, то добавляємо в список справжніх друзів його
                 // та припиняєм цикл
-                if (friendsOfU.get(i).getId()==user.getId()){
+                if (friend.getId()==user.getId()){
                     friendsWhichAcceptedUserApplication.add(u);
                     break;
                 }
@@ -72,5 +84,12 @@ public class BaseController {
         //передаєм на сторінку справжніх друзів
         model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
         return "views-base-friends";
+    }
+
+    public Set<User> listToSet(List<User>users){
+        Set<User> treeOfUsers = new TreeSet<>();
+        for (int i = 0; i < users.size(); i++)
+            treeOfUsers.add(users.get(i));
+        return treeOfUsers;
     }
 }

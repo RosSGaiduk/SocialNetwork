@@ -20,17 +20,24 @@
     <link rel="stylesheet" href="/resources/css/forChat.css" media="screen" type="text/css" />
 </head>
 <body>
-    <div style="width: 10%; height: 100%; background-color: #bcc3d0; float: left; overflow: auto">
+    <div style="width: 10%; height: 100%; float: left; overflow: auto; margin-left: 10%;">
         <sec:authorize access="isAuthenticated()">
-        <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/" style="text-decoration: none"><h3 style="text-align: center">Моя сторінка</h3></a>
+        <div style="width: 100%; height: 10px; float: left; margin-top: 120px;">
+            <a href="/" style="text-decoration: none"><h4 style="text-align: center">Моя сторінка</h4></a>
         </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/friends" style="text-decoration: none"><h3 style="text-align: center">Друзі</h3></a>
+            <a href="/friends" style="text-decoration: none"><h4 style="text-align: center">Друзі</h4></a>
         </div>
+            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
+                <a href="/followers" style="text-decoration: none"><h4 style="text-align: center">Підписники</h4></a>
+            </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/messagePage" style="text-decoration: none"><h3 style="text-align: center">Повідомлення</h3></a>
+            <a href="/messagePage" style="text-decoration: none"><h4 style="text-align: center">Повідомлення</h4></a>
         </div>
+            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
+                <a href="/photos" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
+            </div>
+
         </sec:authorize>
     </div>
 </body>

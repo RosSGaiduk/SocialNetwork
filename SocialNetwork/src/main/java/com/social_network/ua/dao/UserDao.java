@@ -13,5 +13,6 @@ public interface UserDao {
     void edit(User user);
     User findOne(long id);
     void addFriendToUser(long idOfUser,long idOfFriend);
+    User selectUser(long id1, long id2);
     List<User> findAll();
 }

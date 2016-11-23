@@ -30,14 +30,14 @@
 </select>
 
 
-<div id = "messages" style="width: 60%; height: 80%; float: left; background-color: white; overflow: scroll;">
+<div id = "messages" style="width: 50%; height: 80%; float: left; background-color: white; overflow: scroll;">
     <%--<div style="width: 50%; height: auto; margin-left: 20%; margin-top: 20px;">
        <font size="3" style="text-align: center">Hello asdjasnoq ajsklas asdlkasd ojqwqw  oqwejoqwiej sjsdfnsdj oqieqwioeqw oifosifjsd qiweoqwe</font>
     </div>--%>
 </div>
 
-<textarea id = "textAr" style="height: 50px; width:50%; margin-left: 10%" onkeyup="doAj()"></textarea>
-<button onclick="sendMessage()">Send</button>
+<textarea id = "textAr" style="height: 50px; width:50%; float: left" onkeyup="doAj()" placeholder="Введіть повідомлення: "></textarea>
+<button onclick="sendMessage()" style="float: left; margin-left: 45%;">Send</button>
 
 <%--
 Якщо у функцію ajax ми хочемо передати значення з тегів p,span,h1,h2,...h6,font,...
