@@ -22,29 +22,41 @@
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-<div style="width: 60%; height: 100%; background-color: white; margin-left: 20px; max-width: 60%; float: left;">
+<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll;">
     <sec:authorize access="isAuthenticated()">
+        <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
         <div id = "photoOfUser" style="
-        width: 226px; height: 226px; float: left; border:1px solid black;
-        margin-top: 20px; margin-left: 10px;background-image: url(/resources/1/1.JPG)">
+        width: 226px; height: 226px; float: left;
+        margin-top: 20px; margin-left: 30px;background-image: url(${image});
+                background-repeat: no-repeat; background-size: cover;
+                ">
         </div>
-
+        </div>
         <%--<img src="/upload/1/img1.JPG" style="float: left">--%>
         <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
-        <form:form action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-            enctype="multipart/form-data"  >
-        File <input type="file" name="file1"/>
-            <input type="submit" value="Upload">
-        </form:form>
-
-        <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>
-        -->
-        <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 10px; border: 1px solid black; margin-top: 20px;">
+        <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
+        margin-top: 20px; background-color: white">
             <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
             <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
             <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
+            <h3 style="text-align: center">Прізвище: ${user.lastName}</h3>
         </div>
+
+
+            <p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>
+
+
+
+
+        <form:form action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
+            enctype="multipart/form-data" cssStyle="float: left;">
+        <input type="file" name="file1"  style="float: left; margin-top: -50px;"/>
+            <input type="submit" value="Upload" style="float: left; margin-top: -20px">
+        </form:form>
+
+        <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
+
 
 
     </sec:authorize>

@@ -44,7 +44,8 @@ public class User implements Comparable<User>{
     )
     private Set<User> subscribers = new TreeSet<>();
 
-
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    private Set<User_Images> userImages = new TreeSet<>();
 
     @OneToMany(mappedBy = "userFrom",fetch = FetchType.EAGER)
     private List<Message> messages;
@@ -155,5 +156,13 @@ public class User implements Comparable<User>{
                         compare = this.password.compareTo(o.password);
         }
         return compare;
+    }
+
+    public Set<User_Images> getUserImages() {
+        return userImages;
+    }
+
+    public void setUserImages(Set<User_Images> userImages) {
+        this.userImages = userImages;
     }
 }

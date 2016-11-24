@@ -1,6 +1,7 @@
 package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.UserService;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -28,12 +26,37 @@ public class BaseController {
     private UserService userService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(Model model){
+    public String home(Model model,Model model1){
+        //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             model.addAttribute("user", userService.findOne(Long.parseLong(authentication.getName())));
+            System.out.println(userService.findOne(Long.parseLong(authentication.getName())).getId());
         } catch (Exception e){
             model.addAttribute("user","no user");
+        }
+        try {
+            User user = userService.findOne(Long.parseLong(authentication.getName()));
+            System.out.println(user.getId());
+            //Не знаю для чого наступний алгоритм пошуку максимуму, але без нього не працює, хоч в мене і дерево,
+            //яке сортує повідомлення по даті, я не знаю чому не працює просто без цього алгоритму
+            Object[] images =  user.getUserImages().toArray();
+            User_Images user_image = (User_Images)images[0];
+            Date max = user_image.getDateOfImage();
+            int index = 0;
+            for (int i = 1; i < images.length; i++){
+                User_Images user_images = (User_Images)images[i];
+                if (user_images.getDateOfImage().compareTo(max)==1){
+                    max = user_images.getDateOfImage();
+                    index = i;
+                }
+            }
+            User_Images image = (User_Images) images[index];
+            System.out.println("Image: "+image.getUrlOfImage());
+            //System.out.println(image);
+            model1.addAttribute("image", image.getUrlOfImage());
+        } catch (Exception e){
+            model1.addAttribute("image","");
         }
         return "views-base-home";
     }

@@ -1,8 +1,12 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.services.ImageService;
+import com.social_network.ua.services.UserService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +34,11 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "upload",method = RequestMethod.GET)
 public class UploadController {
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ImageService imageService;
 
     @RequestMapping(value = "/process",method = RequestMethod.POST)
     public String save(HttpServletRequest request)
@@ -58,6 +68,13 @@ public class UploadController {
                 if (fileItem.isFormField()==false) {
                     //in this folder, which we created, write our images
                     fileItem.write(new File(path+"/"+authentication.getName()+"/"+fileItem.getName()));
+                    User_Images user_images = new User_Images();
+                    //System.out.println("File item: "+fileItem.getName());
+                    //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
+                    user_images.setUrlOfImage("/resources/"+authentication.getName()+"/"+fileItem.getName());
+                    user_images.setDateOfImage(new Date(System.currentTimeMillis()));
+                    user_images.setUser(userService.findOne(Long.parseLong(authentication.getName())));
+                    imageService.add(user_images);
                 }
             }
 
