@@ -22,22 +22,34 @@
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-<div style="width: 60%; height: 100px; background-color: white; float: left;">
+<div style="width: 60%; height: 50px; background-color: white; float: left;">
 <input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%;" placeholder="Enter name of last name:" onkeyup="findFriends()">
 </div>
 
-<div id = "myFriends" style="width: 60%; height: auto; background-color: white; float: left; overflow: scroll;">
+<div id = "myFriends" style="width: 30%; height: 200px; background-color: white; float: left;overflow: scroll;">
+    <h3>Друзі</h3>
     <c:forEach items="${friendsOfUser}" var="f">
         <a href="/user/${f.id}" style="text-decoration: none;" >
-            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 25%; margin-top: 10px;">
+            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 5%; margin-top: 10px;">
             <p>${f.firstName} ${f.lastName}</p>
             <p>${f.birthDate}</p>
             </div>
         </a>
     </c:forEach>
 </div>
+    <div style="width: 30%; height: 200px; background-color: white; float: left; overflow: scroll;">
+        <h3>Підписники</h3>
+    <c:forEach items="${subscribersOfUser}" var="s">
+        <a href="/user/${s.id}" style="text-decoration: none;" >
+            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 5%; margin-top: 10px;">
+                <p>${s.firstName} ${s.lastName}</p>
+                <p>${s.birthDate}</p>
+            </div>
+        </a>
+    </c:forEach>
+</div>
 
-<div id = "allfriends" style="width: 60%; height: 100%; background-color: white; float: left; overflow: scroll;"></div>
+<div id = "allfriends" style="width: 40%; height: 500px; background-color: white; float: left; overflow: scroll;"></div>
 
 
 <script>

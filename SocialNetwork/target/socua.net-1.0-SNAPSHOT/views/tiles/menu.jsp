@@ -25,19 +25,18 @@
         <div style="width: 100%; height: 10px; float: left; margin-top: 120px;">
             <a href="/" style="text-decoration: none"><h4 style="text-align: center">Моя сторінка</h4></a>
         </div>
+            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
+                <a href="/messagePage" style="text-decoration: none"><h4 style="text-align: center">Повідомлення</h4></a>
+            </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
             <a href="/friends" style="text-decoration: none"><h4 style="text-align: center">Друзі</h4></a>
         </div>
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/followers" style="text-decoration: none"><h4 style="text-align: center">Підписники</h4></a>
-            </div>
-        <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/messagePage" style="text-decoration: none"><h4 style="text-align: center">Повідомлення</h4></a>
-        </div>
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
                 <a href="/photos" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
             </div>
-
+            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
+                <a href="/news" style="text-decoration: none"><h4 style="text-align: center">Новини</h4></a>
+            </div>
         </sec:authorize>
     </div>
 </body>

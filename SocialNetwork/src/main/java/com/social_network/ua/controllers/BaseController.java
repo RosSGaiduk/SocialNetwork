@@ -45,16 +45,14 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/friends",method = RequestMethod.GET)
-    public String friendSearchPage(Model model){
+    public String friendSearchPage(Model model,Model modelSubscribers){
         //дістаємо авторизацію, тобто залогінованого користувача
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //відносно авторизації отримуєм користувача з бази даних
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         //формуємо список всіх користувачів, на які підписався даний користувач(авторизований користувач)
         //ці користувачі МОЖУТЬ бути його друзями, а можуть зберігати його в підписниках
-        Set<User> usersOfThis = user.getFriends();
-        Set<User> userOfThisSet = usersOfThis;
-        System.out.println(usersOfThis.size());
+        Set<User> userOfThisSet = user.getFriends();
         //нам потрібно передати на сторінку всіх друзів даного користувача.
         //якщо ми просто передамо user.getFriends(); на сторінку, то серед цих "друзів" можуть трапитись
         //ті, на які даний користувач підписався, але вони заявку в друзі не прийняли.
@@ -69,8 +67,7 @@ public class BaseController {
         //спочатку пробігаємся циклом по всіх користувачах з тих, на які підписався даний користувач(залогінований)
         for (User u: userOfThisSet){
             //з кожного з них дістаєм ДРУЗІВ...
-            Set<User> friendsOfU = u.getFriends();
-            Set<User> friendsOfUTreeSet = friendsOfU;
+            Set<User> friendsOfUTreeSet =  u.getFriends();
             //перебираємо їх
             for (User friend: friendsOfUTreeSet){
                 //якщо серед них буде наш залогінований користувач, то добавляємо в список справжніх друзів його
@@ -81,8 +78,25 @@ public class BaseController {
                 }
             }
         }
+
+        Set<User> subscribers = user.getSubscribers();
+        Set<User> subscribersWhichArentFriendsOfUser = new TreeSet<>();
+        for (User u: subscribers){
+            int count = 0;
+            for (User f: friendsWhichAcceptedUserApplication) {
+                if (u.getId() != f.getId()) {
+                    count++;
+                } else break;
+            }
+            if (count == friendsWhichAcceptedUserApplication.size()){
+                subscribersWhichArentFriendsOfUser.add(u);
+            }
+        }
+
+
         //передаєм на сторінку справжніх друзів
         model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
+        modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
         return "views-base-friends";
     }
 
