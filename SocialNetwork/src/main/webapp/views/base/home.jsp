@@ -26,11 +26,20 @@
     <sec:authorize access="isAuthenticated()">
         <div id = "photoOfUser" style="
         width: 226px; height: 226px; float: left; border:1px solid black;
-        margin-top: 20px; margin-left: 10px;">
+        margin-top: 20px; margin-left: 10px;background-image: url(/resources/1/1.JPG)">
         </div>
 
-        <button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>
+        <%--<img src="/upload/1/img1.JPG" style="float: left">--%>
+        <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
+        <form:form action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
+            enctype="multipart/form-data"  >
+        File <input type="file" name="file1"/>
+            <input type="submit" value="Upload">
+        </form:form>
+
+        <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>
+        -->
         <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 10px; border: 1px solid black; margin-top: 20px;">
             <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
             <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
@@ -39,7 +48,6 @@
 
 
     </sec:authorize>
-
 
 
     <%--Якщо ніхто не залогінований, тоді форма для заповнення чи реєстрації--%>
