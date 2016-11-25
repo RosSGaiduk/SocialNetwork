@@ -30,7 +30,7 @@
 </select>
 
 
-<div id = "messages" style="width: 50%; height: 80%; float: left; background-color: white; overflow: scroll;">
+<div id = "messages" style="width: 50%; height: 80%; float: left; background-color: white; overflow: scroll; margin-top: 20px;">
     <%--<div style="width: 50%; height: auto; margin-left: 20%; margin-top: 20px;">
        <font size="3" style="text-align: center">Hello asdjasnoq ajsklas asdlkasd ojqwqw  oqwejoqwiej sjsdfnsdj oqieqwioeqw oifosifjsd qiweoqwe</font>
     </div>--%>

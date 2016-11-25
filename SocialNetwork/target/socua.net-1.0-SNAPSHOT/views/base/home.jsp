@@ -36,11 +36,25 @@
         <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
         <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
-        margin-top: 20px; background-color: white">
+        margin-top: 20px; background-color: white;">
+            <div style="width: 100%; height: 70%; float: left; float: left;">
             <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
             <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
             <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
             <h3 style="text-align: center">Прізвище: ${user.lastName}</h3>
+            </div>
+            <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
+             background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
+            "></div>
+                <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
+            background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
+            cursor: hand;"></div>
+                <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
+                background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
+                cursor: hand;"></div>
+            </div>
         </div>
 
 

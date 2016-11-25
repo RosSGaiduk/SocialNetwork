@@ -67,4 +67,6 @@ public class User_Images implements Comparable<User_Images>{
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }

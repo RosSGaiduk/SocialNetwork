@@ -23,22 +23,40 @@
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 
-<div id = "mainDiv" style="width: 60%; height: 100%; background-color: white; margin-left: 20px; max-width: 60%; float: left">
+<div id = "mainDiv" style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left;overflow: scroll;">
+    <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
     <div id = "photoOfUser" style="
-        width: 226px; height: 226px; float: left; border:1px solid black;
-        margin-top: 20px; margin-left: 10px;">
+            width: 226px; height: 226px; float: left;
+            margin-top: 20px; margin-left: 30px;background-image: url(${image});
+            background-repeat: no-repeat; background-size: cover;">
     </div>
+        </div>
     <button style="float: left; margin-top: 270px; margin-left: -220px; height: 30px; width: 100px;">Messages</button>
 
 
     <button onclick="addUserToFriendZone()" id = "addFriend"
             style="float: left; margin-top: 270px; height: 30px; margin-left: -110px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
 
-    <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 10px; border: 1px solid black; margin-top: 20px;">
-        <h2 style="text-align: center; visibility: hidden" id = "userId" >${user.id}</h2>
-        <h2 style="text-align: center">${user.firstName} ${user.lastName}</h2>
-        <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
-        <h3 style="text-align: center">Ім'я: ${user.lastName}</h3>
+    <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
+        margin-top: 20px; background-color: white;">
+        <div style="width: 100%; height: 70%; float: left; float: left;">
+            <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
+            <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
+            <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
+            <h3 style="text-align: center">Прізвище: ${user.lastName}</h3>
+        </div>
+        <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
+             background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
+            "></div>
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
+            background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
+            cursor: hand;"></div>
+            <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
+                background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
+                cursor: hand;"></div>
+        </div>
     </div>
     </div>
 

@@ -2,6 +2,7 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -65,7 +66,7 @@ public class UserController extends BaseMethods{
 
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
-    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton){
+    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton,Model imageUserModel){
         model.addAttribute("user",userService.findOne(Long.parseLong(id)));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
@@ -81,6 +82,25 @@ public class UserController extends BaseMethods{
         modelForButton.addAttribute("friendOrNo","hidden");
         else
         modelForButton.addAttribute("friendOrNo","visible");
+
+
+        try{
+        Object[] images =  userService.findOne(Long.parseLong(id)).getUserImages().toArray();
+        User_Images user_image = (User_Images)images[0];
+        Date max = user_image.getDateOfImage();
+        int index = 0;
+        for (int i = 1; i < images.length; i++){
+            User_Images user_images = (User_Images)images[i];
+            if (user_images.getDateOfImage().compareTo(max)==1){
+                max = user_images.getDateOfImage();
+                index = i;
+            }
+        }
+        User_Images image = (User_Images) images[index];
+        imageUserModel.addAttribute("image",image.getUrlOfImage());
+        } catch (Exception ex) {
+            imageUserModel.addAttribute("image","");
+        }
         return "views-user-selected";
     }
 }

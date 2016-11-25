@@ -25,6 +25,7 @@ public class BaseController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home(Model model,Model model1){
         //System.out.println("Hello");
@@ -122,6 +123,20 @@ public class BaseController {
         modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
         return "views-base-friends";
     }
+
+
+    @RequestMapping(value = "/photos",method = RequestMethod.GET)
+    public String photosPage(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        long authLong = Long.parseLong(authentication.getName());
+        User user = userService.findOne(authLong);
+        Set<User_Images> user_images = user.getUserImages();
+
+        model.addAttribute("images_all",user_images);
+        System.out.println(user_images.size());
+        return "views-user-photos";
+    }
+
 
     public Set<User> listToSet(List<User>users){
         Set<User> treeOfUsers = new TreeSet<>();
