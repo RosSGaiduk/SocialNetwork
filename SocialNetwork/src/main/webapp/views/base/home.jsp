@@ -27,7 +27,7 @@
         <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
         <div id = "photoOfUser" style="
         width: 226px; height: 226px; float: left;
-        margin-top: 20px; margin-left: 30px;background-image: url(${image});
+        margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
                 background-repeat: no-repeat; background-size: cover;
                 ">
         </div>
@@ -48,9 +48,10 @@
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
              background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
             "></div>
+                <a href="/photosOf/${user.id}">
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
             background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
-            cursor: hand;"></div>
+            cursor: hand;"></div></a>
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
                 background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
                 cursor: hand;"></div>

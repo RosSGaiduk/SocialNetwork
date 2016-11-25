@@ -27,15 +27,16 @@
     <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
     <div id = "photoOfUser" style="
             width: 226px; height: 226px; float: left;
-            margin-top: 20px; margin-left: 30px;background-image: url(${image});
+            margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
             background-repeat: no-repeat; background-size: cover;">
     </div>
-        </div>
-    <button style="float: left; margin-top: 270px; margin-left: -220px; height: 30px; width: 100px;">Messages</button>
+        <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;">Messages</button>
+        <button onclick="addUserToFriendZone()" id = "addFriend"
+                style="float: left; margin-top: 10px; height: 30px; margin-left: 10px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
+    </div>
 
 
-    <button onclick="addUserToFriendZone()" id = "addFriend"
-            style="float: left; margin-top: 270px; height: 30px; margin-left: -110px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
+
 
     <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
         margin-top: 20px; background-color: white;">
@@ -44,15 +45,17 @@
             <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
             <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
             <h3 style="text-align: center">Прізвище: ${user.lastName}</h3>
+            <h3 id = "userId" style="visibility: hidden">${user.id}</h3>
         </div>
         <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
              background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
             "></div>
+            <a href="/photosOf/${user.id}">
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
             background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
-            cursor: hand;"></div>
+            cursor: hand;"></div></a>
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
                 background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
                 cursor: hand;"></div>

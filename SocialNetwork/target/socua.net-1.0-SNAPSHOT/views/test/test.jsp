@@ -102,12 +102,18 @@
                     document.getElementById("messages").appendChild(elemData);
 
 
-                    if (v.fromUser)
+                    if (v.fromUser) {
                         elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px;";
+                    }
                     else elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px; margin-left:20%";
 
 
-                    document.getElementById("messages").appendChild(elem);
+                    /*var image = document.createElement("img");
+                    image.style = "width:50px;height:50px;background-size:cover;float:left;";
+                    image.src = v.image;*/
+
+
+                    //document.getElementById("messages").appendChild(elem);
                     var divNew = document.createElement("div");
                     divNew.style = "padding: 14px;border-left: 1px solid #cfdae1;float: left;color: black; width: 214px;";
 
@@ -118,6 +124,7 @@
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
                     myDivMessages.appendChild(elem);
+                    //myDivMessages.appendChild(image);
                     myDivMessages.scrollTop = myDivMessages.scrollHeight;
                 });
             }

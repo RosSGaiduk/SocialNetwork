@@ -3,6 +3,7 @@ package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.MessageService;
 import com.social_network.ua.services.UserService;
 import org.json.JSONArray;
@@ -90,6 +91,26 @@ public class AjaxController extends BaseMethods {
                 jsonObject.putOnce("text", messages.get(i).getText());
                 if (messages.get(i).getUserFrom().getId() == user2) jsonObject.putOnce("fromUser", true);
                 else jsonObject.putOnce("toUser", false);
+
+                Set<User_Images> userImages = userService.findOne(user1).getUserImages();
+               /* try {
+                    Object[] images =  userImages.toArray();
+                    User_Images user_image = (User_Images)images[0];
+                    Date max = user_image.getDateOfImage();
+                    int index = 0;
+                    for (int j = 1; j < images.length; j++){
+                        User_Images user_images = (User_Images)images[j];
+                        if (user_images.getDateOfImage().compareTo(max)==1){
+                            max = user_images.getDateOfImage();
+                            index = j;
+                        }
+                    }
+                    User_Images targetImg = (User_Images)images[index];
+                    System.out.println(targetImg.getUrlOfImage());
+                    jsonObject.putOnce("image",targetImg.getUrlOfImage());
+                } catch (Exception ex){
+                    jsonObject.putOnce("image","");
+                }*/
                 jsonArray.put(jsonObject);
             }
         }
@@ -114,6 +135,7 @@ public class AjaxController extends BaseMethods {
                     jsonObject.putOnce("id", u.getId());
                     jsonObject.putOnce("name", u.getFirstName());
                     jsonObject.putOnce("lastName", u.getLastName());
+                    jsonObject.putOnce("image", u.getNewestImageSrc());
                     jsonArray.put(jsonObject);
                 }
             }

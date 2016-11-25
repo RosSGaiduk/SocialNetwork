@@ -26,6 +26,8 @@ public class User implements Comparable<User>{
     private String email;
     @Column
     private String password;
+    @Column
+    private String newestImageSrc;
     @Transient
     private String confirmPassword;
 
@@ -54,6 +56,7 @@ public class User implements Comparable<User>{
     private List<Message> messagesUserTo;
 
     public User(){}
+
 
     public long getId() {
         return id;
@@ -164,5 +167,13 @@ public class User implements Comparable<User>{
 
     public void setUserImages(Set<User_Images> userImages) {
         this.userImages = userImages;
+    }
+
+    public String getNewestImageSrc() {
+        return newestImageSrc;
+    }
+
+    public void setNewestImageSrc(String newestImageSrc) {
+        this.newestImageSrc = newestImageSrc;
     }
 }

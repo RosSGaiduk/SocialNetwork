@@ -22,29 +22,34 @@
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-<div style="width: 60%; height: 50px; background-color: white; float: left;">
-<input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%;" placeholder="Enter name of last name:" onkeyup="findFriends()">
+<div style="width: 60%; height: 50px; background-color: white; float: left; margin-top: 20px;">
+<input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%; height: 20px;" placeholder="Enter name of last name:" onkeyup="findFriends()">
 </div>
 
-<div id = "myFriends" style="width: 30%; height: 200px; background-color: white; float: left;overflow: scroll;">
-    <h3>Друзі</h3>
+<div id = "myFriends" style="width: 30%; height: 300px; background-color: white; float: left;overflow: scroll;">
+    <h3 style="float: left">Друзі (знайдено ${friendsOfUser.size()})</h3>
+    <p style="clear: left"/>
     <c:forEach items="${friendsOfUser}" var="f">
         <a href="/user/${f.id}" style="text-decoration: none;" >
-            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 5%; margin-top: 10px;">
+            <img src="${f.newestImageSrc}" style="width: 80px; height: 55px; float:left; margin-top: 10px; margin-left: 20%;">
+            <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
             <p>${f.firstName} ${f.lastName}</p>
             <p>${f.birthDate}</p>
             </div>
+            <p style="clear: left"></p>
         </a>
     </c:forEach>
 </div>
-    <div style="width: 30%; height: 200px; background-color: white; float: left; overflow: scroll;">
-        <h3>Підписники</h3>
+    <div style="width: 30%; height: 300px; background-color: white; float: left; overflow: scroll;">
+        <h3 style="float: left">Підписники (знайдено ${subscribersOfUser.size()})</h3>
     <c:forEach items="${subscribersOfUser}" var="s">
         <a href="/user/${s.id}" style="text-decoration: none;" >
-            <div style="width: 30%; height: 50px; border: 1px solid black; margin-left: 5%; margin-top: 10px;">
+            <img src="${s.newestImageSrc}" style="width: 80px; height: 55px; float:left; margin-top: 10px; margin-left: 20%;">
+            <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
                 <p>${s.firstName} ${s.lastName}</p>
                 <p>${s.birthDate}</p>
             </div>
+            <p style="clear: left"></p>
         </a>
     </c:forEach>
 </div>
@@ -69,10 +74,25 @@
              $.each(data,function(k,v) {
                  var elemA = document.createElement("a");
                  elemA.href = "/user/"+ v.id;
-                 var elem = document.createElement("p");
+
+                 var image = document.createElement("img");
+
+                 image.style = "width:100px;height:75px;background-size:cover;float:left;margin-left:10%;margin-top:20px;";
+                 image.src = v.image;
+                 document.getElementById("allfriends").appendChild(image);
+
+                 var elem = document.createElement("h3");
+                 elem.style = "float:left; margin-left:10px; margin-top:20px;";
                  elem.innerHTML = v.name+" "+ v.lastName;
                  elemA.appendChild(elem);
+
+
                  document.getElementById("allfriends").appendChild(elemA);
+
+                 var elem1 = document.createElement("p");
+                 elem1.style = "clear:left";
+                 document.getElementById("allfriends").appendChild(elem1);
+
              });
          }
         });

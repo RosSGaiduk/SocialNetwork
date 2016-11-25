@@ -66,7 +66,7 @@ public class UserController extends BaseMethods{
 
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
-    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton,Model imageUserModel){
+    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton){
         model.addAttribute("user",userService.findOne(Long.parseLong(id)));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
@@ -84,7 +84,7 @@ public class UserController extends BaseMethods{
         modelForButton.addAttribute("friendOrNo","visible");
 
 
-        try{
+        /*try{
         Object[] images =  userService.findOne(Long.parseLong(id)).getUserImages().toArray();
         User_Images user_image = (User_Images)images[0];
         Date max = user_image.getDateOfImage();
@@ -100,7 +100,20 @@ public class UserController extends BaseMethods{
         imageUserModel.addAttribute("image",image.getUrlOfImage());
         } catch (Exception ex) {
             imageUserModel.addAttribute("image","");
-        }
+        }*/
+
+
         return "views-user-selected";
     }
+
+    @RequestMapping(value = "/photosOf/{id}",method = RequestMethod.GET)
+    public String photosOfUser(@PathVariable("id") String id,Model model){
+        long idLong = Long.parseLong(id);
+        User user = userService.findOne(idLong);
+        Set<User_Images> user_images = user.getUserImages();
+        model.addAttribute("images_all",user_images);
+        System.out.println(user_images.size());
+        return "views-user-photos";
+    }
+
 }

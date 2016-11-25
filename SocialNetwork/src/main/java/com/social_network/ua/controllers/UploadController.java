@@ -1,5 +1,6 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.ImageService;
 import com.social_network.ua.services.UserService;
@@ -63,9 +64,9 @@ public class UploadController {
         try {
             //getting a list of items, from which, we will get our image
             List<FileItem> lst = upload.parseRequest(request);
-
+            User user = userService.findOne(Long.parseLong(authentication.getName()));
             for (FileItem fileItem: lst){
-                if (fileItem.isFormField()==false) {
+                if (fileItem.isFormField()==false){
                     //in this folder, which we created, write our images
                     fileItem.write(new File(path+"/"+authentication.getName()+"/"+fileItem.getName()));
                     User_Images user_images = new User_Images();
@@ -73,15 +74,17 @@ public class UploadController {
                     //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
                     user_images.setUrlOfImage("/resources/"+authentication.getName()+"/"+fileItem.getName());
                     user_images.setDateOfImage(new Date(System.currentTimeMillis()));
-                    user_images.setUser(userService.findOne(Long.parseLong(authentication.getName())));
+                    user_images.setUser(user);
+                    user.setNewestImageSrc("/resources/"+authentication.getName()+"/"+fileItem.getName());
+                    userService.edit(user);
                     imageService.add(user_images);
                 }
             }
-
         } catch (Exception e){
             e.printStackTrace();
             return "fail";
         }
+
         return "views-base-friends";
     }
 }

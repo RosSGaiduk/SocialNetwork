@@ -25,7 +25,6 @@ public class BaseController {
     @Autowired
     private UserService userService;
 
-
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home(Model model,Model model1){
         //System.out.println("Hello");
@@ -36,7 +35,7 @@ public class BaseController {
         } catch (Exception e){
             model.addAttribute("user","no user");
         }
-        try {
+        /*try {
             User user = userService.findOne(Long.parseLong(authentication.getName()));
             System.out.println(user.getId());
             //Не знаю для чого наступний алгоритм пошуку максимуму, але без нього не працює, хоч в мене і дерево,
@@ -58,13 +57,17 @@ public class BaseController {
             model1.addAttribute("image", image.getUrlOfImage());
         } catch (Exception e){
             model1.addAttribute("image","");
-        }
+        }*/
         return "views-base-home";
     }
 
     @RequestMapping(value = "/messagePage",method = RequestMethod.GET)
-    public String messagePage(Model model){
+    public String messagePage(Model model,Model modelUser){
         model.addAttribute("users",userService.findAll());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+
+        model.addAttribute("usersThis",userService.findOne(Long.parseLong(authentication.getName())));
         return "views-test-test";
     }
 
