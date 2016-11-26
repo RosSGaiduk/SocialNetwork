@@ -23,14 +23,17 @@
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 
-<div id = "mainDiv" style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left;overflow: scroll;">
+<div id = "mainDiv" style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
     <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
     <div id = "photoOfUser" style="
             width: 226px; height: 226px; float: left;
             margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
             background-repeat: no-repeat; background-size: cover;">
     </div>
-        <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;">Messages</button>
+
+            <a href="/messagesWithUser/${user.id}" style="text-decoration: none; color: black;">
+                <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;">
+                Messages</button></a>
         <button onclick="addUserToFriendZone()" id = "addFriend"
                 style="float: left; margin-top: 10px; height: 30px; margin-left: 10px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
     </div>
@@ -56,9 +59,11 @@
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
             background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
             cursor: hand;"></div></a>
+            <a href="/messagesWithUser/${user.id}">
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
                 background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
                 cursor: hand;"></div>
+            </a>
         </div>
     </div>
     </div>

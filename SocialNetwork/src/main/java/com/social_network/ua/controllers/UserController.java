@@ -116,4 +116,12 @@ public class UserController extends BaseMethods{
         return "views-user-photos";
     }
 
+    @RequestMapping(value = "/messagesWithUser/{id}",method = RequestMethod.GET)
+    public String messagesWithUser(@PathVariable("id")String id,Model model,Model model1){
+        long idLong = Long.parseLong(id);
+        model.addAttribute("idOfUser",idLong);
+        model1.addAttribute("users",userService.findAll());
+        return "views-test-test";
+    }
+
 }

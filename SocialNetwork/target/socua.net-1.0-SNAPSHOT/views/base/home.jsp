@@ -22,7 +22,7 @@
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll;">
+<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
     <sec:authorize access="isAuthenticated()">
         <div style="width: 300px; height: 300px; float: left; background-color: white; margin-top: 20px;">
         <div id = "photoOfUser" style="
@@ -45,16 +45,20 @@
             </div>
             <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
+
+                <a href="/friends" style="text-decoration: none">
             <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
              background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
-            "></div>
+            "></div></a>
                 <a href="/photosOf/${user.id}">
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
             background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
             cursor: hand;"></div></a>
+                <a href="/messagePage">
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
                 background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
                 cursor: hand;"></div>
+                </a>
             </div>
         </div>
 

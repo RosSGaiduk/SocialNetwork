@@ -23,14 +23,14 @@
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <font id = "pId">asd</font>
 
-<select id = "selct" onchange="changedSelect()">
+<select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
     <c:forEach items="${users}" var="u">
         <option>${u.id}</option>
     </c:forEach>
 </select>
 
 
-<div id = "messages" style="width: 50%; height: 80%; float: left; background-color: white; overflow: scroll; margin-top: 20px;">
+<div id = "messages" style="width: 50%; height: 80%; float: left; background-color: white; overflow: scroll; margin-top: 70px;">
     <%--<div style="width: 50%; height: auto; margin-left: 20%; margin-top: 20px;">
        <font size="3" style="text-align: center">Hello asdjasnoq ajsklas asdlkasd ojqwqw  oqwejoqwiej sjsdfnsdj oqieqwioeqw oifosifjsd qiweoqwe</font>
     </div>--%>
@@ -58,7 +58,13 @@
     }
     //var id = setInterval("doAj()",1000);
 </script>--%>
-
+<script>
+    function setSelect(){
+        var element = document.getElementById('selct');
+        element.value = ${idOfUser};
+    }
+    setSelect();
+</script>
 
 <script>
     function sendMessage(){
@@ -94,7 +100,6 @@
             async: false,
             success: function(data){
                 $.each(data,function(k,v){
-
                     var elem = document.createElement("div");
                     var elemData = document.createElement("p");
                     elemData.style = "font-size:12px;margin-top:20px;margin-left:10%;float:left;margin-botom:20px;"

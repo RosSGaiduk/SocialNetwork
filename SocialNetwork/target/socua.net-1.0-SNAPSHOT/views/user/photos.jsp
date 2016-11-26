@@ -23,7 +23,7 @@
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 
-<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll;">
+<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll; margin-top: 50px;">
     <c:forEach items="${images_all}" var="im">
         <div id = "photo" style="width: 300px; height: 300px; background-repeat: no-repeat; background-size: cover;float: left; margin-left: 10px; margin-top: 10px; cursor: hand;
         background-image: url(${im.urlOfImage});" onclick="zoom()"></div>
