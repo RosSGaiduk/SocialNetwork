@@ -76,21 +76,21 @@
             ">Edit</button>
         </div>
 
-        <div style="width: 50%; height: 300px; float: left; margin-left: 15px;
-        margin-top: 20px; background-color: white;"></div>
+        <%--<div style="width: 50%; height: 100px; float: left; background-color: white; margin-top: 20px; margin-left: 15px;">
+            </div>--%>
 
+        <p style="clear: left"></p>
 
         <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px;
-        margin-top: -220px;
         ">
             <a href="/friends" style="margin-left: 10px;">Друзі</a>
             <p style="clear: left"></p>
             <c:forEach items="${friendsOfUser}" var="u">
-            <a href="/user/${u.id}" style="text-decoration: none;">
-                <div style="width: 25%; height: 68%; margin-left: 3%; margin-top: 10px;
-                        background-image: url(${u.newestImageSrc}); background-size: cover; float:left;">
-                    <%--<span>${u.firstName}</span>--%>
-                </div>
+                <a href="/user/${u.id}" style="text-decoration: none;">
+                    <div style="width: 25%; height: 68%; margin-left: 3%; margin-top: 10px;
+                            background-image: url(${u.newestImageSrc}); background-size: cover; float:left;">
+                            <%--<span>${u.firstName}</span>--%>
+                    </div>
                 </a>
             </c:forEach>
 
@@ -98,11 +98,42 @@
 
             <c:forEach items="${friendsOfUser}" var="u">
                 <div style="width: 25%; height: 68%; margin-left: 3%;float:left;">
-                        <span>${u.firstName}</span>
+                    <span>${u.firstName}</span>
                 </div>
             </c:forEach>
 
         </div>
+
+
+        <div id = "records" style="width: 50%; height: auto; float: left; margin-left: 15px;
+        margin-top: -50px; background-color: white;">
+            <div style="width: 70px; height: 50px; float: left; background-image: url(${user.newestImageSrc});
+                    background-size: cover; background-repeat: no-repeat;
+                    ">
+            </div>
+            <textarea id = "newRecord" placeholder="Do you have something new?"
+                      style="width: 200px; height: 50px; float: left; margin-left: 10px;">
+         </textarea>
+
+            <button onclick="updateRecords()" style="height: 25px; margin-top: 25px; margin-left: 10px;
+            background-color: #6ea0ff; color: white;
+            ">Send</button>
+            <c:forEach var="rec" items="${records}">
+                <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
+                    <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
+                    <p style="clear: left"/>
+                    <div style="width:70px; height:50px;
+                            background-image: url(${rec.userFrom.newestImageSrc}); background-size:cover;
+                            float:left; margin-left:10px; margin-top:10px;"></div>
+                    <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
+                        <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
+                    </div>
+                </div>
+            </c:forEach>
+        <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
+
+        </div>
+
 
 
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
@@ -125,6 +156,56 @@
         </div>
     </sec:authorize>
 </div>
+
+<script>
+    function updateRecords(){
+        /*alert($('#newRecord').val());*/
+        $.ajax({
+           url: "/updateRecords",
+            data: ({
+                newRecord:$('#newRecord').val(),
+                userFrom:1
+            }),
+            dataType: "json",
+            async:false,
+            success: function(data){
+                alert("Hello");
+                $.each(data,function(k,v){
+                    var elem = document.createElement("div");
+                    elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";
+                    var pDate = document.createElement("p");
+                    pDate.innerHTML = v.date;
+                    pDate.style = "float:left; margin-left:10px;";
+                    elem.appendChild(pDate);
+
+                    var pClear = document.createElement("p");
+                    pClear.style = "clear:left";
+                    elem.appendChild(pClear);
+
+                    var imag = document.createElement("div");
+                    imag.style = "width:70px; height:50px;" +
+                            "background-image: url("+ v.userFromImage+");" +
+                            "background-size:cover;" +
+                            "float:left; margin-left:10px; margin-top:10px;";
+                    elem.appendChild(imag);
+
+
+
+                    var elemLeft = document.createElement("div");
+                    elemLeft.style = "width:50%; height:auto; background-color:white; float:left;" +
+                            "margin-top:20px;";
+                    var pThis = document.createElement("p");
+                    pThis.innerHTML = v.text;
+                    pThis.style = "float:left; margin-left:10px; margin-top:10px;";
+                    elemLeft.appendChild(pThis);
+                    elem.appendChild(elemLeft);
+                    document.getElementById("records").appendChild(elem);
+                });
+            }
+        });
+    }
+</script>
+
 
 </body>
 </html>

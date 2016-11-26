@@ -32,6 +32,13 @@ public class User implements Comparable<User>{
     private String confirmPassword;
 
 
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    private Set<Record> recordsToUser = new TreeSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "userFrom")
+    private Set<Record> recordsFromUser = new TreeSet<>();
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="subscribers",
             joinColumns=@JoinColumn(name="subscriber_id"),
@@ -175,5 +182,21 @@ public class User implements Comparable<User>{
 
     public void setNewestImageSrc(String newestImageSrc) {
         this.newestImageSrc = newestImageSrc;
+    }
+
+    public Set<Record> getRecordsToUser() {
+        return recordsToUser;
+    }
+
+    public void setRecordsToUser(Set<Record> recordsToUser) {
+        this.recordsToUser = recordsToUser;
+    }
+
+    public Set<Record> getRecordsFromUser() {
+        return recordsFromUser;
+    }
+
+    public void setRecordsFromUser(Set<Record> recordsFromUser) {
+        this.recordsFromUser = recordsFromUser;
     }
 }

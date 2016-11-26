@@ -2,9 +2,11 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.Message;
+import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.MessageService;
+import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,7 +31,8 @@ public class AjaxController extends BaseMethods {
     private UserService userService;
     @Autowired
     private MessageService messageService;
-
+    @Autowired
+    private RecordService recordService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
@@ -164,5 +167,32 @@ public class AjaxController extends BaseMethods {
         if (!was)
         userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
         return "views-base-home";
+    }
+
+    @RequestMapping(value = "/updateRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String updateRecords(@RequestParam String newRecord,@RequestParam String userFrom){
+        long idUser = Long.parseLong(userFrom);
+        User user = userService.findOne(idUser);
+
+        Record record = new Record();
+        record.setText(newRecord);
+        Date date = new Date(System.currentTimeMillis());
+        record.setDateOfRecord(date);
+        record.setUser(user);
+        record.setUserFrom(user);
+        recordService.add(record);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("userFromImage",user.getNewestImageSrc());
+        jsonObject.putOnce("text",newRecord);
+        jsonObject.putOnce("date",date);
+        System.out.println("Text: "+jsonObject.get("text"));
+
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonObject);
+        System.out.println("Length: "+jsonArray.length());
+        return jsonArray.toString();
     }
 }

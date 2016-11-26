@@ -1,5 +1,6 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.UserService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,10 +26,10 @@ public class BaseController extends BaseMethods{
 
     @Autowired
     private UserService userService;
-    
+
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(Model model,Model modelFriends,Model modelSubscribers){
+    public String home(Model model,Model modelFriends,Model modelSubscribers,Model modelRecords){
         //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
@@ -74,12 +76,18 @@ public class BaseController extends BaseMethods{
                 friendsOnly3OfThem.add(u);
                 i++;
             }
+
+            Set<Record> records = user.getRecordsToUser();
+
+            modelRecords.addAttribute("records",records);
             modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
             modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
         } catch (Exception ex){
             modelFriends.addAttribute("friendsOfUser", "");
             modelSubscribers.addAttribute("subscribersOfUser", "");
         }
+
+
 
         return "views-base-home";
     }
