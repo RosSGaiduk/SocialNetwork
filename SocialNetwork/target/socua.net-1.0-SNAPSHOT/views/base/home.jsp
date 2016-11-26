@@ -19,6 +19,7 @@
     <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
     <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
     <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="/resources/css/mainStyle.css" media="screen" type="text/css" />
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
@@ -31,7 +32,14 @@
                 background-repeat: no-repeat; background-size: cover;
                 ">
         </div>
+            <form:form action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
+                       enctype="multipart/form-data" cssStyle="float: left;">
+                <input type="file" name="file1"  style="float: left;"/>
+                <input type="submit" value="Upload" style="float: left;">
+            </form:form>
         </div>
+
+
         <%--<img src="/upload/1/img1.JPG" style="float: left">--%>
         <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
@@ -61,23 +69,43 @@
                 </a>
             </div>
         </div>
+        <p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>
+
+        <div style="width: 300px; height: 50px; float: left; background-color: white; margin-top: 20px;">
+            <button style="width: 80%; height: 80%; margin-left: 10%; margin-top:5px;background-color: gainsboro;
+            ">Edit</button>
+        </div>
+
+        <div style="width: 50%; height: 300px; float: left; margin-left: 15px;
+        margin-top: 20px; background-color: white;"></div>
 
 
-            <p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>
+        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px;
+        margin-top: -220px;
+        ">
+            <a href="/friends" style="margin-left: 10px;">Друзі</a>
+            <p style="clear: left"></p>
+            <c:forEach items="${friendsOfUser}" var="u">
+            <a href="/user/${u.id}" style="text-decoration: none;">
+                <div style="width: 25%; height: 68%; margin-left: 3%; margin-top: 10px;
+                        background-image: url(${u.newestImageSrc}); background-size: cover; float:left;">
+                    <%--<span>${u.firstName}</span>--%>
+                </div>
+                </a>
+            </c:forEach>
 
+            <p style="clear: left"></p>
 
+            <c:forEach items="${friendsOfUser}" var="u">
+                <div style="width: 25%; height: 68%; margin-left: 3%;float:left;">
+                        <span>${u.firstName}</span>
+                </div>
+            </c:forEach>
 
+        </div>
 
-        <form:form action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-            enctype="multipart/form-data" cssStyle="float: left;">
-        <input type="file" name="file1"  style="float: left; margin-top: -50px;"/>
-            <input type="submit" value="Upload" style="float: left; margin-top: -20px">
-        </form:form>
 
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
-
-
-
     </sec:authorize>
 
 

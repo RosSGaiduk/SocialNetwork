@@ -32,14 +32,13 @@
     </div>
 
             <a href="/messagesWithUser/${user.id}" style="text-decoration: none; color: black;">
-                <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;">
+                <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;
+                color: white;background-color: darkslateblue;
+                ">
                 Messages</button></a>
         <button onclick="addUserToFriendZone()" id = "addFriend"
                 style="float: left; margin-top: 10px; height: 30px; margin-left: 10px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
     </div>
-
-
-
 
     <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
         margin-top: 20px; background-color: white;">
@@ -66,6 +65,43 @@
             </a>
         </div>
     </div>
+
+
+
+    <p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>
+
+    <div style="width: 300px; height: 50px; float: left; background-color: white; margin-top: 20px;"></div>
+
+
+
+    <div style="width: 50%; height: 300px; float: left; margin-left: 15px;
+        margin-top: 20px; background-color: white;"></div>
+
+
+    <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px;
+        margin-top: -220px;
+        ">
+        <p style="margin-left: 10px;">Друзі</p>
+        <c:forEach items="${friendsOfUser}" var="u">
+            <a href="/user/${u.id}" style="text-decoration: none;">
+                <div style="width: 25%; height: 68%; margin-left: 3%; margin-top: 10px;
+                        background-image: url(${u.newestImageSrc}); background-size: cover; float:left;">
+                        <%--<span>${u.firstName}</span>--%>
+                </div>
+            </a>
+        </c:forEach>
+
+        <p style="clear: left"></p>
+
+        <c:forEach items="${friendsOfUser}" var="u">
+            <div style="width: 25%; height: 68%; margin-left: 3%;float:left;">
+                <span>${u.firstName}</span>
+            </div>
+        </c:forEach>
+
+    </div>
+
+
     </div>
 
 <script>

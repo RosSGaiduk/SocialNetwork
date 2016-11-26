@@ -1,5 +1,3 @@
-<%@ page import="org.springframework.security.core.Authentication" %>
-<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -22,6 +20,7 @@
 <body>
     <div style="width: 10%; height: 100%; float: left; overflow: auto; margin-left: 10%;">
         <sec:authorize access="isAuthenticated()">
+
         <div style="width: 100%; height: 10px; float: left; margin-top: 120px;">
             <a href="/" style="text-decoration: none"><h4 style="text-align: center">Моя сторінка</h4></a>
         </div>
@@ -37,7 +36,12 @@
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
                 <a href="/news" style="text-decoration: none"><h4 style="text-align: center">Новини</h4></a>
             </div>
+
+            <form:form method="post" action="/logout">
+                <button type="submit">Вийти</button>
+            </form:form>
         </sec:authorize>
+
     </div>
 </body>
 </html>

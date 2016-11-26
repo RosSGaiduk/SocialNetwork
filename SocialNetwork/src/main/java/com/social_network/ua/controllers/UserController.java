@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Rostyslav on 21.10.2016.
@@ -66,7 +67,7 @@ public class UserController extends BaseMethods{
 
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
-    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton){
+    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton,Model modelFriends,Model modelSubscribers){
         model.addAttribute("user",userService.findOne(Long.parseLong(id)));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
@@ -83,6 +84,26 @@ public class UserController extends BaseMethods{
         else
         modelForButton.addAttribute("friendOrNo","visible");
 
+        try {
+            User user = userService.findOne(Long.parseLong(id));
+            //шукаємо друзів даного юзера
+            Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
+            //шукаємо підписників даного юзера(авторизованого)
+            Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user, friendsWhichAcceptedUserApplication);
+            //передаєм на сторінку справжніх друзів
+            Set<User> friendsOnly3OfThem = new TreeSet<>();
+            int i = 0;
+            for (User u : friendsWhichAcceptedUserApplication) {
+                if (i == 3) break;
+                friendsOnly3OfThem.add(u);
+                i++;
+            }
+            modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
+            modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
+        } catch (Exception ex){
+            modelFriends.addAttribute("friendsOfUser", "");
+            modelSubscribers.addAttribute("subscribersOfUser", "");
+        }
 
         /*try{
         Object[] images =  userService.findOne(Long.parseLong(id)).getUserImages().toArray();
@@ -101,7 +122,6 @@ public class UserController extends BaseMethods{
         } catch (Exception ex) {
             imageUserModel.addAttribute("image","");
         }*/
-
 
         return "views-user-selected";
     }

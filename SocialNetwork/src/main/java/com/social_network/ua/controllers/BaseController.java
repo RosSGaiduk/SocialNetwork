@@ -20,13 +20,14 @@ import java.util.*;
  * Created by Rostyslav on 21.11.2016.
  */
 @Controller
-public class BaseController {
+public class BaseController extends BaseMethods{
 
     @Autowired
     private UserService userService;
+    
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(Model model,Model model1){
+    public String home(Model model,Model modelFriends,Model modelSubscribers){
         //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
@@ -58,6 +59,28 @@ public class BaseController {
         } catch (Exception e){
             model1.addAttribute("image","");
         }*/
+
+        try {
+            User user = userService.findOne(Long.parseLong(authentication.getName()));
+            //шукаємо друзів даного юзера
+            Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
+            //шукаємо підписників даного юзера(авторизованого)
+            Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user, friendsWhichAcceptedUserApplication);
+            //передаєм на сторінку справжніх друзів
+            Set<User> friendsOnly3OfThem = new TreeSet<>();
+            int i = 0;
+            for (User u : friendsWhichAcceptedUserApplication) {
+                if (i == 3) break;
+                friendsOnly3OfThem.add(u);
+                i++;
+            }
+            modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
+            modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
+        } catch (Exception ex){
+            modelFriends.addAttribute("friendsOfUser", "");
+            modelSubscribers.addAttribute("subscribersOfUser", "");
+        }
+
         return "views-base-home";
     }
 
@@ -77,50 +100,10 @@ public class BaseController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //відносно авторизації отримуєм користувача з бази даних
         User user = userService.findOne(Long.parseLong(authentication.getName()));
-        //формуємо список всіх користувачів, на які підписався даний користувач(авторизований користувач)
-        //ці користувачі МОЖУТЬ бути його друзями, а можуть зберігати його в підписниках
-        Set<User> userOfThisSet = user.getFriends();
-        //нам потрібно передати на сторінку всіх друзів даного користувача.
-        //якщо ми просто передамо user.getFriends(); на сторінку, то серед цих "друзів" можуть трапитись
-        //ті, на які даний користувач підписався, але вони заявку в друзі не прийняли.
-        //бо в мене схема добавлення в друзі така: якщо user1 добавляє user2 в друзі, то user2 автоматично стає
-        //другом user1, але user1 не буде другом user2, а тільки підписником. Якщо ж user2 так само після того
-        //добавить в друзі user1, лише тоді вони будуть друзями між собою. Тому мені потрібно запрограмувати
-        //передачу на сторінку юзерів, які по справжньому є друзями даного користувача.
-        //роблю treeset, бо при зв'язку many to many появляються баги і воно виводило по 20 разів 1 друга на сторінці
-
-        //в цей список будуть збережені такі юзери
-        Set<User> friendsWhichAcceptedUserApplication = new TreeSet<>();
-        //спочатку пробігаємся циклом по всіх користувачах з тих, на які підписався даний користувач(залогінований)
-        for (User u: userOfThisSet){
-            //з кожного з них дістаєм ДРУЗІВ...
-            Set<User> friendsOfUTreeSet =  u.getFriends();
-            //перебираємо їх
-            for (User friend: friendsOfUTreeSet){
-                //якщо серед них буде наш залогінований користувач, то добавляємо в список справжніх друзів його
-                // та припиняєм цикл
-                if (friend.getId()==user.getId()){
-                    friendsWhichAcceptedUserApplication.add(u);
-                    break;
-                }
-            }
-        }
-
-        Set<User> subscribers = user.getSubscribers();
-        Set<User> subscribersWhichArentFriendsOfUser = new TreeSet<>();
-        for (User u: subscribers){
-            int count = 0;
-            for (User f: friendsWhichAcceptedUserApplication) {
-                if (u.getId() != f.getId()) {
-                    count++;
-                } else break;
-            }
-            if (count == friendsWhichAcceptedUserApplication.size()){
-                subscribersWhichArentFriendsOfUser.add(u);
-            }
-        }
-
-
+        //шукаємо друзів даного юзера
+        Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
+        //шукаємо підписників даного юзера(авторизованого)
+        Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user,friendsWhichAcceptedUserApplication);
         //передаєм на сторінку справжніх друзів
         model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
         modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);

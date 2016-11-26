@@ -67,17 +67,6 @@
             <p style="clear: left"></p>
         </a>
     </c:forEach>
-
-    <c:forEach items="${friendsOfUser}" var="f">
-        <a href="/user/${f.id}" style="text-decoration: none;" >
-            <img src="${f.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px;">
-            <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
-                <h3 style="margin-left: 10px;">${f.firstName} ${f.lastName}</h3>
-                <h3 style="margin-left: 10px;">${f.birthDate}</h3>
-            </div>
-            <p style="clear: left"></p>
-        </a>
-    </c:forEach>
 </div>
 
 <div style="width: 20%; height: 300px; background-color: white; float: left; margin-left: 20px;"></div>

@@ -2,6 +2,9 @@
   HTML implementation of a Hip Chat redesign based on Jan Dvořák Dribbble shot.
   https://dribbble.com/shots/1529065-HipChat-Redesign
 */
+a:hover {
+    color: cornflowerblue;
+}
 
 html, body, div, span, applet, object, iframe, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
