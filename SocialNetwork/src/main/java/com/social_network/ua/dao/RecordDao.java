@@ -13,4 +13,5 @@ public interface RecordDao {
     void delete(Record record);
     Record findOne(long id);
     List<Record> findAll();
+    List<Record> findAllInTheWallOf(long id);
 }

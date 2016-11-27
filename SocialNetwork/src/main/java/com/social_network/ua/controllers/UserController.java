@@ -1,8 +1,10 @@
 package com.social_network.ua.controllers;
 
 
+import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by Rostyslav on 21.10.2016.
@@ -26,6 +26,8 @@ public class UserController extends BaseMethods{
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RecordService recordService;
 
     @RequestMapping(value = "/addUser",method = RequestMethod.GET)
     public String addUserPage(Model model){
@@ -67,7 +69,14 @@ public class UserController extends BaseMethods{
 
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
-    public String goLogin(@PathVariable("id")String id,Model model,Model modelForButton,Model modelFriends,Model modelSubscribers){
+    public String goLogin(@PathVariable("id")String id,
+                          Model model,
+                          Model modelForButton,
+                          Model modelFriends,
+                          Model modelSubscribers,
+                          Model modelIdUserAuth,
+                          Model modelRecords
+    ){
         model.addAttribute("user",userService.findOne(Long.parseLong(id)));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
@@ -80,9 +89,12 @@ public class UserController extends BaseMethods{
             }
         }
         if (wasSubscriber)
-        modelForButton.addAttribute("friendOrNo","hidden");
-        else
-        modelForButton.addAttribute("friendOrNo","visible");
+            modelForButton.addAttribute("friendOrNo","hidden");
+        else {
+            if (!(id.equals(authentication.getName())))
+                modelForButton.addAttribute("friendOrNo", "visible");
+            else  modelForButton.addAttribute("friendOrNo","hidden");
+        }
 
         try {
             User user = userService.findOne(Long.parseLong(id));
@@ -105,23 +117,14 @@ public class UserController extends BaseMethods{
             modelSubscribers.addAttribute("subscribersOfUser", "");
         }
 
-        /*try{
-        Object[] images =  userService.findOne(Long.parseLong(id)).getUserImages().toArray();
-        User_Images user_image = (User_Images)images[0];
-        Date max = user_image.getDateOfImage();
-        int index = 0;
-        for (int i = 1; i < images.length; i++){
-            User_Images user_images = (User_Images)images[i];
-            if (user_images.getDateOfImage().compareTo(max)==1){
-                max = user_images.getDateOfImage();
-                index = i;
-            }
-        }
-        User_Images image = (User_Images) images[index];
-        imageUserModel.addAttribute("image",image.getUrlOfImage());
-        } catch (Exception ex) {
-            imageUserModel.addAttribute("image","");
-        }*/
+        //Set<Record> records = userService.findOne(Long.parseLong(id)).getRecordsToUser();
+        List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(id));
+        List<Record> inverseRecords = new ArrayList<>();
+        for (int i = records.size()-1; i >=0; i--)
+            inverseRecords.add(records.get(i));
+
+        modelRecords.addAttribute("records",inverseRecords);
+        modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
 
         return "views-user-selected";
     }

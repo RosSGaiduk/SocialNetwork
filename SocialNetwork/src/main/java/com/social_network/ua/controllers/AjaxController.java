@@ -165,21 +165,23 @@ public class AjaxController extends BaseMethods {
         }
 
         if (!was)
-        userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
+            userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
         return "views-base-home";
     }
 
     @RequestMapping(value = "/updateRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
-    public String updateRecords(@RequestParam String newRecord,@RequestParam String userFrom){
+    public String updateRecords(@RequestParam String newRecord,@RequestParam String userFrom,@RequestParam String userTo){
         long idUser = Long.parseLong(userFrom);
+        long idUserTo = Long.parseLong(userTo);
         User user = userService.findOne(idUser);
+        User userToMess = userService.findOne(idUserTo);
 
         Record record = new Record();
         record.setText(newRecord);
         Date date = new Date(System.currentTimeMillis());
         record.setDateOfRecord(date);
-        record.setUser(user);
+        record.setUser(userToMess);
         record.setUserFrom(user);
         recordService.add(record);
 

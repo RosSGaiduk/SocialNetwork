@@ -42,4 +42,8 @@ public class RecordDaoImpl implements RecordDao {
     public List<Record> findAll() {
         return entityManager.createQuery("from Record").getResultList();
     }
+    @Transactional
+    public List<Record> findAllInTheWallOf(long id) {
+        return entityManager.createQuery("from Record where user_id = ?1 group by dateOfRecord").setParameter(1,id).getResultList();
+    }
 }

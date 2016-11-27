@@ -3,6 +3,7 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -26,10 +24,18 @@ public class BaseController extends BaseMethods{
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private RecordService recordService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(Model model,Model modelFriends,Model modelSubscribers,Model modelRecords){
+    public String home
+            (Model model,
+             Model modelFriends,
+             Model modelSubscribers,
+             Model modelRecords,
+             Model modelIdUserAuth,
+             Model modelForButton
+            ){
         //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
@@ -38,29 +44,6 @@ public class BaseController extends BaseMethods{
         } catch (Exception e){
             model.addAttribute("user","no user");
         }
-        /*try {
-            User user = userService.findOne(Long.parseLong(authentication.getName()));
-            System.out.println(user.getId());
-            //Не знаю для чого наступний алгоритм пошуку максимуму, але без нього не працює, хоч в мене і дерево,
-            //яке сортує повідомлення по даті, я не знаю чому не працює просто без цього алгоритму
-            Object[] images =  user.getUserImages().toArray();
-            User_Images user_image = (User_Images)images[0];
-            Date max = user_image.getDateOfImage();
-            int index = 0;
-            for (int i = 1; i < images.length; i++){
-                User_Images user_images = (User_Images)images[i];
-                if (user_images.getDateOfImage().compareTo(max)==1){
-                    max = user_images.getDateOfImage();
-                    index = i;
-                }
-            }
-            User_Images image = (User_Images) images[index];
-            System.out.println("Image: "+image.getUrlOfImage());
-            //System.out.println(image);
-            model1.addAttribute("image", image.getUrlOfImage());
-        } catch (Exception e){
-            model1.addAttribute("image","");
-        }*/
 
         try {
             User user = userService.findOne(Long.parseLong(authentication.getName()));
@@ -77,9 +60,16 @@ public class BaseController extends BaseMethods{
                 i++;
             }
 
-            Set<Record> records = user.getRecordsToUser();
+            //Set<Record> records = user.getRecordsToUser();
 
-            modelRecords.addAttribute("records",records);
+            List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(authentication.getName()));
+            List<Record> inverseRecords = new ArrayList<>();
+
+            for (int j = records.size()-1; j >=0; j--)
+                inverseRecords.add(records.get(j));
+
+            modelForButton.addAttribute("friendOrNo","hidden");
+            modelRecords.addAttribute("records",inverseRecords);
             modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
             modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
         } catch (Exception ex){
@@ -87,9 +77,12 @@ public class BaseController extends BaseMethods{
             modelSubscribers.addAttribute("subscribersOfUser", "");
         }
 
-
-
-        return "views-base-home";
+        try {
+            modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
+        } catch (Exception ex){
+            modelIdUserAuth.addAttribute("userAuth", "no user auth");
+        }
+        return "views-user-selected";
     }
 
     @RequestMapping(value = "/messagePage",method = RequestMethod.GET)
@@ -117,6 +110,21 @@ public class BaseController extends BaseMethods{
         modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
         return "views-base-friends";
     }
+
+    @RequestMapping(value = "/friendsOf/{id}",method = RequestMethod.GET)
+    public String friendSearchPage(@PathVariable("id")String id, Model model, Model modelSubscribers){
+        //відносно авторизації отримуєм користувача з бази даних
+        User user = userService.findOne(Long.parseLong(id));
+        //шукаємо друзів даного юзера
+        Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
+        //шукаємо підписників даного юзера(авторизованого)
+        Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user,friendsWhichAcceptedUserApplication);
+        //передаєм на сторінку справжніх друзів
+        model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
+        modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
+        return "views-base-friends";
+    }
+
 
 
     @RequestMapping(value = "/photos",method = RequestMethod.GET)

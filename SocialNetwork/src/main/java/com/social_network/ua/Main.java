@@ -1,11 +1,13 @@
 package com.social_network.ua;
 
+import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.List;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -32,7 +34,7 @@ public class Main {
         /*System.out.println(user.getSubscribers().size());
         System.out.println(user.getFriends().size());*/
 
-        User user = entityManager.find(User.class,1l);
+        /*User user = entityManager.find(User.class,1l);
         System.out.println(user.getUserImages());
 
         for (User_Images user_images: user.getUserImages())
@@ -41,7 +43,9 @@ public class Main {
         Object[] images =  user.getUserImages().toArray();
         System.out.println(images.length);
         User_Images image = (User_Images) images[images.length-1];
-        System.out.println(image.getUrlOfImage());
+        System.out.println(image.getUrlOfImage());*/
+
+
 
 
 

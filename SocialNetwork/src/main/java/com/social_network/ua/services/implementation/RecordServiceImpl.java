@@ -6,6 +6,11 @@ import com.social_network.ua.services.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+
+
+
+
 import java.util.Date;
 import java.util.List;
 
@@ -49,4 +54,11 @@ public class RecordServiceImpl implements RecordService {
     public List<Record> findAll() {
         return recordDao.findAll();
     }
+
+    @Override
+    public List<Record> findAllInTheWallOf(long id) {
+        return recordDao.findAllInTheWallOf(id);
+    }
 }
+
+

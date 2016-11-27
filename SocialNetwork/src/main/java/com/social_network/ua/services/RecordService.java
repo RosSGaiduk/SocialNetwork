@@ -15,4 +15,5 @@ public interface RecordService {
     void delete(long id);
     Record findOne(long id);
     List<Record> findAll();
+    List<Record> findAllInTheWallOf(long id);
 }
