@@ -127,14 +127,14 @@
         margin-top: -100px; background-color: white;">
 
             <div style="width: 70px; height: 50px; float: left; background-image: url(${userAuth.newestImageSrc});
-                    background-size: cover; background-repeat: no-repeat; margin-left: 10px; margin-top: 10px;
+                    background-size: cover; background-repeat: no-repeat; margin-left: 10px; margin-top: 3px;
                     ">
             </div>
              <textarea id = "newRecord" placeholder="Do you have something new?"
-                       style="width: 200px; height: 50px; float: left; margin-left: 10px; margin-top: 10px;">
-         </textarea>
+                       style="width: 200px; height: 50px; float: left; margin-left: 10px; margin-top: 3px;">
+             </textarea>
 
-            <button onclick="updateRecords()" style="height: 25px; margin-top: 35px; margin-left: 10px;
+            <button onclick="updateRecords()" style="height: 25px; margin-top: 30px; margin-left: 10px;
             background-color: #6ea0ff; color: white;
             ">Send</button>
             </div>
@@ -154,7 +154,6 @@
                 </div>
             </c:forEach>
             <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
-
         </div>
 
 
