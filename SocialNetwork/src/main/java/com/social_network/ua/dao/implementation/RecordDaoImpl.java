@@ -30,7 +30,8 @@ public class RecordDaoImpl implements RecordDao {
 
     @Transactional
     public void delete(Record record) {
-        entityManager.remove(record);
+        //entityManager.remove(record);
+        entityManager.remove(entityManager.contains(record) ? record : entityManager.merge(record));
     }
 
     @Transactional

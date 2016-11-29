@@ -47,7 +47,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public void delete(long id) {
-        recordDao.delete(findOne(id));
+        recordDao.delete(recordDao.findOne(id));
     }
 
     @Override

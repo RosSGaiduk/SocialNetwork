@@ -155,7 +155,7 @@
         <div id = "records" style="width: 50%; height: auto; float: left; margin-left: 15px;
          background-color: white; margin-top: 0px;">
             <c:forEach var="rec" items="${records}">
-                <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
+                <div id = "${rec.id} div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
                     <p style="clear: left"/>
                     <div style="width:70px; height:50px;
@@ -168,7 +168,11 @@
                         <img src="${rec.urlImage}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
                         background-size: cover;
                         "></c:if>
+                        <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
                     </div>
+                    <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)"
+                            style="visibility: visible"
+                    >Delete</button>
                 </div>
             </c:forEach>
             <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
@@ -194,6 +198,13 @@
     </sec:authorize>
 </div>
 
+<script>
+    function checkIfAuthUserInHomePage(){
+        if (document.getElementById("userAuthId").innerHTML == document.getElementById("userId").innerHTML)
+                return "";
+    }
+    checkIfAuthUserInHomePage();
+</script>
 
 <script>
     function checkWhatToDoMessagesOrDownloadPicture(){
@@ -212,7 +223,7 @@
 <script>
     function updateRecords(){
         /*alert($('#newRecord').val());*/
-        alert($('#imageToWall').val());
+        //alert($('#imageToWall').val());
         $.ajax({
             url: "/updateRecords",
             data: ({
@@ -224,7 +235,7 @@
             dataType: "json",
             async:false,
             success: function(data){
-                alert("Hello");
+                //alert("Hello");
                 $.each(data,function(k,v){
                   var elem = document.createElement("div");
                     elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";
@@ -279,6 +290,23 @@
                  button.setAttribute("id","removeFriend");
                  button.innerHTML = "Remove friend";
                  document.getElementById("mainDiv").appendChild(button);*/
+            }
+        })
+    }
+</script>
+
+<script>
+    function deleteRecord(recId){
+        $.ajax({
+            url: "/deleteRecord",
+            data:({
+                idRecord: recId
+            }),
+            async: false,
+            success: function(data){
+                var mainDiv = document.getElementById("records");
+                var deletedDiv = document.getElementById(recId+' div');
+                mainDiv.removeChild(deletedDiv);
             }
         })
     }

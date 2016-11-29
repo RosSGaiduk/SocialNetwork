@@ -216,4 +216,13 @@ public class AjaxController extends BaseMethods {
         System.out.println("Length: "+jsonArray.length());
         return jsonArray.toString();
     }
+
+
+    @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String deleteRecord(@RequestParam String idRecord){
+        long idRec = Long.parseLong(idRecord);
+        recordService.delete(idRec);
+        return idRecord;
+    }
 }
