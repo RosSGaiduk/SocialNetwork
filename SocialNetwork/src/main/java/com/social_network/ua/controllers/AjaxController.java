@@ -8,6 +8,9 @@ import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.MessageService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -171,7 +180,12 @@ public class AjaxController extends BaseMethods {
 
     @RequestMapping(value = "/updateRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
-    public String updateRecords(@RequestParam String newRecord,@RequestParam String userFrom,@RequestParam String userTo){
+    public String updateRecords(@RequestParam String newRecord,
+                                @RequestParam String image,
+                                @RequestParam String userFrom,
+                                @RequestParam String userTo
+                                ){
+        //System.out.println("sadasd");
         long idUser = Long.parseLong(userFrom);
         long idUserTo = Long.parseLong(userTo);
         User user = userService.findOne(idUser);
@@ -183,6 +197,11 @@ public class AjaxController extends BaseMethods {
         record.setDateOfRecord(date);
         record.setUser(userToMess);
         record.setUserFrom(user);
+
+        if (image.equals("")) record.setHasImage(false);
+        else record.setHasImage(true);
+
+
         recordService.add(record);
 
         JSONObject jsonObject = new JSONObject();

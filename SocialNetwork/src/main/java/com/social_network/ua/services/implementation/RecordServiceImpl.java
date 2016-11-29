@@ -41,6 +41,11 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public void edit(Record record) {
+        recordDao.edit(record);
+    }
+
+    @Override
     public void delete(long id) {
         recordDao.delete(findOne(id));
     }

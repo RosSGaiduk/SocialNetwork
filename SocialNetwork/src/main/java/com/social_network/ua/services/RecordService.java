@@ -12,6 +12,7 @@ public interface RecordService {
     void add(Record record);
     void add(String text, String urlOfImage, Date dateOfRecord);
     void edit(long id, String text, String urlOfImage, Date dateOfRecord);
+    void edit(Record record);
     void delete(long id);
     Record findOne(long id);
     List<Record> findAll();

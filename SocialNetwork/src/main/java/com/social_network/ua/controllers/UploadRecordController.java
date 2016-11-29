@@ -11,51 +11,48 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.JpaSort;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.IOException;
-import java.nio.file.*;
-
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Rostyslav on 24.11.2016.
+ * Created by Rostyslav on 29.11.2016.
  */
 @Controller
-@RequestMapping(value = "upload",method = RequestMethod.GET)
-public class UploadController {
-
+public class UploadRecordController {
     @Autowired
     private UserService userService;
     @Autowired
     private ImageService imageService;
     @Autowired
     private RecordService recordService;
-
-    @RequestMapping(value = "/process",method = RequestMethod.POST)
-    public String save(HttpServletRequest request)
+    @RequestMapping(value = "/process1",method = RequestMethod.POST)
+    public String saveToTheWall(HttpServletRequest request)
     {
+        System.out.println("I am here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
+        List<Record> records = recordService.findAll();
+        Record record = records.get(records.size()-1);
+
+        System.out.println("Id: "+record.getUser().getId());
+
         //creating a folder inside of this folder
-        Path path1 = Paths.get(path+"\\"+authentication.getName());
+        Path path1 = Paths.get(path+"\\"+record.getUser().getId()+"\\wall");
         try {
             Files.createDirectories(path1);
         } catch (IOException e) {
@@ -65,31 +62,24 @@ public class UploadController {
         DiskFileItemFactory d = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(d);
 
-
+        List<FileItem> lst = null;
         try {
-            //getting a list of items, from which, we will get our image
-            List<FileItem> lst = upload.parseRequest(request);
+            lst = upload.parseRequest(request);
             User user = userService.findOne(Long.parseLong(authentication.getName()));
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
                     //in this folder, which we created, write our images
-                    fileItem.write(new File(path+"/"+authentication.getName()+"/"+fileItem.getName()));
-                    User_Images user_images = new User_Images();
-                    //System.out.println("File item: "+fileItem.getName());
-                    //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
-                    user_images.setUrlOfImage("/resources/"+authentication.getName()+"/"+fileItem.getName());
-                    user_images.setDateOfImage(new Date(System.currentTimeMillis()));
-                    user_images.setUser(user);
-                    user.setNewestImageSrc("/resources/"+authentication.getName()+"/"+fileItem.getName());
-                    userService.edit(user);
-                    imageService.add(user_images);
+                    fileItem.write(new File(path+"/"+record.getUser().getId()+"/wall/"+fileItem.getName()));
+                    record.setUrlImage("/resources/"+record.getUser().getId()+"/wall/"+fileItem.getName());
+                    recordService.edit(record);
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return "fail";
         }
+        System.out.println("size: "+lst.size());
 
-        return "views-base-friends";
+        //return "redirect:/";
+        return "redirect:/user/"+record.getUser().getId();
     }
 }

@@ -137,10 +137,23 @@
             <button onclick="updateRecords()" style="height: 25px; margin-top: 30px; margin-left: 10px;
             background-color: #6ea0ff; color: white;
             ">Send</button>
-            </div>
+
+           <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
+                <form:form id = "formForLoadingPicturesToWall" action="upload/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
+                           enctype="multipart/form-data" cssStyle="float: left;">
+                <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
+                <input type="submit" value="Upload2" style="float: left; margin-left: 85%; margin-top: -20px;">
+                </form:form>
+            </div>--%>
+            <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
+            <form:form action="/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
+            <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
+            <input onclick="updateRecords()" type="submit" value="Upload">
+            </form:form>
+        </div>
 
         <div id = "records" style="width: 50%; height: auto; float: left; margin-left: 15px;
-        margin-top: -20px; background-color: white;">
+         background-color: white; margin-top: 0px;">
             <c:forEach var="rec" items="${records}">
                 <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
@@ -150,6 +163,11 @@
                             float:left; margin-left:10px; margin-top:10px;"></div>
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
                         <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
+                        <div style="width: 50%; float: left; height: 50px;"></div>
+                        <c:if test="${rec.hasImage == true}">
+                        <img src="${rec.urlImage}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
+                        background-size: cover;
+                        "></c:if>
                     </div>
                 </div>
             </c:forEach>
@@ -194,10 +212,12 @@
 <script>
     function updateRecords(){
         /*alert($('#newRecord').val());*/
+        alert($('#imageToWall').val());
         $.ajax({
             url: "/updateRecords",
             data: ({
                 newRecord:$('#newRecord').val(),
+                image:$('#imageToWall').val(),
                 userFrom:document.getElementById("userAuthId").innerHTML,
                 userTo: document.getElementById("userId").innerHTML
             }),

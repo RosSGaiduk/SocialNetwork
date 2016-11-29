@@ -18,6 +18,8 @@ public class Record implements Comparable<Record>{
     private String urlImage;
     @Column
     private Date dateOfRecord;
+    @Column
+    private boolean hasImage;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
@@ -78,6 +80,14 @@ public class Record implements Comparable<Record>{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isHasImage() {
+        return hasImage;
+    }
+
+    public void setHasImage(boolean hasImage) {
+        this.hasImage = hasImage;
     }
 
     @Override
