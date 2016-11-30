@@ -9,7 +9,7 @@
         <!-- <security:intercept-url pattern="/*/new" access="hasRole('ROLE_ADMIN')"/>-->
 
         <security:form-login login-page="/loginpage" login-processing-url="/loginprocessing"/>
-        <security:logout logout-url="/logout"/>
+        <security:logout logout-url="/logout" logout-success-url="/"/>
         <!--<security:logout logout-success-url="/another"/>-->
     </security:http>
 
