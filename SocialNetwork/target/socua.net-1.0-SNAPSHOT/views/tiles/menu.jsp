@@ -38,7 +38,11 @@
             </div>
             <div style="width: 100%; height: 10px; float: left; margin-top: 40px;">
             <form:form method="post" action="/logout">
-                <p style="text-align: center"><button type="submit">Вийти</button></p>
+                <p style="text-align: center"><button type="submit" style="
+                background-color: darkslateblue;
+                color:white;
+                cursor: hand;
+                ">Вийти</button></p>
             </form:form>
                 </div>
         </sec:authorize>

@@ -170,9 +170,11 @@
                         "></c:if>
                         <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
                     </div>
+                    <c:if test="${user.id == userAuth.id}">
                     <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)"
                             style="visibility: visible"
                     >Delete</button>
+                    </c:if>
                 </div>
             </c:forEach>
             <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
