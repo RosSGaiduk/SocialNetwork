@@ -123,8 +123,12 @@
 
         </div>
 
+        <p style="clear: left"/>
+
+        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px"></div>
+
         <div style="width: 50%; height: auto; float: left; margin-left: 15px;
-        margin-top: -100px; background-color: white;">
+        margin-top: -230px; background-color: white;">
 
             <div style="width: 70px; height: 50px; float: left; background-image: url(${userAuth.newestImageSrc});
                     background-size: cover; background-repeat: no-repeat; margin-left: 10px; margin-top: 3px;
@@ -153,7 +157,7 @@
         </div>
 
         <div id = "records" style="width: 50%; height: auto; float: left; margin-left: 15px;
-         background-color: white; margin-top: 0px;">
+         background-color: white; margin-top: -130px;">
             <c:forEach var="rec" items="${records}">
                 <div id = "${rec.id} div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>

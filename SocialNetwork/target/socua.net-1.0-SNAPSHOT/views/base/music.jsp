@@ -41,8 +41,6 @@
         </audio>
     </c:forEach>
 
-
-
     </div>
 
 </body>
