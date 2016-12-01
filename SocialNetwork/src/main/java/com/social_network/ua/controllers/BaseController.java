@@ -3,6 +3,7 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.services.MusicService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.dom4j.rule.Mode;
@@ -26,6 +27,8 @@ public class BaseController extends BaseMethods{
     private UserService userService;
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private MusicService musicService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home
@@ -145,5 +148,11 @@ public class BaseController extends BaseMethods{
         for (int i = 0; i < users.size(); i++)
             treeOfUsers.add(users.get(i));
         return treeOfUsers;
+    }
+
+    @RequestMapping(value = "/music",method = RequestMethod.GET)
+    public String musicAll(Model model){
+        model.addAttribute("musicAll",musicService.findAll());
+        return "views-base-music";
     }
 }
