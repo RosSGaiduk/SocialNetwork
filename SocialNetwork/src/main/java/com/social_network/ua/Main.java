@@ -1,6 +1,7 @@
 package com.social_network.ua;
 
 import com.social_network.ua.entity.Message;
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 
@@ -80,9 +81,14 @@ public class Main {
 
 
 
-        saveMp3File("C:/Users/Rostyslav/Desktop/Adele Hello.mp3","C:/Users/Rostyslav/Desktop/Adele1 - Hello.mp3");
+        //saveMp3File("C:/Users/Rostyslav/Desktop/Adele Hello.mp3","C:/Users/Rostyslav/Desktop/Adele1 - Hello.mp3");
 
 
+        User user = entityManager.find(User.class,7l);
+        System.out.println(user.getMusics().size());
+
+        Music music = entityManager.find(Music.class,1l);
+        System.out.println(music.getUsers().size());
 
 
 

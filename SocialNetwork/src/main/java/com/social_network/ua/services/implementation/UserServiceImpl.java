@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void addMusicToUser(long idOfUser, long idOfMusic) {
+        userDao.addMusicToUser(idOfUser,idOfMusic);
+    }
+
+    @Override
     public User selectUser(long id1, long id2) {
         return userDao.selectUser(id1,id2);
     }

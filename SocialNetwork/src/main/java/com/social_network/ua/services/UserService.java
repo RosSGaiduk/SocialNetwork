@@ -16,6 +16,7 @@ public interface UserService {
     void edit(User user);
     User findOne(long id);
     void addFriendToUser(long id1,long id2);
+    void addMusicToUser(long idOfUser,long idOfMusic);
     User selectUser(long id1,long id2);
     List<User> findAll();
 }

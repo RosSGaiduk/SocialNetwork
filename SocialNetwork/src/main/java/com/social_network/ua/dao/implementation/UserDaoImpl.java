@@ -1,6 +1,7 @@
 package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.UserDao;
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,12 @@ public class UserDaoImpl implements UserDao {
     public void addFriendToUser(long idOfUser, long idOfFriend) {
         User user = entityManager.find(User.class,idOfUser);
         user.getFriends().add(entityManager.find(User.class,idOfFriend));
+    }
+
+    @Transactional
+    public void addMusicToUser(long idOfUser, long idOfMusic) {
+        User user = entityManager.find(User.class,idOfUser);
+        user.getMusics().add(entityManager.find(Music.class,idOfMusic));
     }
 
     @Override

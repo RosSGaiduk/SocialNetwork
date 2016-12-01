@@ -1,6 +1,7 @@
 package com.social_network.ua.controllers;
 
 
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
@@ -75,9 +76,14 @@ public class UserController extends BaseMethods{
                           Model modelFriends,
                           Model modelSubscribers,
                           Model modelIdUserAuth,
-                          Model modelRecords
+                          Model modelRecords,
+                          Model musicOfAuth
     ){
-        model.addAttribute("user",userService.findOne(Long.parseLong(id)));
+        User userSearched = userService.findOne(Long.parseLong(id));
+        model.addAttribute("user",userSearched);
+        if (userSearched.getMusics().size()>0)
+            musicOfAuth.addAttribute("musicOfAuth",userSearched.getMusics().get(0));
+        else musicOfAuth.addAttribute("musicOfAuth",new Music());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
         boolean wasSubscriber = false;
@@ -147,4 +153,10 @@ public class UserController extends BaseMethods{
         return "views-test-test";
     }
 
+    @RequestMapping(value = "/musicOf/{id}",method = RequestMethod.GET)
+    public String musicOfUser(@PathVariable("id")String id,Model modelMusic){
+        User user = userService.findOne(Long.parseLong(id));
+        modelMusic.addAttribute("musicAll",user.getMusics());
+        return "views-user-music";
+    }
 }

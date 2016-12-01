@@ -217,12 +217,22 @@ public class AjaxController extends BaseMethods {
         return jsonArray.toString();
     }
 
-
     @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String deleteRecord(@RequestParam String idRecord){
         long idRec = Long.parseLong(idRecord);
         recordService.delete(idRec);
         return idRecord;
+    }
+
+    @RequestMapping(value = "/addMusicToUser",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String addMusicToUser(@RequestParam String idMusic){
+        System.out.println("Add music to user");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        long idUserLng = Long.parseLong(authentication.getName());
+        long idMusicLng = Long.parseLong(idMusic);
+        userService.addMusicToUser(idUserLng,idMusicLng);
+        return "";
     }
 }

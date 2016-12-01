@@ -25,28 +25,22 @@
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 
 <div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 80px; background-color: white">
-<form:form action="/musicProcess.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-           enctype="multipart/form-data" cssStyle="float: left;">
-    <input type="file" name="file1"  style="float: left;"/>
-    <input type="submit" value="Upload" style="float: left;">
-</form:form>
-
     <c:forEach items="${musicAll}" var="mus">
         <p style="clear: left"/>
         <p style="margin-top: 10px; margin-left: 20%;">${mus.nameOfSong}</p>
-        <audio controls style="margin-top: 10px; margin-left: 20%;">
-            <source src="${mus.urlOfSong}" type="audio/mpeg" style="cursor: hand">
+        <audio controls style="margin-top: 10px; margin-left: 20%">
+            <source src="${mus.urlOfSong}" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
         <button onclick="addMusicToUser(${mus.id})">Add</button>
     </c:forEach>
-    </div>
+</div>
 
 
 <script>
     function addMusicToUser(id){
         $.ajax({
-           url:"/addMusicToUser",
+            url:"/addMusicToUser",
             data: ({idMusic: id}),
             async: false,
             success: function(data){

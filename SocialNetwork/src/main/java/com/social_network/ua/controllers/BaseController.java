@@ -1,5 +1,6 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
@@ -37,12 +38,17 @@ public class BaseController extends BaseMethods{
              Model modelSubscribers,
              Model modelRecords,
              Model modelIdUserAuth,
-             Model modelForButton
+             Model modelForButton,
+             Model musicOfAuth
             ){
         //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            model.addAttribute("user", userService.findOne(Long.parseLong(authentication.getName())));
+            User user =  userService.findOne(Long.parseLong(authentication.getName()));
+            model.addAttribute("user",user);
+            if (user.getMusics().size()>0)
+                musicOfAuth.addAttribute("musicOfAuth",user.getMusics().get(0));
+            else musicOfAuth.addAttribute("musicOfAuth",new Music());
             System.out.println(userService.findOne(Long.parseLong(authentication.getName())).getId());
         } catch (Exception e){
             model.addAttribute("user","no user");

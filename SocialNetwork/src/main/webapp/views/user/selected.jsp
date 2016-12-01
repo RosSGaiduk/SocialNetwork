@@ -125,7 +125,15 @@
 
         <p style="clear: left"/>
 
-        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px"></div>
+        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px">
+            <a href="/musicOf/${user.id}" style="margin-left: 10px;">Музика</a>
+            <p style="clear: left"/>
+            <p style="margin-top: 10px;">${musicOfAuth.nameOfSong}</p>
+            <audio controls style="margin-top: 10px;">
+                <source src="${musicOfAuth.urlOfSong}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
 
         <div style="width: 50%; height: auto; float: left; margin-left: 15px;
         margin-top: -230px; background-color: white;">
@@ -186,7 +194,6 @@
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
     </sec:authorize>
 
-
     <%--Якщо ніхто не залогінований, тоді форма для заповнення чи реєстрації--%>
     <sec:authorize access="isAnonymous()">
         <div style="margin-top: 20%; float: left; width: 60%; height: auto">
@@ -224,7 +231,6 @@
     }
     checkWhatToDoMessagesOrDownloadPicture();
 </script>
-
 
 <script>
     function updateRecords(){
@@ -281,7 +287,6 @@
 </script>
 
 <script>
-
     function addUserToFriendZone(){
         $.ajax({
             url: "/addUserToFriendsZone",
@@ -317,6 +322,5 @@
         })
     }
 </script>
-
 </body>
 </html>

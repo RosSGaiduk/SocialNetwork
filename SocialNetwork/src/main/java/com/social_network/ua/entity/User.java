@@ -62,6 +62,11 @@ public class User implements Comparable<User>{
     @OneToMany(mappedBy = "userTo",fetch = FetchType.EAGER)
     private List<Message> messagesUserTo;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_music",joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "music_id"))
+    private List<Music> musics = new ArrayList<>();
+
+
     public User(){}
 
 
@@ -198,5 +203,13 @@ public class User implements Comparable<User>{
 
     public void setRecordsFromUser(Set<Record> recordsFromUser) {
         this.recordsFromUser = recordsFromUser;
+    }
+
+    public List<Music> getMusics() {
+        return musics;
+    }
+
+    public void setMusics(List<Music> musics) {
+        this.musics = musics;
     }
 }
