@@ -65,19 +65,35 @@ public class UploadMusicController extends BaseMethods{
             lst = upload.parseRequest(request);
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
-                    //in this folder, which we created, write our images
-                    fileItem.write(new File(path+"/audio/"+fileItem.getName()));
-                    Music music = new Music();
-                    music.setNameOfSong(fileItem.getName());
-                    music.setUrlOfSong("/resources/audio/"+fileItem.getName());
-                    musicService.add(music);
                     System.out.println(fileItem.getName());
+                    String file = fileItem.getName().toString();
+                    String[] extensions = file.split("\\.");
+                    /*System.out.println("Length: "+extensions.length);
+                    System.out.println("Extension: "+extensions[extensions.length-1]);*/
+                    String extension = extensions[extensions.length-1];
+                    if (extension.equalsIgnoreCase("mp3") || extension.equalsIgnoreCase("aud") ||
+                            extension.equalsIgnoreCase("aif") || extension.equalsIgnoreCase("flac") ||
+                            extension.equalsIgnoreCase("iff") || extension.equalsIgnoreCase("m3u") ||
+                            extension.equalsIgnoreCase("m4a") || extension.equalsIgnoreCase("m4b") ||
+                            extension.equalsIgnoreCase("m4r") || extension.equalsIgnoreCase("mid") ||
+                            extension.equalsIgnoreCase("midi") || extension.equalsIgnoreCase("mod") ||
+                            extension.equalsIgnoreCase("mpa") || extension.equalsIgnoreCase("ogg") ||
+                            extension.equalsIgnoreCase("wav") || extension.equalsIgnoreCase("ra") ||
+                            extension.equalsIgnoreCase("ram") || extension.equalsIgnoreCase("sib") ||
+                            extension.equalsIgnoreCase("wma")
+                            ) {
+                        //in this folder, which we created, write our images
+                        fileItem.write(new File(path + "/audio/" + fileItem.getName()));
+                        Music music = new Music();
+                        music.setNameOfSong(fileItem.getName());
+                        music.setUrlOfSong("/resources/audio/" + fileItem.getName());
+                        musicService.add(music);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return "redirect:/";
     }
 }

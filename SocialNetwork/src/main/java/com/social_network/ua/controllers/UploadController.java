@@ -72,17 +72,26 @@ public class UploadController {
             User user = userService.findOne(Long.parseLong(authentication.getName()));
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
-                    //in this folder, which we created, write our images
-                    fileItem.write(new File(path+"/"+authentication.getName()+"/"+fileItem.getName()));
-                    User_Images user_images = new User_Images();
-                    //System.out.println("File item: "+fileItem.getName());
-                    //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
-                    user_images.setUrlOfImage("/resources/"+authentication.getName()+"/"+fileItem.getName());
-                    user_images.setDateOfImage(new Date(System.currentTimeMillis()));
-                    user_images.setUser(user);
-                    user.setNewestImageSrc("/resources/"+authentication.getName()+"/"+fileItem.getName());
-                    userService.edit(user);
-                    imageService.add(user_images);
+                    String file = fileItem.getName().toString();
+                    String[] extensions = file.split("\\.");
+                    /*System.out.println("Length: "+extensions.length);
+                    System.out.println("Extension: "+extensions[extensions.length-1]);*/
+                    String extension = extensions[extensions.length-1];
+                    if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
+                            extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            ) {
+                        //in this folder, which we created, write our images
+                        fileItem.write(new File(path + "/" + authentication.getName() + "/" + fileItem.getName()));
+                        User_Images user_images = new User_Images();
+                        //System.out.println("File item: "+fileItem.getName());
+                        //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
+                        user_images.setUrlOfImage("/resources/" + authentication.getName() + "/" + fileItem.getName());
+                        user_images.setDateOfImage(new Date(System.currentTimeMillis()));
+                        user_images.setUser(user);
+                        user.setNewestImageSrc("/resources/" + authentication.getName() + "/" + fileItem.getName());
+                        userService.edit(user);
+                        imageService.add(user_images);
+                    }
                 }
             }
         } catch (Exception e){
