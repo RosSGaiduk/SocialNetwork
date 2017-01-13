@@ -42,6 +42,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public void edit(User_Images user_images) {
+        imageDao.edit(user_images);
+    }
+
+    @Override
     public User_Images findOne(long id) {
         return imageDao.findOne(id);
     }

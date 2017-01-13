@@ -20,6 +20,9 @@ public class User_Images implements Comparable<User_Images>{
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Album album;
+
 
     public User_Images(){}
     public User_Images(String urlOfImage,Date date) {
@@ -56,6 +59,9 @@ public class User_Images implements Comparable<User_Images>{
         int compare = this.dateOfImage.compareTo(o.dateOfImage);
         if (compare == 0){
             compare = this.urlOfImage.compareTo(o.urlOfImage);
+            if (compare==0){
+                compare = (int)(this.id - o.getId());
+            }
         }
         return compare;
     }
@@ -69,4 +75,11 @@ public class User_Images implements Comparable<User_Images>{
     }
 
 
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
 }

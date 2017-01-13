@@ -9,6 +9,7 @@ import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -136,12 +137,16 @@ public class UserController extends BaseMethods{
     }
 
     @RequestMapping(value = "/photosOf/{id}",method = RequestMethod.GET)
-    public String photosOfUser(@PathVariable("id") String id,Model model){
+    public String photosOfUser(@PathVariable("id") String id,Model model,Model albumModel,Model userModel,Model userAuthModel){
         long idLong = Long.parseLong(id);
         User user = userService.findOne(idLong);
+        albumModel.addAttribute("albums",user.getAlbums());
         Set<User_Images> user_images = user.getUserImages();
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userModel.addAttribute("userPageId",user.getId());
+        userAuthModel.addAttribute("userAuthId",authentication.getName());
         return "views-user-photos";
     }
 
@@ -154,9 +159,12 @@ public class UserController extends BaseMethods{
     }
 
     @RequestMapping(value = "/musicOf/{id}",method = RequestMethod.GET)
-    public String musicOfUser(@PathVariable("id")String id,Model modelMusic){
+    public String musicOfUser(@PathVariable("id")String id,Model modelMusic,Model modelIdAuth,Model modeliIdUserSelected){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(id));
         modelMusic.addAttribute("musicAll",user.getMusics());
+        modelIdAuth.addAttribute("idAuth",authentication.getName());
+        modeliIdUserSelected.addAttribute("idUserSelected",id);
         return "views-user-music";
     }
 }

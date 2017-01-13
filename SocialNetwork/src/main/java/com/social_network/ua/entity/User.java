@@ -66,6 +66,8 @@ public class User implements Comparable<User>{
     @JoinTable(name = "user_music",joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "music_id"))
     private List<Music> musics = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    private Set<Album> albums = new TreeSet<>();
 
     public User(){}
 
@@ -211,5 +213,13 @@ public class User implements Comparable<User>{
 
     public void setMusics(List<Music> musics) {
         this.musics = musics;
+    }
+
+    public Set<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(Set<Album> albums) {
+        this.albums = albums;
     }
 }

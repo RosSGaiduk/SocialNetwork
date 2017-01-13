@@ -85,6 +85,23 @@
     }
 </script>
 
+<script>
+    function checkIfNewMessages(){
+        var val = $("#selct").val();
+        $.ajax({
+            url: "/checkIfNewMessages",
+            data: ({
+                userToId: val
+            }),
+            async: false,
+            success: function(data) {
+                if (data == "true") update();
+            }
+    });
+        //var id1 = setInterval("checkIfNewMessages()",1000);
+}
+
+</script>
 
 <script>
     function update(){
@@ -112,13 +129,6 @@
                     }
                     else elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px; margin-left:20%";
 
-
-                    /*var image = document.createElement("img");
-                    image.style = "width:50px;height:50px;background-size:cover;float:left;";
-                    image.src = v.image;*/
-
-
-                    //document.getElementById("messages").appendChild(elem);
                     var divNew = document.createElement("div");
                     divNew.style = "padding: 14px;border-left: 1px solid #cfdae1;float: left;color: black; width: 214px;";
 
@@ -129,7 +139,6 @@
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
                     myDivMessages.appendChild(elem);
-                    //myDivMessages.appendChild(image);
                     myDivMessages.scrollTop = myDivMessages.scrollHeight;
                 });
             }
@@ -142,7 +151,9 @@
     function changedSelect(){
         var element = document.getElementById("messages");
         while(element.firstChild) element.removeChild(element.firstChild);
+        update();
     }
+    changedSelect();
 </script>
 
 </body>

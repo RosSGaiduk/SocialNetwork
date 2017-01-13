@@ -32,7 +32,9 @@
             <source src="${mus.urlOfSong}" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
-        <button onclick="addMusicToUser(${mus.id})">Add</button>
+        <c:if test="${idAuth != idUserSelected}">
+        <button id = "button ${mus.id}" onclick="addMusicToUser(${mus.id})">Add</button>
+        </c:if>
     </c:forEach>
 </div>
 
@@ -44,7 +46,7 @@
             data: ({idMusic: id}),
             async: false,
             success: function(data){
-
+                document.getElementById("button "+id).style.visibility = "hidden";
             }
         });
     }

@@ -13,6 +13,7 @@ public interface ImageService {
     void add(String urlOfImage, Date dateOfImage);
     void delete(long id);
     void edit(long id,String urlOfImage,Date dateOfImage);
+    void edit(User_Images user_images);
     User_Images findOne(long id);
     List<User_Images> findAll();
 }

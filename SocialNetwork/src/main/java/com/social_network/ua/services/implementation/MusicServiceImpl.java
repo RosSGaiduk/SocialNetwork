@@ -16,7 +16,6 @@ public class MusicServiceImpl implements MusicService {
     @Autowired
     private MusicDao musicDao;
 
-
     @Override
     public void add(Music music) {
         musicDao.add(music);

@@ -30,7 +30,7 @@
                     width: 226px; height: 226px; float: left;
                     margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
                     background-repeat: no-repeat; background-size: cover;
-                    ">
+                    " class="magnify">
             </div>
 
 
@@ -210,6 +210,13 @@
         </div>
     </sec:authorize>
 </div>
+
+
+<script>
+    function biggerImg(div){
+
+    }
+</script>
 
 <script>
     function checkIfAuthUserInHomePage(){

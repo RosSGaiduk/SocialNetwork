@@ -137,14 +137,16 @@ public class BaseController extends BaseMethods{
 
 
     @RequestMapping(value = "/photos",method = RequestMethod.GET)
-    public String photosPage(Model model){
+    public String photosPage(Model model,Model albumModel,Model userModel,Model userAuthModel){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         long authLong = Long.parseLong(authentication.getName());
         User user = userService.findOne(authLong);
         Set<User_Images> user_images = user.getUserImages();
-
+        albumModel.addAttribute("albums",user.getAlbums());
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());
+        userModel.addAttribute("userPageId",user.getId());
+        userAuthModel.addAttribute("userAuthId",authentication.getName());
         return "views-user-photos";
     }
 
