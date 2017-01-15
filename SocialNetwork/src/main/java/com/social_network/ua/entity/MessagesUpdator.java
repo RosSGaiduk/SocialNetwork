@@ -15,13 +15,15 @@ public class MessagesUpdator {
     private long idUserTo;
     @Column
     private long idUserFrom;
-
+    @Column
+    private int countMessages;
 
     public MessagesUpdator(){}
 
     public MessagesUpdator(long idUserFrom,long idUserTo) {
         this.idUserTo = idUserTo;
         this.idUserFrom = idUserFrom;
+        countMessages = 1;
     }
 
     public long getId() {
@@ -36,7 +38,7 @@ public class MessagesUpdator {
         return idUserTo;
     }
 
-    public void setIdUserTo(int idUserTo) {
+    public void setIdUserTo(long idUserTo) {
         this.idUserTo = idUserTo;
     }
 
@@ -44,8 +46,16 @@ public class MessagesUpdator {
         return idUserFrom;
     }
 
-    public void setIdUserFrom(int idUserFrom) {
+    public void setIdUserFrom(long idUserFrom) {
         this.idUserFrom = idUserFrom;
+    }
+
+    public int getCountMessages() {
+        return countMessages;
+    }
+
+    public void setCountMessages(int countMessages) {
+        this.countMessages = countMessages;
     }
 }
 

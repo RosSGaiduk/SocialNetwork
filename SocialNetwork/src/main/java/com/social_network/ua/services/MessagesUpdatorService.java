@@ -15,6 +15,8 @@ public interface MessagesUpdatorService {
     void edit(MessagesUpdator messagesUpdator);
     boolean findMessageBetweenUsers(long id1,long id2);
     MessagesUpdator findOne(long id);
+    MessagesUpdator findOneBy2Ids(long id1, long id2);
     void deleteWhereUserFromLikeId1AndUserToLikeId2(long id1,long id2);
+    int findCountByIdUserFromAndIdUserTo(long idUserFrom,long idUserTo);
     List<MessagesUpdator> findAll();
 }

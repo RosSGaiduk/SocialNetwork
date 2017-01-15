@@ -25,9 +25,9 @@
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
     <sec:authorize access="isAuthenticated()">
-        <div style="width: 300px; height: 350px; float: left; background-color: white; margin-top: 20px;">
+        <div class="userPhoto">
             <div id = "photoOfUser" style="
-                    width: 226px; height: 226px; float: left;
+                    width: 75%; height: 64%; float: left;
                     margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
                     background-repeat: no-repeat; background-size: cover;
                     " class="magnify">
@@ -55,9 +55,9 @@
         <%--<img src="/upload/1/img1.JPG" style="float: left">--%>
         <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
-        <div id = "info" style="width: 50%; height: 300px; float: left; margin-left: 15px;
-        margin-top: 20px; background-color: white;">
+        <div id = "info" class = "userInfo">
             <div style="width: 100%; height: 70%; float: left; float: left;">
+                <h3 style="text-align: center; color: blue;">Online</h3>
                 <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
                 <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
                 <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
@@ -66,27 +66,21 @@
                 <h3 id = "userAuthId" style="text-align: center;visibility: hidden;">${userAuth.id}</h3>
             </div>
 
+
             <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
-
                 <a href="/friendsOf/${user.id}" style="text-decoration: none">
-                    <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;
-             background-image: url(/resources/img/icons/followers.jpg); background-size: cover; background-repeat: no-repeat;
-            "></div></a>
+                    <div class = "logos" style="background-image: url(/resources/img/icons/followers.jpg);"></div></a>
                 <a href="/photosOf/${user.id}">
-                    <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
-            background-image: url(/resources/img/icons/camera.png); background-size: cover; background-repeat: no-repeat;
-            cursor: hand;"></div></a>
+                    <div class = "logos" style="background-image: url(/resources/img/icons/camera.png);"></div></a>
                 <a href="/messagesWithUser/${user.id}">
-                    <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro;
-                background-image: url(/resources/img/icons/message.png); background-size: cover; background-repeat: no-repeat;
-                cursor: hand;"></div>
-                </a>
+                    <div class = "logos"  style="background-image: url(/resources/img/icons/message.png);"></div></a>
             </div>
         </div>
 
 
-        <p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>
+
+        <%--<p style="text-align: right; margin-top: 10px; float: left; margin-left: 20px;">Online</p>--%>
 
 
         <%--<div style="width: 50%; height: 100px; float: left; background-color: white; margin-top: 20px; margin-left: 15px;">
@@ -95,13 +89,13 @@
         <p style="clear: left"></p>
 
 
-        <div style="width: 300px; height: 50px; float: left; background-color: white; margin-top: 20px;">
+        <div class="userEdit">
             <button style="width: 80%; height: 80%; margin-left: 10%; margin-top:5px;background-color: gainsboro;
             ">Edit</button>
         </div>
         <p style="clear: left"></p>
-        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px;
-        ">
+
+        <div class = "userFriends">
             <a href="/friendsOf/${user.id}" style="margin-left: 10px;">Друзі</a>
             <p style="clear: left"></p>
             <c:forEach items="${friendsOfUser}" var="u">
@@ -120,34 +114,30 @@
                     <span>${u.firstName}</span>
                 </div>
             </c:forEach>
-
         </div>
 
         <p style="clear: left"/>
 
-        <div style="width: 300px; height: 110px; float: left; background-color: white; margin-top: 20px">
+        <div class = "userMusic">
             <a href="/musicOf/${user.id}" style="margin-left: 10px;">Музика</a>
             <p style="clear: left"/>
             <p style="margin-top: 10px;">${musicOfAuth.nameOfSong}</p>
-            <audio controls style="margin-top: 10px;">
+            <audio controls style="margin-top: 10px; width: 100%;" >
                 <source src="${musicOfAuth.urlOfSong}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
 
-        <div style="width: 50%; height: auto; float: left; margin-left: 15px;
-        margin-top: -230px; background-color: white;">
-
+        <div class="userRecords">
             <div style="width: 70px; height: 50px; float: left; background-image: url(${userAuth.newestImageSrc});
                     background-size: cover; background-repeat: no-repeat; margin-left: 10px; margin-top: 3px;
                     ">
             </div>
              <textarea id = "newRecord" placeholder="Do you have something new?"
-                       style="width: 200px; height: 50px; float: left; margin-left: 10px; margin-top: 3px;">
+                       class = "textAreaRecordClass">
              </textarea>
 
-            <button onclick="updateRecords()" style="height: 25px; margin-top: 30px; margin-left: 10px;
-            background-color: #6ea0ff; color: white;
+            <button onclick="updateRecords()" class = "sendButton";
             ">Send</button>
 
            <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
@@ -164,8 +154,7 @@
             </form:form>
         </div>
 
-        <div id = "records" style="width: 50%; height: auto; float: left; margin-left: 15px;
-         background-color: white; margin-top: -130px;">
+        <div id = "records" class="userRecordsFromDb">
             <c:forEach var="rec" items="${records}">
                 <div id = "${rec.id} div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>

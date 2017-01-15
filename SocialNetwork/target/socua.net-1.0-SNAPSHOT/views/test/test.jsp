@@ -85,28 +85,10 @@
     }
 </script>
 
-<script>
-    function checkIfNewMessages(){
-        var val = $("#selct").val();
-        $.ajax({
-            url: "/checkIfNewMessages",
-            data: ({
-                userToId: val
-            }),
-            async: false,
-            success: function(data) {
-                if (data == "true") update();
-            }
-    });
-        //var id1 = setInterval("checkIfNewMessages()",1000);
-}
-
-</script>
 
 <script>
     function update(){
         var val = $("#selct").val();
-        //alert(document.getElementById("messages").childElementCount);
         $.ajax({
            url: "/update",
             dataType: "json",
@@ -144,7 +126,7 @@
             }
         });
     }
-    var id1 = setInterval("update()",1000);
+    var id1 = setInterval("update()",500);
 </script>
 
 <script>

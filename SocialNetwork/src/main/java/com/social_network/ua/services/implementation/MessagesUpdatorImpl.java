@@ -43,8 +43,18 @@ public class MessagesUpdatorImpl implements  MessagesUpdatorService {
     }
 
     @Override
+    public MessagesUpdator findOneBy2Ids(long id1, long id2) {
+        return messagesUpdatorDao.findOneBy2Ids(id1,id2);
+    }
+
+    @Override
     public void deleteWhereUserFromLikeId1AndUserToLikeId2(long id1, long id2) {
         messagesUpdatorDao.deleteWhereUserFromLikeId1AndUserToLikeId2(id1,id2);
+    }
+
+    @Override
+    public int findCountByIdUserFromAndIdUserTo(long idUserFrom, long idUserTo) {
+        return messagesUpdatorDao.findCountByIdUserFromAndIdUserTo(idUserFrom,idUserTo);
     }
 
     @Override

@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/resources/css/forChat.css" media="screen" type="text/css" />
 </head>
 <body>
-    <div style="width: 10%; height: 100%; float: left; overflow: auto; margin-left: 10%;">
+    <div class="menuDivClass">
         <sec:authorize access="isAuthenticated()">
 
         <div style="width: 100%; height: 10px; float: left; margin-top: 120px;">

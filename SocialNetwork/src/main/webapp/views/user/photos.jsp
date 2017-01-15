@@ -30,8 +30,8 @@
                 <option>${a.name}</option>
             </c:forEach>
         </select>
-        <p id = "userAuthId" style="visibility: hidden;">${userAuthId}</p>
-        <p id = "userPageId" style="visibility: hidden;">${userPageId}</p>
+        <p id = "userAuthId" style="visibility: visible;">${userAuthId}</p>
+        <p id = "userPageId" style="visibility: visible;">${userPageId}</p>
     </div>
 
     <div id = "photosAll">
@@ -48,10 +48,11 @@
             </c:if>
         </div>
     </c:forEach>
-    </div>
+    </div>--%>
     <c:if test="${userAuthId==userPageId}">
     <a href="/createAlbumPage"><button>Create album</button></a>
-    </c:if>--%>
+    </c:if>
+</div>
 </div>
 
 
@@ -93,6 +94,18 @@
                 var elem = document.createElement("div");
                     elem.style = "width: 300px; height: 300px; background-repeat: no-repeat; background-size: cover;float: left; margin-left: 10px; margin-top: 10px; cursor: hand; margin-top: 20px;  background-image: url("+ url+");";
                     if (document.getElementById("userAuthId").innerHTML == document.getElementById("userPageId").innerHTML) {
+                            //alert("adasd");
+                            var aElem = document.createElement("a");
+                            aElem.href = "/createAlbumPage";
+                            //aElem.innerHTML = "Create album";
+
+                            var buttn = document.createElement("button");
+                            buttn.style = "float: left;";
+                            buttn.textContent = "Create album";
+                            aElem.appendChild(buttn);
+                            document.getElementById("photosAll").appendChild(aElem);
+
+
                         index++;
                         var sel = document.createElement("select");
                         sel.style = "float: left; margin-top: 300px; width:80px;";
@@ -108,9 +121,10 @@
                         var btn = document.createElement("button");
                         btn.style = "float: left; margin-top: 300px";
                         btn.id = "btn" + iD;
-                        btn.textContent = btn.id;
+                        btn.textContent = "OK";
                         elem.appendChild(btn);
                         document.getElementById("photosAll").appendChild(elem);
+
                         $('#btn' + iD).on("click", function () {
                             addImgToAlbum(iD);
                         });

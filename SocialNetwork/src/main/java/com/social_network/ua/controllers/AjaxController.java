@@ -43,7 +43,7 @@ public class AjaxController extends BaseMethods {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private MessagesUpdatorImpl messagesUpdator;
+    private MessagesUpdatorImpl messagesUpdatorService;
     @Autowired
     private AlbumService albumService;
 
@@ -72,38 +72,41 @@ public class AjaxController extends BaseMethods {
         newMessage.setDateOfMessage(new Date(System.currentTimeMillis()));
         messageService.add(newMessage);
 
-        messagesUpdator.add(new MessagesUpdator(authId,Long.parseLong(userToId)));
-
-        System.out.println(message+" from "+authentication.getName());
+        MessagesUpdator messagesUpdator = messagesUpdatorService.findOneBy2Ids(authId,Long.parseLong(userToId));
+        if (messagesUpdator == null) {
+            System.out.println("NULL");
+            messagesUpdatorService.add(new MessagesUpdator(authId, Long.parseLong(userToId)));
+        }
+        else {
+            messagesUpdator.setCountMessages(messagesUpdator.getCountMessages()+1);
+            messagesUpdatorService.edit(messagesUpdator);
+        }
+        //System.out.println(message+" from "+authentication.getName());
         return message;
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
     public String updateMessagesIn2Methods(long userAuthId,long userToId,int countInt){
-        long countBetween2users = messageService.findAllLastBy2ids(userAuthId,userToId);
+        //можна зекономити тут, просто не дописувати в messageUpdator ше 1 поле, а доробити змінну countMessages,
+        //і просто збільшувати її на 1 між даними 2 користувачами, тоді, запит робитиметься одразу
+        long countBetween2users = messagesUpdatorService.findCountByIdUserFromAndIdUserTo(userAuthId,userToId);
+        System.out.println("count: "+countBetween2users);
+        //long countBetween2users = messageService.findAllLastBy2ids(userAuthId,userToId);  //було так
         int limit = (int)(countBetween2users-countInt);
-
         JSONArray jsonArray = new JSONArray();
-
         if (countBetween2users>countInt) {
             List<Message> messages = messageService.findAllByIdsAndCount(userToId,userAuthId,limit);
             System.out.println("Size: "+messages.size());
             for (int i = messages.size() - 1; i >= 0; i--) {
                 JSONObject jsonObject = new JSONObject();
-                //String from = stringUTF_8Encode(userService.findOne(messages.get(i).getUserFrom().getId()).getFirstName());
                 jsonObject.putOnce("data", messages.get(i).getDateOfMessage() + " FROM " + messages.get(i).getUserFrom().getFirstName());
                 jsonObject.putOnce("text", messages.get(i).getText());
                 if (messages.get(i).getUserFrom().getId() == userAuthId) jsonObject.putOnce("fromUser", true);
                 else jsonObject.putOnce("toUser", false);
-
-                //Set<User_Images> userImages = userService.findOne(userToId).getUserImages();
                 jsonArray.put(jsonObject);
             }
-
         }
-
-        //messagesUpdator.deleteWhereUserFromLikeId1AndUserToLikeId2(userToId,userAuthId);
         return jsonArray.toString();
     }
 
@@ -124,7 +127,7 @@ public class AjaxController extends BaseMethods {
         long idUser = Long.parseLong(userToId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         long idUserAuth = Long.parseLong(authentication.getName());
-        if (messagesUpdator.findMessageBetweenUsers(idUser,idUserAuth)){
+        if (messagesUpdatorService.findMessageBetweenUsers(idUser,idUserAuth)){
             return "true";
         }
         else return "false";
@@ -160,7 +163,6 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String addUserToFriendZone(@RequestParam String userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //User user = userService.selectUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
         User user = userService.findOne(Long.parseLong(userId));
         Set<User> subscribersOfUser = user.getSubscribers();
         boolean was = false;
@@ -205,11 +207,11 @@ public class AjaxController extends BaseMethods {
         jsonObject.putOnce("userFromImage",user.getNewestImageSrc());
         jsonObject.putOnce("text",newRecord);
         jsonObject.putOnce("date",date);
-        System.out.println("Text: "+jsonObject.get("text"));
+        //System.out.println("Text: "+jsonObject.get("text"));
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(jsonObject);
-        System.out.println("Length: "+jsonArray.length());
+        //System.out.println("Length: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -235,13 +237,13 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/addPhotoToAlbum", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String addPhotoToAlbum(@RequestParam String idPhoto,@RequestParam String nameAlbum){
-        System.out.println("_____________________________________\nId photo: "+idPhoto+" name album selected: "+nameAlbum); //норм
-        System.out.println("Album name: "+nameAlbum);
+        //System.out.println("_____________________________________\nId photo: "+idPhoto+" name album selected: "+nameAlbum); //норм
+        //System.out.println("Album name: "+nameAlbum);
         User_Images user_images = imageService.findOne(Long.parseLong(idPhoto));
-        System.out.println(user_images.getId()); //норм
+        //System.out.println(user_images.getId()); //норм
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(authentication.getName())); //норм
-        System.out.println("Album name(found): "+album.getName()+", album id(found): "+album.getId());
+        //System.out.println("Album name(found): "+album.getName()+", album id(found): "+album.getId());
         user_images.setAlbum(album);
         imageService.edit(user_images);
         return "Success!";
@@ -250,7 +252,7 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String checkPhotosFromAlbumOfUser(@RequestParam String idUserChecked,@RequestParam String nameAlbum){
         if (nameAlbum.equals("*")){
-            System.out.println("*********");
+            //System.out.println("*********");
             Set<User_Images> images = userService.findOne(Long.parseLong(idUserChecked)).getUserImages();
             return makeJsonArray(userService.findOne(Long.parseLong(idUserChecked)),images);
         }
