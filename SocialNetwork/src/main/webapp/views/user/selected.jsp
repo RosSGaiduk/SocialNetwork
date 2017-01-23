@@ -55,7 +55,12 @@
 
         <div id = "info" class = "userInfo">
             <div style="width: 100%; height: 70%; float: left; float: left;">
+                <c:if test="${user.isOnline}">
                 <h3 style="text-align: center; color: blue;">Online</h3>
+                </c:if>
+                <c:if test="${!user.isOnline}">
+                    <h3 style="text-align: center; color: blue;">Was online: ${user.lastOnline}</h3>
+                </c:if>
                 <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
                 <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
                 <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
@@ -256,8 +261,6 @@
                             "background-size:cover;" +
                             "float:left; margin-left:10px; margin-top:10px;";
                     elem.appendChild(imag);
-
-
 
                     var elemLeft = document.createElement("div");
                     elemLeft.style = "width:50%; height:auto; background-color:white; float:left;" +

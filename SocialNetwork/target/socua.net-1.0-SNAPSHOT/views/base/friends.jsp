@@ -25,6 +25,7 @@
 <div style="width: 50%; height: 50px; background-color: white; float: left; margin-top: 70px;">
 <input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%; height: 30px;float: left; font-size: 10px;" placeholder="Enter name of last name:" onkeyup="findFriends()">
 </div>
+<p id = "userThis">112</p>
 <%--<div style="margin-left: 60%; float: left"></div>--%>
 <%--<div id = "myFriends" style="width: 30%; height: 300px; background-color: white; float: left;overflow: scroll;">
     <h3 style="float: left">Друзі (знайдено ${friendsOfUser.size()})</h3>
@@ -58,11 +59,24 @@
     <h3 style="float: left; margin-left: 10px;">Друзі (знайдено ${friendsOfUser.size()})</h3>
     <p style="clear: left"/>
     <c:forEach items="${friendsOfUser}" var="f">
-        <a href="/user/${f.id}" style="text-decoration: none;" >
-            <img src="${f.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px; border-radius: 0%;">
+    <a href="/user/${f.id}" style="text-decoration: none;" >
+        <img src="${f.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px; border-radius: 0%;">
+        <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
+            <h3 style="margin-left: 10px;">${f.firstName} ${f.lastName}</h3>
+            <h3 style="margin-left: 10px;">${f.birthDate}</h3>
+        </div>
+        <p style="clear: left"></p>
+    </a>
+    </c:forEach>
+    <div style="width: 100%; height: 1px; background-color: #999999; margin-top: 10px;"></div>
+    <h3 style="float: left; margin-left: 10px;">Інші люди</h3>
+    <p style="clear: left;"/>
+    <c:forEach items="${anotherPeople}" var="a">
+        <a href="/user/${a.id}" style="text-decoration: none;" >
+            <img src="${a.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px; border-radius: 0%;">
             <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
-                <h3 style="margin-left: 10px;">${f.firstName} ${f.lastName}</h3>
-                <h3 style="margin-left: 10px;">${f.birthDate}</h3>
+                <h3 style="margin-left: 10px;">${a.firstName} ${a.lastName}</h3>
+                <h3 style="margin-left: 10px;">${a.birthDate}</h3>
             </div>
             <p style="clear: left"></p>
         </a>
@@ -77,12 +91,15 @@
         var element = document.getElementById("allfriends");
         while(element.firstChild) element.removeChild(element.firstChild);
 
+        alert(document.getElementById("userThis").innerHTML);
+
         $.ajax({
             url: "/findFriends",
             dataType: "json",
         data:(
         {
-            friend:$("#inputFriend").val()
+            friend:$("#inputFriend").val(),
+            user: document.getElementById("userThis").innerHTML
         }),
          async: false,
          success: function(data){
@@ -101,9 +118,7 @@
                  elem.innerHTML = v.name+" "+ v.lastName;
                  elemA.appendChild(elem);
 
-
                  document.getElementById("allfriends").appendChild(elemA);
-
                  var elem1 = document.createElement("p");
                  elem1.style = "clear:left";
                  document.getElementById("allfriends").appendChild(elem1);

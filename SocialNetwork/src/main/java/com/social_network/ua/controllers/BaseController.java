@@ -9,6 +9,7 @@ import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -105,7 +106,8 @@ public class BaseController extends BaseMethods{
     }
 
     @RequestMapping(value = "/friends",method = RequestMethod.GET)
-    public String friendSearchPage(Model model,Model modelSubscribers){
+    public String friendSearchPage(Model userOf,Model model,Model modelSubscribers,Model anotherPeopleModel){
+        System.out.println("I am hereee");
         //дістаємо авторизацію, тобто залогінованого користувача
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //відносно авторизації отримуєм користувача з бази даних
@@ -114,14 +116,28 @@ public class BaseController extends BaseMethods{
         Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
         //шукаємо підписників даного юзера(авторизованого)
         Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user,friendsWhichAcceptedUserApplication);
+        //System.out.println("Count subs: "+subscribersWhichArentFriendsOfUser.size());
         //передаєм на сторінку справжніх друзів
         model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
         modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
+        //System.out.println("Count: "+userService.findAllIdsOfSubscribersOfUser(Long.parseLong(authentication.getName())).size());
+        List<Long> idsOfSubscribers = userService.findAllIdsOfSubscribersOfUser(Long.parseLong(authentication.getName()));
+        try {
+            Long[] anotherIntPeople = new Long[idsOfSubscribers.size()];
+            for (int i = 0; i < idsOfSubscribers.size(); i++) {
+                anotherIntPeople[i] = idsOfSubscribers.get(i);
+            }
+            //System.out.println("Count another people: "+userService.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(anotherIntPeople).size());
+            anotherPeopleModel.addAttribute("anotherPeople", userService.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(anotherIntPeople));
+        } catch (Exception ex){
+            anotherPeopleModel.addAttribute("anotherPeople",userService.findAll());
+        }
+        userOf.addAttribute("user",authentication.getName());
         return "views-base-friends";
     }
 
     @RequestMapping(value = "/friendsOf/{id}",method = RequestMethod.GET)
-    public String friendSearchPage(@PathVariable("id")String id, Model model, Model modelSubscribers){
+    public String friendSearchPage(@PathVariable("id")String id, Model userOf, Model model, Model modelSubscribers,Model anotherPeopleModel){
         //відносно авторизації отримуєм користувача з бази даних
         User user = userService.findOne(Long.parseLong(id));
         //шукаємо друзів даного юзера
@@ -131,9 +147,19 @@ public class BaseController extends BaseMethods{
         //передаєм на сторінку справжніх друзів
         model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
         modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
+        List<Long> idsOfSubscribers = userService.findAllIdsOfSubscribersOfUser(Long.parseLong(id));
+        try {
+            Long[] anotherIntPeople = new Long[idsOfSubscribers.size()];
+            for (int i = 0; i < idsOfSubscribers.size(); i++) {
+                anotherIntPeople[i] = idsOfSubscribers.get(i);
+            }
+            anotherPeopleModel.addAttribute("anotherPeople", userService.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(anotherIntPeople));
+        } catch (Exception ex){
+            anotherPeopleModel.addAttribute("anotherPeople",userService.findAll());
+        }
+        userOf.addAttribute("user",id);
         return "views-base-friends";
     }
-
 
 
     @RequestMapping(value = "/photos",method = RequestMethod.GET)

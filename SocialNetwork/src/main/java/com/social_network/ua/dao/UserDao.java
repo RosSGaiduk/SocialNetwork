@@ -14,6 +14,10 @@ public interface UserDao {
     User findOne(long id);
     void addFriendToUser(long idOfUser,long idOfFriend);
     void addMusicToUser(long idOfUser,long idOfMusic);
+    //передаєм масив id-шок тих користувачів, які підписались на даного користувача
+    List<User> findAllThatArentFriendsOfUserAndArentSubscribersOfUser(Long[]idsOf);
+    List<Long> findAllIdsOfSubscribersOfUser(long id);
+    List<User> findAllByInput(String str);
     User selectUser(long id1, long id2);
     List<User> findAll();
 }

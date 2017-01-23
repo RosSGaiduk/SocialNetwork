@@ -75,6 +75,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<User> findAllThatArentFriendsOfUserAndArentSubscribersOfUser(Long[] idsOf) {
+        return userDao.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(idsOf);
+    }
+
+    @Override
+    public List<Long> findAllIdsOfSubscribersOfUser(long id) {
+        return userDao.findAllIdsOfSubscribersOfUser(id);
+    }
+
+    @Override
+    public List<User> findAllByInput(String str) {
+        return userDao.findAllByInput(str);
+    }
+
+    @Override
     public User selectUser(long id1, long id2) {
         return userDao.selectUser(id1,id2);
     }
@@ -89,6 +104,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user;
         try {
             user = userRepo.findByLogin(login);
+            user.setIsOnline(true);
+            edit(user);
             System.out.println(user.getFirstName());
         } catch (NoResultException e){
             System.out.println("No result");

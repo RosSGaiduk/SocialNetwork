@@ -2,8 +2,6 @@ package com.social_network.ua.entity;
 
 import javax.persistence.Entity;
 
-
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -28,9 +26,12 @@ public class User implements Comparable<User>{
     private String password;
     @Column
     private String newestImageSrc;
+    @Column
+    private Boolean isOnline;
+    @Column
+    private String lastOnline;
     @Transient
     private String confirmPassword;
-
 
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private Set<Record> recordsToUser = new TreeSet<>();
@@ -70,7 +71,6 @@ public class User implements Comparable<User>{
     private Set<Album> albums = new TreeSet<>();
 
     public User(){}
-
 
     public long getId() {
         return id;
@@ -221,5 +221,21 @@ public class User implements Comparable<User>{
 
     public void setAlbums(Set<Album> albums) {
         this.albums = albums;
+    }
+
+    public boolean getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public String getLastOnline() {
+        return lastOnline;
+    }
+
+    public void setLastOnline(String lastOnline) {
+        this.lastOnline = lastOnline;
     }
 }

@@ -1,9 +1,6 @@
 package com.social_network.ua;
 
-import com.social_network.ua.entity.Message;
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -125,6 +122,9 @@ public class Main {
             entityManager.merge(messageSend);
         }
 
+
+        //List<subscribers> subscriberses = entityManager.createQuery("from subscribers").getResultList();
+        //System.out.println(subscriberses.size());
 
 
         entityManager.getTransaction().commit();

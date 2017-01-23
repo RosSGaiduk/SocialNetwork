@@ -27,6 +27,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -46,6 +51,8 @@ public class AjaxController extends BaseMethods {
     private MessagesUpdatorImpl messagesUpdatorService;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private SubscriberService subscriberService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
@@ -136,32 +143,27 @@ public class AjaxController extends BaseMethods {
 
     @RequestMapping(value = "/findFriends",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
-    public String findFriends(@RequestParam String friend){
-        List<User> users = userService.findAll();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+    public String findFriends(@RequestParam String friend,@RequestParam String user){
+        System.out.println("User: "+user);
+        System.out.println("String: "+friend);
+        List<User> users = userService.findAllByInput(friend);
         JSONArray jsonArray = new JSONArray();
 
-        for (User u: users)
-            if (u.getFirstName().contains(friend) || u.getLastName().contains(friend)){
-                if (u.getId()!=Long.parseLong(authentication.getName())) {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.putOnce("id", u.getId());
-                    jsonObject.putOnce("name", u.getFirstName());
-                    jsonObject.putOnce("lastName", u.getLastName());
-                    jsonObject.putOnce("image", u.getNewestImageSrc());
-                    jsonArray.put(jsonObject);
-                }
-            }
-
-
+        for (User u: users) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id", u.getId());
+            jsonObject.putOnce("name", u.getFirstName());
+            jsonObject.putOnce("lastName", u.getLastName());
+            jsonObject.putOnce("image", u.getNewestImageSrc());
+            jsonArray.put(jsonObject);
+        }
         return jsonArray.toString();
     }
-
 
     @RequestMapping(value = "/addUserToFriendsZone",method = RequestMethod.GET)
     @ResponseBody
     public String addUserToFriendZone(@RequestParam String userId){
+        System.out.println("I am here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(userId));
         Set<User> subscribersOfUser = user.getSubscribers();
@@ -173,9 +175,13 @@ public class AjaxController extends BaseMethods {
                 break;
             }
         }
-
-        if (!was)
-            userService.addFriendToUser(Long.parseLong(authentication.getName()),Long.parseLong(userId));
+        if (!was) {
+            subscribersCopy subscriber = new subscribersCopy();
+            subscriber.setUser_id(Long.parseLong(authentication.getName()));
+            subscriber.setSubscriber_id(Long.parseLong(userId));
+            subscriberService.add(subscriber);
+            userService.addFriendToUser(Long.parseLong(authentication.getName()), Long.parseLong(userId));
+        }
         return "views-base-home";
     }
 
@@ -258,6 +264,25 @@ public class AjaxController extends BaseMethods {
         }
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(idUserChecked));
         return makeJsonArrayWithAlbums(userService.findOne(Long.parseLong(idUserChecked)),album);
+    }
+
+    @RequestMapping(value = "/exitUser", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String exitUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        user.setIsOnline(false);
+        /*DateFormat dateFormat = new SimpleDateFormat("MM/dd");
+        Date date = new Date();
+        dateFormat.format(date);
+        System.out.println(date);*/
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime localDate = LocalDateTime.now();
+        String date = dtf.format(localDate);
+        user.setLastOnline(date);
+        userService.edit(user);
+        System.out.println("Exit");
+        return "success";
     }
 
     public JSONObject makeJsonPictureAndAlbums(User user,User_Images img) {

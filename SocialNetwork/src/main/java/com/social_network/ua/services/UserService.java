@@ -17,6 +17,9 @@ public interface UserService {
     User findOne(long id);
     void addFriendToUser(long id1,long id2);
     void addMusicToUser(long idOfUser,long idOfMusic);
+    List<User> findAllThatArentFriendsOfUserAndArentSubscribersOfUser(Long[]idsOf);
+    List<Long> findAllIdsOfSubscribersOfUser(long id);
+    List<User> findAllByInput(String str);
     User selectUser(long id1,long id2);
     List<User> findAll();
 }

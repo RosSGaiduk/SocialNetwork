@@ -67,7 +67,6 @@ public abstract class BaseMethods {
 
 
     public Set<User> subscribersOfAuthentication(User user, Set<User> friendsWhichAcceptedUserApplication){
-
         Set<User> subscribers = user.getSubscribers();
         Set<User> subscribersWhichArentFriendsOfUser = new TreeSet<>();
         for (User u: subscribers){

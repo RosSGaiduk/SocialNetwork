@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,9 +51,48 @@ public class UserDaoImpl implements UserDao {
         user.getMusics().add(entityManager.find(Music.class,idOfMusic));
     }
 
-    @Override
+
+
+    @Transactional
+    public List<User> findAllThatArentFriendsOfUserAndArentSubscribersOfUser(Long[]idsOf) {
+        String query = "";
+        for (int i = 0; i < idsOf.length-1; i++){
+            query+="id != "+idsOf[i]+" and ";
+        }
+        query+="id != "+idsOf[idsOf.length-1];
+        return entityManager.createQuery("from User where "+query).getResultList();
+    }
+
+    @Transactional
+    public List<Long> findAllIdsOfSubscribersOfUser(long id) {
+        try {
+            List<Long> ids = entityManager.createQuery("select subscriber_id from subscribersCopy where user_id = ?1").setParameter(1, id).getResultList();
+            return ids;
+        } catch (Exception ex){
+            System.out.println("Exception");
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<User> findAllByInput(String str) {
+        List<User> users = entityManager.createQuery("from User where firstName like ?1 or lastName like ?1").setParameter(1,"%"+str+"%").getResultList();
+        System.out.println(users.size()==0);
+        if (users.size()==0) {
+            try {
+                users = entityManager.createQuery("from User where (firstName like ?1 and lastName like ?2) or (firstName like ?2 and lastName like ?1)").setParameter(1, str.split(" ")[0]).setParameter(2, str.split(" ")[1]).getResultList();
+                if (users.size()==0)
+                    users = entityManager.createQuery("from User where (firstName like ?1 and lastName like ?2) or (lastName like ?1 and firstName like ?2)").setParameter(1,str.split(" ")[0]).setParameter(2,"%"+str.split(" ")[1]+"%").getResultList();
+            } catch (Exception ex) {
+                System.out.println("Exception from method findAllByInput(String str) from UserDaoImpl");
+            }
+        }
+        return users;
+    }
+
+    @Transactional
     public User selectUser(long id1, long id2) {
-        return (User)entityManager.createQuery("from subscribers where subscriber_id = ?1 and user_id = ?2").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+        return (User)entityManager.createQuery("from subscribersCopy where subscriber_id = ?1 and user_id = ?2").setParameter(1,id1).setParameter(2,id2).getSingleResult();
     }
 
     @Transactional

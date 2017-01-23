@@ -47,11 +47,24 @@
                 background-color: darkslateblue;
                 color:white;
                 cursor: hand;
-                ">Вийти</button></p>
+                " onclick="doExit()">Вийти</button></p>
             </form:form>
                 </div>
         </sec:authorize>
-
     </div>
+
+<script>
+    function doExit(){
+        $.ajax({
+            url: "/exitUser",
+            async: false,
+            success: function(data){
+                console.log(data);
+            }
+        });
+    }
+</script>
+
+
 </body>
 </html>
