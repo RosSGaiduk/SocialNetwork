@@ -74,7 +74,7 @@
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
                 <a href="/friendsOf/${user.id}" style="text-decoration: none">
                     <div class = "logos" style="background-image: url(/resources/img/icons/followers.jpg);"></div></a>
-                <a href="/photosOf/${user.id}">
+                <a href="/photosOf/${user.id}/*">
                     <div class = "logos" style="background-image: url(/resources/img/icons/camera.png);"></div></a>
                 <a href="/messagesWithUser/${user.id}">
                     <div class = "logos"  style="background-image: url(/resources/img/icons/message.png);"></div></a>

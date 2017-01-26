@@ -28,10 +28,10 @@
                 <a href="/messagePage" style="text-decoration: none"><h4 style="text-align: center">Повідомлення</h4></a>
             </div>
         <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/friends" style="text-decoration: none"><h4 style="text-align: center">Друзі</h4></a>
+            <a href="/friendsOf/<sec:authentication property="name"/>" style="text-decoration: none"><h4 style="text-align: center">Друзі</h4></a>
         </div>
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/photos" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
+                <a href="/photosOf/<sec:authentication property="name"/>/*" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
             </div>
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
                 <a href="/music" style="text-decoration: none"><h4 style="text-align: center">Музика</h4></a>

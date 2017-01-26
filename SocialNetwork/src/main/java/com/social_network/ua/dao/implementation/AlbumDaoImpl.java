@@ -3,9 +3,7 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.AlbumDao;
 import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;

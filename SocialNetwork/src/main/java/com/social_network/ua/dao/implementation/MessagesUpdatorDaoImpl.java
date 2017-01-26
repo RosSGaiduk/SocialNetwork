@@ -3,9 +3,7 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.MessagesUpdatorDao;
 import com.social_network.ua.entity.MessagesUpdator;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;

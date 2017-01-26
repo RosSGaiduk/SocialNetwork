@@ -1,7 +1,6 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Record;
-
 import java.util.List;
 
 /**

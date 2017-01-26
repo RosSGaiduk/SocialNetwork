@@ -6,7 +6,6 @@ import com.social_network.ua.entity.User;
 import com.social_network.ua.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 

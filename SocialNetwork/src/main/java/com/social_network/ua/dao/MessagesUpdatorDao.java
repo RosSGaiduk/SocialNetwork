@@ -1,9 +1,6 @@
 package com.social_network.ua.dao;
 
-import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.MessagesUpdator;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**

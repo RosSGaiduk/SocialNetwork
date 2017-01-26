@@ -1,7 +1,6 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.User_Images;
-
 import java.util.List;
 
 /**

@@ -5,15 +5,7 @@ package com.social_network.ua.controllers;
  */
 
 import com.social_network.ua.entity.User;
-import com.social_network.ua.services.UserService;
-import org.dom4j.rule.Mode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
-
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 

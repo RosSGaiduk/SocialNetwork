@@ -1,8 +1,6 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Album;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**

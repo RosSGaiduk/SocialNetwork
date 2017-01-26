@@ -3,7 +3,6 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.RecordDao;
 import com.social_network.ua.entity.Record;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;

@@ -6,7 +6,6 @@ import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,26 +127,7 @@ public class UserController extends BaseMethods{
 
         modelRecords.addAttribute("records",inverseRecords);
         modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
-
         return "views-user-selected";
-    }
-
-    @RequestMapping(value = "/photosOf/{id}",method = RequestMethod.GET)
-    public String photosOfUser(@PathVariable("id") String id,Model model,Model albumModel,Model userModel,Model userAuthModel){
-        long idLong = Long.parseLong(id);
-        User user = userService.findOne(idLong);
-        Set<String> albumSet = new TreeSet<>();
-        for(Album a: user.getAlbums()){
-            albumSet.add(a.getName());
-        }
-        albumModel.addAttribute("albums",albumSet);
-        Set<User_Images> user_images = user.getUserImages();
-        model.addAttribute("images_all",user_images);
-        System.out.println(user_images.size());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        userModel.addAttribute("userPageId",user.getId());
-        userAuthModel.addAttribute("userAuthId",authentication.getName());
-        return "views-user-photos";
     }
 
     @RequestMapping(value = "/messagesWithUser/{id}",method = RequestMethod.GET)

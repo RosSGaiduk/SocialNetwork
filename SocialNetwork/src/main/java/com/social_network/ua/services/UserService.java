@@ -1,7 +1,6 @@
 package com.social_network.ua.services;
 
 import com.social_network.ua.entity.User;
-
 import java.util.Date;
 import java.util.List;
 

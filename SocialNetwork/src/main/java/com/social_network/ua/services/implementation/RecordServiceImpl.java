@@ -5,12 +5,6 @@ import com.social_network.ua.entity.Record;
 import com.social_network.ua.services.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-
-
-
-
 import java.util.Date;
 import java.util.List;
 

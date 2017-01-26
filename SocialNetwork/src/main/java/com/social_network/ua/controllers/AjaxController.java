@@ -4,32 +4,16 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.*;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -213,7 +197,6 @@ public class AjaxController extends BaseMethods {
         jsonObject.putOnce("userFromImage",user.getNewestImageSrc());
         jsonObject.putOnce("text",newRecord);
         jsonObject.putOnce("date",date);
-        //System.out.println("Text: "+jsonObject.get("text"));
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(jsonObject);
@@ -243,6 +226,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/addPhotoToAlbum", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String addPhotoToAlbum(@RequestParam String idPhoto,@RequestParam String nameAlbum){
+        System.out.println("name album: "+nameAlbum+", id of photo: "+idPhoto);
         User_Images user_images = imageService.findOne(Long.parseLong(idPhoto));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(authentication.getName())); //норм
@@ -261,7 +245,6 @@ public class AjaxController extends BaseMethods {
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(idUserChecked));
         return makeJsonArrayWithAlbums(userService.findOne(Long.parseLong(idUserChecked)),album);
     }
-
 
     @RequestMapping(value = "/exitUser", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody

@@ -1,16 +1,14 @@
 package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.*;
+import com.social_network.ua.services.AlbumService;
 import com.social_network.ua.services.MusicService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +26,8 @@ public class BaseController extends BaseMethods{
     private RecordService recordService;
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private AlbumService albumService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home
@@ -102,36 +102,6 @@ public class BaseController extends BaseMethods{
         return "views-test-test";
     }
 
-    @RequestMapping(value = "/friends",method = RequestMethod.GET)
-    public String friendSearchPage(Model userOf,Model model,Model modelSubscribers,Model anotherPeopleModel){
-        System.out.println("I am hereee");
-        //дістаємо авторизацію, тобто залогінованого користувача
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //відносно авторизації отримуєм користувача з бази даних
-        User user = userService.findOne(Long.parseLong(authentication.getName()));
-        //шукаємо друзів даного юзера
-        Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
-        //шукаємо підписників даного юзера(авторизованого)
-        Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user,friendsWhichAcceptedUserApplication);
-        //System.out.println("Count subs: "+subscribersWhichArentFriendsOfUser.size());
-        //передаєм на сторінку справжніх друзів
-        model.addAttribute("friendsOfUser",friendsWhichAcceptedUserApplication);
-        modelSubscribers.addAttribute("subscribersOfUser",subscribersWhichArentFriendsOfUser);
-        //System.out.println("Count: "+userService.findAllIdsOfSubscribersOfUser(Long.parseLong(authentication.getName())).size());
-        List<Long> idsOfSubscribers = userService.findAllIdsOfSubscribersOfUser(Long.parseLong(authentication.getName()));
-        try {
-            Long[] anotherIntPeople = new Long[idsOfSubscribers.size()];
-            for (int i = 0; i < idsOfSubscribers.size(); i++) {
-                anotherIntPeople[i] = idsOfSubscribers.get(i);
-            }
-            //System.out.println("Count another people: "+userService.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(anotherIntPeople).size());
-            anotherPeopleModel.addAttribute("anotherPeople", userService.findAllThatArentFriendsOfUserAndArentSubscribersOfUser(anotherIntPeople));
-        } catch (Exception ex){
-            anotherPeopleModel.addAttribute("anotherPeople",userService.findAll());
-        }
-        userOf.addAttribute("userThis",authentication.getName());
-        return "views-base-friends";
-    }
 
     @RequestMapping(value = "/friendsOf/{id}",method = RequestMethod.GET)
     public String friendSearchPage(@PathVariable("id")String id, Model userOf, Model model, Model modelSubscribers,Model anotherPeopleModel){
@@ -158,26 +128,30 @@ public class BaseController extends BaseMethods{
         return "views-base-friends";
     }
 
-
-    @RequestMapping(value = "/photos",method = RequestMethod.GET)
-    public String photosPage(Model model,Model albumModel,Model userModel,Model userAuthModel){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        long authLong = Long.parseLong(authentication.getName());
-        User user = userService.findOne(authLong);
-        Set<User_Images> user_images = user.getUserImages();
+    @RequestMapping(value = "/photosOf/{id}/{album}",method = RequestMethod.GET)
+    public String photosOfUser(@PathVariable("id") String id, @PathVariable("album") String album,Model model,Model albumModel,Model userModel,Model userAuthModel){
+        System.out.println("Selected album: "+album);
+        long idLong = Long.parseLong(id);
+        User user = userService.findOne(idLong);
         Set<String> albumSet = new TreeSet<>();
-        //тому, що воно кожен раз альбоми в іншій послідовності додає, для цього так по дурному зробив
         for(Album a: user.getAlbums()){
             albumSet.add(a.getName());
         }
         albumModel.addAttribute("albums",albumSet);
+        Set<User_Images> user_images = null;
+        if (album.equals("*")) {
+           user_images = user.getUserImages();
+        } else {
+            Album selectedAlbum = albumService.findOneByNameAndUserId(album,idLong);
+            user_images = selectedAlbum.getUser_images();
+        }
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userModel.addAttribute("userPageId",user.getId());
         userAuthModel.addAttribute("userAuthId",authentication.getName());
         return "views-user-photos";
     }
-
 
     public Set<User> listToSet(List<User>users){
         Set<User> treeOfUsers = new TreeSet<>();

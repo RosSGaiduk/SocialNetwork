@@ -1,5 +1,3 @@
-<%@ page import="org.springframework.security.core.Authentication" %>
-<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -27,14 +25,14 @@
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll; margin-top: 50px;">
     <div style="float: left;width: 40%; margin-left: 30%;">
-        <select id = "selectAlbum" style="width: 30%;" onchange="checkImagesFromAlbum()">
-            <option id = "allPhotos">*</option>
+        <ul id = "selectAlbum"> <%--onchange="checkImagesFromAlbum()">--%>
+            <li><a href="/photosOf/${userPageId}/*" style="text-decoration: none;">*</a></li>
             <c:forEach items="${albums}" var="a">
-                <option>${a}</option>
+             <li><a href="/photosOf/${userPageId}/${a}" style="text-decoration: none;">${a}</a></li>
             </c:forEach>
-        </select>
-        <p id = "userAuthId" style="visibility: visible;">${userAuthId}</p>
-        <p id = "userPageId" style="visibility: visible;">${userPageId}</p>
+        </ul>
+        <p id = "userAuthId" style="visibility: hidden;">${userAuthId}</p>
+        <p id = "userPageId" style="visibility: hidden;">${userPageId}</p>
     </div>
     <div id = "photosAll" style="border: 1px coral;">
      <c:forEach items="${images_all}" var="im">
@@ -43,12 +41,12 @@
                 <img src="${im.urlOfImage}" style="width: 100%; height: 90%;">
             </a>
             <c:if test="${userAuthId==userPageId}">
-            <select style="float: left;width:80px;" id="checkAlbum">
+            <select style="float: left;width:80px;" id="checkAlbum_${im.id}">
                 <c:forEach items="${albums}" var="a">
                     <option>${a}</option>
                 </c:forEach>
             </select>
-            <button style="float: left;" onclick="addImgToAlbum(${im.id})">OK</button>
+            <button style="float: left;" onclick="addImgToAlbum('checkAlbum_${im.id}')">OK</button>
             </c:if>
         </div>
     </c:forEach>
@@ -60,21 +58,22 @@
 
 <script>
     function addImgToAlbum(id) {
+        alert($('#'+id+' option:selected').text());
         $.ajax({
             url: "/addPhotoToAlbum",
             data: ({
-                idPhoto: id,
+                idPhoto: id.split("_")[1],
                 nameAlbum: $('#'+id+' option:selected').text()
             }),
             async: false,
             success: function (data) {
-                checkImagesFromAlbum();
+                window.location.href = "/photosOf/${userPageId}/"+ $('#'+id+' option:selected').text();
             }
         });
     }
 </script>
 
-<script>
+<%--<script>
     function checkImagesFromAlbum(){
         var element = document.getElementById("photosAll");
         while(element.firstChild) element.removeChild(element.firstChild);
@@ -110,7 +109,7 @@
             }
         });
     }
-</script>
+</script>--%>
 
 <script type="text/javascript">(
         function(){
@@ -137,7 +136,6 @@
                 if (index<urls.length-1)
                 index++;
                 else index = 0;
-                //index%=(urls.length);
             } else if (event.keyCode == 37){
                 if (index==0) index = urls.length-1;
                 else index--;

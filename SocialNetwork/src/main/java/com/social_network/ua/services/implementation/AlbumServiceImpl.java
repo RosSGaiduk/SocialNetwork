@@ -5,7 +5,6 @@ import com.social_network.ua.entity.Album;
 import com.social_network.ua.services.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**

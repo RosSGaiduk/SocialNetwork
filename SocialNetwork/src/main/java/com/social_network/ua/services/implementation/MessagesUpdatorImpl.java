@@ -5,7 +5,6 @@ import com.social_network.ua.entity.MessagesUpdator;
 import com.social_network.ua.services.MessagesUpdatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**

@@ -3,7 +3,6 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.services.AlbumService;
-import com.social_network.ua.services.ImageService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,16 +22,11 @@ public class AlbumController {
     private AlbumService albumService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ImageService imageService;
-
-
     @RequestMapping(value = "/createAlbumPage", method = RequestMethod.GET)
     public String createAlbumPage(Model model){
         model.addAttribute("album",new Album());
         return "views-album-new";
     }
-
     @RequestMapping(value = "/createAlbum",method = RequestMethod.POST)
     public String createAlbum(@ModelAttribute Album album){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

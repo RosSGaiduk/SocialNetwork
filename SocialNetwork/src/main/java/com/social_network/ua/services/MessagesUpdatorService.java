@@ -1,9 +1,8 @@
 package com.social_network.ua.services;
 
 
-import com.social_network.ua.entity.Message;
-import com.social_network.ua.entity.MessagesUpdator;
 
+import com.social_network.ua.entity.MessagesUpdator;
 import java.util.List;
 
 /**

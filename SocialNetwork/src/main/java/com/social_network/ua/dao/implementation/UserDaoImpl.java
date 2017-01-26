@@ -4,11 +4,9 @@ import com.social_network.ua.dao.UserDao;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -3,7 +3,7 @@ package com.social_network.ua.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 /**
  * Created by Rostyslav on 01.12.2016.

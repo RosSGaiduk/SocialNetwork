@@ -2,12 +2,9 @@ package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
-import com.social_network.ua.services.ImageService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +30,6 @@ import java.util.List;
 public class UploadRecordController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private ImageService imageService;
     @Autowired
     private RecordService recordService;
     @RequestMapping(value = "/process1",method = RequestMethod.POST)
@@ -78,8 +73,6 @@ public class UploadRecordController {
             e.printStackTrace();
         }
         System.out.println("size: "+lst.size());
-
-        //return "redirect:/";
         return "redirect:/user/"+record.getUser().getId();
     }
 }
