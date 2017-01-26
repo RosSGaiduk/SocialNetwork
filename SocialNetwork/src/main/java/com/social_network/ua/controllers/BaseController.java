@@ -1,9 +1,6 @@
 package com.social_network.ua.controllers;
 
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.Record;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 import com.social_network.ua.services.MusicService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
@@ -132,7 +129,7 @@ public class BaseController extends BaseMethods{
         } catch (Exception ex){
             anotherPeopleModel.addAttribute("anotherPeople",userService.findAll());
         }
-        userOf.addAttribute("user",authentication.getName());
+        userOf.addAttribute("userThis",authentication.getName());
         return "views-base-friends";
     }
 
@@ -157,7 +154,7 @@ public class BaseController extends BaseMethods{
         } catch (Exception ex){
             anotherPeopleModel.addAttribute("anotherPeople",userService.findAll());
         }
-        userOf.addAttribute("user",id);
+        userOf.addAttribute("userThis",id);
         return "views-base-friends";
     }
 
@@ -168,7 +165,12 @@ public class BaseController extends BaseMethods{
         long authLong = Long.parseLong(authentication.getName());
         User user = userService.findOne(authLong);
         Set<User_Images> user_images = user.getUserImages();
-        albumModel.addAttribute("albums",user.getAlbums());
+        Set<String> albumSet = new TreeSet<>();
+        //тому, що воно кожен раз альбоми в іншій послідовності додає, для цього так по дурному зробив
+        for(Album a: user.getAlbums()){
+            albumSet.add(a.getName());
+        }
+        albumModel.addAttribute("albums",albumSet);
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());
         userModel.addAttribute("userPageId",user.getId());

@@ -19,46 +19,47 @@
     <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
     <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
     <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="/resources/css/simplebox.css" type="text/css">
+    <script type="text/javascript" src="/resources/scripts/simplebox_util.js"></script>
+    <script type="text/javascript" src="/resources/scripts/simplebox.js"></script>
 </head>
-<body>
+<body id="main">
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll; margin-top: 50px;">
     <div style="float: left;width: 40%; margin-left: 30%;">
         <select id = "selectAlbum" style="width: 30%;" onchange="checkImagesFromAlbum()">
             <option id = "allPhotos">*</option>
             <c:forEach items="${albums}" var="a">
-                <option>${a.name}</option>
+                <option>${a}</option>
             </c:forEach>
         </select>
         <p id = "userAuthId" style="visibility: visible;">${userAuthId}</p>
         <p id = "userPageId" style="visibility: visible;">${userPageId}</p>
     </div>
-
-    <div id = "photosAll">
-    <%--<c:forEach items="${images_all}" var="im">
-        <div id = "photo" style="width: 300px; height: 300px; background-repeat: no-repeat; background-size: cover;float: left; margin-left: 10px; margin-top: 10px; cursor: hand; margin-top: 20px;;
-        background-image: url(${im.urlOfImage});" onclick="zoom()">
+    <div id = "photosAll" style="border: 1px coral;">
+     <c:forEach items="${images_all}" var="im">
+        <div class="albumPhotos">
+            <a rel="simplebox" href="${im.urlOfImage}" class="aUrl" id="imgId">
+                <img src="${im.urlOfImage}" style="width: 100%; height: 90%;">
+            </a>
             <c:if test="${userAuthId==userPageId}">
-            <select style="float: left; margin-top: 300px; width:80px;" id="checkAlbum">
+            <select style="float: left;width:80px;" id="checkAlbum">
                 <c:forEach items="${albums}" var="a">
-                    <option>${a.name}</option>
+                    <option>${a}</option>
                 </c:forEach>
             </select>
-            <button style="float: left; margin-top: 300px" onclick="addImgToAlbum(${im.id})">OK</button>
+            <button style="float: left;" onclick="addImgToAlbum(${im.id})">OK</button>
             </c:if>
         </div>
     </c:forEach>
-    </div>--%>
-    <c:if test="${userAuthId==userPageId}">
-    <a href="/createAlbumPage"><button>Create album</button></a>
-    </c:if>
+        <c:if test="${userAuthId==userPageId}">
+            <a href="/createAlbumPage"><button>Create album</button></a>
+        </c:if>
+    </div>
 </div>
-</div>
-
 
 <script>
     function addImgToAlbum(id) {
-        //alert($('#'+id+' option:selected').text());
         $.ajax({
             url: "/addPhotoToAlbum",
             data: ({
@@ -67,7 +68,6 @@
             }),
             async: false,
             success: function (data) {
-                //alert(id);
                 checkImagesFromAlbum();
             }
         });
@@ -91,43 +91,20 @@
                 $.each(data,function(k,v){
                     var url = v.url;
                     var iD = v.idOfImg;
-                var elem = document.createElement("div");
-                    elem.style = "width: 300px; height: 300px; background-repeat: no-repeat; background-size: cover;float: left; margin-left: 10px; margin-top: 10px; cursor: hand; margin-top: 20px;  background-image: url("+ url+");";
+                    var elem = document.createElement("div");
+                    elem.className = "albumPhotos";
                     if (document.getElementById("userAuthId").innerHTML == document.getElementById("userPageId").innerHTML) {
-                            //alert("adasd");
                             var aElem = document.createElement("a");
-                            aElem.href = "/createAlbumPage";
-                            //aElem.innerHTML = "Create album";
-
-                            var buttn = document.createElement("button");
-                            buttn.style = "float: left;";
-                            buttn.textContent = "Create album";
-                            aElem.appendChild(buttn);
-                            document.getElementById("photosAll").appendChild(aElem);
-
-
-                        index++;
-                        var sel = document.createElement("select");
-                        sel.style = "float: left; margin-top: 300px; width:80px;";
-                        sel.id = iD;
-                        $.each(v.albums,function(k,v1) {
-                            if (v1 != v.albumOfPhoto) {
-                                var option = document.createElement("option");
-                                option.text = v1;
-                                sel.appendChild(option);
-                            }
-                        });
-                        elem.appendChild(sel);
-                        var btn = document.createElement("button");
-                        btn.style = "float: left; margin-top: 300px";
-                        btn.id = "btn" + iD;
-                        btn.textContent = "OK";
-                        elem.appendChild(btn);
-                        document.getElementById("photosAll").appendChild(elem);
-
-                        $('#btn' + iD).on("click", function () {
-                            addImgToAlbum(iD);
-                        });
+                            aElem.className = "aUrl";
+                            aElem.rel = "simplebox";
+                            aElem.href = url;
+                            aElem.id = "imgId";
+                            var myImg = document.createElement("img");
+                            myImg.src = url;
+                            myImg.style="width: 100%; height: 90%;"
+                            aElem.appendChild(myImg);
+                            elem.appendChild(aElem);
+                            $("#photosAll").append(elem);
                     }
                 });
             }
@@ -135,8 +112,47 @@
     }
 </script>
 
+<script type="text/javascript">(
+        function(){
+            var boxes=[],els,i,l;
+                els=document.querySelectorAll('a[rel=simplebox]');
+                Box.getStyles('simplebox_css','/resources/css/simplebox.css');
+                Box.getScripts('simplebox_js','/resources/scripts/simplebox.js',function(){
+                    simplebox.init();
+                    for(i=0,l=els.length;i<l;++i)
+                        simplebox.start(els[i]);
+                    simplebox.start('a[rel=simplebox_group]');
+                });
+        })
+();
+</script>
+
 <script>
-    checkImagesFromAlbum();
+    var urls = document.getElementsByClassName("aUrl");
+    var index = 0;
+    var f = function() {
+        function eventHandler(event){
+            console.log(event.keyCode);
+            if (event.keyCode == 39){
+                if (index<urls.length-1)
+                index++;
+                else index = 0;
+                //index%=(urls.length);
+            } else if (event.keyCode == 37){
+                if (index==0) index = urls.length-1;
+                else index--;
+            }
+            console.log(index);
+            var val = urls[index];
+            console.log(val);
+            var link = document.getElementById("imgId");
+            link.setAttribute("href",urls[index].getElementsByTagName('img')[0].src);
+            document.getElementById("imgId").click();
+        }
+        var elem = document.getElementById("main");
+        elem.addEventListener('keyup',eventHandler,false);
+    }
+    window.addEventListener("load",f,false);
 </script>
 
 </body>

@@ -25,4 +25,11 @@ public class SubscribersDaoImpl implements SubscribersDao {
     public void delete(subscribersCopy subscribers) {
         entityManager.remove(subscribers);
     }
+
+    @Transactional
+    public boolean checkIfFriends(long id1, long id2) {
+        int count = (Integer) entityManager.createQuery("select count(id) from subscribersCopy  where (user_id = ?1 and subscriber_id = ?2) or (user_id = ?2 and subscriber_id = ?1)").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+        if (count == 2) return true;
+        else return false;
+    }
 }

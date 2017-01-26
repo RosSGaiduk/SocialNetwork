@@ -8,4 +8,5 @@ import com.social_network.ua.entity.subscribersCopy;
 public interface SubscribersDao {
     void add(subscribersCopy subscribers);
     void delete(subscribersCopy subscribers);
+    boolean checkIfFriends(long id1,long id2);
 }

@@ -243,28 +243,25 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/addPhotoToAlbum", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String addPhotoToAlbum(@RequestParam String idPhoto,@RequestParam String nameAlbum){
-        //System.out.println("_____________________________________\nId photo: "+idPhoto+" name album selected: "+nameAlbum); //норм
-        //System.out.println("Album name: "+nameAlbum);
         User_Images user_images = imageService.findOne(Long.parseLong(idPhoto));
-        //System.out.println(user_images.getId()); //норм
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(authentication.getName())); //норм
-        //System.out.println("Album name(found): "+album.getName()+", album id(found): "+album.getId());
         user_images.setAlbum(album);
         imageService.edit(user_images);
         return "Success!";
     }
+
     @RequestMapping(value = "/checkPhotosFromAlbumOfUser", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String checkPhotosFromAlbumOfUser(@RequestParam String idUserChecked,@RequestParam String nameAlbum){
         if (nameAlbum.equals("*")){
-            //System.out.println("*********");
             Set<User_Images> images = userService.findOne(Long.parseLong(idUserChecked)).getUserImages();
             return makeJsonArray(userService.findOne(Long.parseLong(idUserChecked)),images);
         }
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(idUserChecked));
         return makeJsonArrayWithAlbums(userService.findOne(Long.parseLong(idUserChecked)),album);
     }
+
 
     @RequestMapping(value = "/exitUser", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody

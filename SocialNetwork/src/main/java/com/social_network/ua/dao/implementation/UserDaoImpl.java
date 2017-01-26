@@ -76,8 +76,11 @@ public class UserDaoImpl implements UserDao {
 
     @Transactional
     public List<User> findAllByInput(String str) {
+        //пробуємо знайти користувачів, у яких ім'я або прізвище містить дану стрічку str
         List<User> users = entityManager.createQuery("from User where firstName like ?1 or lastName like ?1").setParameter(1,"%"+str+"%").getResultList();
         System.out.println(users.size()==0);
+        //якщо не знайшли, тоді можливо наша стрічка str складається з 2-х слів, тому перевірити функцією split і
+        // перевірити чи ім'я містить str.split(" ")[0], або str.split(" ")[1] і з прізвищем те саме
         if (users.size()==0) {
             try {
                 users = entityManager.createQuery("from User where (firstName like ?1 and lastName like ?2) or (firstName like ?2 and lastName like ?1)").setParameter(1, str.split(" ")[0]).setParameter(2, str.split(" ")[1]).getResultList();
@@ -85,6 +88,7 @@ public class UserDaoImpl implements UserDao {
                     users = entityManager.createQuery("from User where (firstName like ?1 and lastName like ?2) or (lastName like ?1 and firstName like ?2)").setParameter(1,str.split(" ")[0]).setParameter(2,"%"+str.split(" ")[1]+"%").getResultList();
             } catch (Exception ex) {
                 System.out.println("Exception from method findAllByInput(String str) from UserDaoImpl");
+                users = entityManager.createQuery("from User where  (firstName like ?1 or lastName like ?1)").setParameter(1, str.split(" ")[0]).getResultList();
             }
         }
         return users;

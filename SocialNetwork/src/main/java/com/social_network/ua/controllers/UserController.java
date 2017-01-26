@@ -1,10 +1,7 @@
 package com.social_network.ua.controllers;
 
 
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.Record;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,6 @@ import java.util.*;
 public class UserController extends BaseMethods{
     @Autowired
     private UserService userService;
-
     @Autowired
     private RecordService recordService;
 
@@ -140,7 +136,11 @@ public class UserController extends BaseMethods{
     public String photosOfUser(@PathVariable("id") String id,Model model,Model albumModel,Model userModel,Model userAuthModel){
         long idLong = Long.parseLong(id);
         User user = userService.findOne(idLong);
-        albumModel.addAttribute("albums",user.getAlbums());
+        Set<String> albumSet = new TreeSet<>();
+        for(Album a: user.getAlbums()){
+            albumSet.add(a.getName());
+        }
+        albumModel.addAttribute("albums",albumSet);
         Set<User_Images> user_images = user.getUserImages();
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());

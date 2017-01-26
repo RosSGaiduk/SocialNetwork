@@ -24,4 +24,9 @@ public class SubscribersServiceImpl implements SubscriberService{
     public void delete(subscribersCopy subscribers) {
         subscribersDao.delete(subscribers);
     }
+
+    @Override
+    public boolean checkIfFriend(long id1, long id2) {
+        return subscribersDao.checkIfFriends(id1,id2);
+    }
 }

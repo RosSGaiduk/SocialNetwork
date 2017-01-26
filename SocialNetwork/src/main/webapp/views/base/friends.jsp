@@ -25,7 +25,7 @@
 <div style="width: 50%; height: 50px; background-color: white; float: left; margin-top: 70px;">
 <input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%; height: 30px;float: left; font-size: 10px;" placeholder="Enter name of last name:" onkeyup="findFriends()">
 </div>
-<p id = "userThis">112</p>
+<p id = "userThis">${userThis}</p>
 <%--<div style="margin-left: 60%; float: left"></div>--%>
 <%--<div id = "myFriends" style="width: 30%; height: 300px; background-color: white; float: left;overflow: scroll;">
     <h3 style="float: left">Друзі (знайдено ${friendsOfUser.size()})</h3>
@@ -91,7 +91,7 @@
         var element = document.getElementById("allfriends");
         while(element.firstChild) element.removeChild(element.firstChild);
 
-        alert(document.getElementById("userThis").innerHTML);
+        //alert(document.getElementById("userThis").innerHTML);
 
         $.ajax({
             url: "/findFriends",
@@ -127,7 +127,6 @@
          }
         });
     }
-
 </script>
 
 
