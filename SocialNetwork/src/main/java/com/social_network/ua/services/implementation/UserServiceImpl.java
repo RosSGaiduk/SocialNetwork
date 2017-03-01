@@ -1,6 +1,7 @@
 package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.UserDao;
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.repository.UserRepo;
 import com.social_network.ua.services.UserService;
@@ -91,6 +92,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User selectUser(long id1, long id2) {
         return userDao.selectUser(id1,id2);
+    }
+
+    @Override
+    public List<Music> get3LastMusicOfUser(long userId) {
+        return userDao.get3LastMusicOfUser(userId);
+    }
+
+    @Override
+    public User getUserOfMessage(long messageId) {
+        return userDao.getUserOfMessage(messageId);
     }
 
     @Override

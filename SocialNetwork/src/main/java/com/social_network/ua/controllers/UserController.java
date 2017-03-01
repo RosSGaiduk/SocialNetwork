@@ -5,6 +5,7 @@ import com.social_network.ua.entity.*;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -58,13 +59,6 @@ public class UserController extends BaseMethods{
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/userLogin",method = RequestMethod.GET)
-    public String goLogin(Model model){
-        model.addAttribute("user",new User());
-        return "views-user-login";
-    }
-
-
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
     public String goLogin(@PathVariable("id")String id,
                           Model model,
@@ -77,9 +71,17 @@ public class UserController extends BaseMethods{
     ){
         User userSearched = userService.findOne(Long.parseLong(id));
         model.addAttribute("user",userSearched);
-        if (userSearched.getMusics().size()>0)
-            musicOfAuth.addAttribute("musicOfAuth",userSearched.getMusics().get(0));
-        else musicOfAuth.addAttribute("musicOfAuth",new Music());
+
+        //if (userSearched.getMusics().size()>0)
+            //musicOfAuth.addAttribute("musicOfAuth",userSearched.getMusics().get(0));
+
+        try {
+            musicOfAuth.addAttribute("musicOfAuth", userService.get3LastMusicOfUser(userSearched.getId()));
+        } catch (Exception ex) {
+            musicOfAuth.addAttribute("musicOfAuth", null);
+        }
+
+        //else musicOfAuth.addAttribute("musicOfAuth",new Music());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<User> subscribersOfUser = userService.findOne(Long.parseLong(id)).getSubscribers();
         boolean wasSubscriber = false;

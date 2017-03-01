@@ -33,10 +33,10 @@ public class User implements Comparable<User>{
     @Transient
     private String confirmPassword;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private Set<Record> recordsToUser = new TreeSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "userFrom")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "userFrom")
     private Set<Record> recordsFromUser = new TreeSet<>();
 
 
@@ -54,20 +54,20 @@ public class User implements Comparable<User>{
     )
     private Set<User> subscribers = new TreeSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private Set<User_Images> userImages = new TreeSet<>();
 
-    @OneToMany(mappedBy = "userFrom",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userFrom",fetch = FetchType.LAZY)
     private List<Message> messages;
 
-    @OneToMany(mappedBy = "userTo",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userTo",fetch = FetchType.LAZY)
     private List<Message> messagesUserTo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_music",joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "music_id"))
     private List<Music> musics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<Album> albums = new TreeSet<>();
 
     public User(){}

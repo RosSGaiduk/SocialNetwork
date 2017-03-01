@@ -11,11 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
-    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'>
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/forChat.css" media="screen" type="text/css" />
+    <%--Всі лінки підключені в template.jsp--%>
 </head>
 <body>
     <div class="menuDivClass">

@@ -11,10 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>User</title>
-    <link href="<c:url value="/resources/css/style.css"/>" type="text/css" rel="stylesheet">
-    <link href="<c:url value="/resources/css/formsStyle1.css"/>" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <%--Всі лінки підключені в template.jsp--%>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
 </head>
@@ -26,7 +23,6 @@
              background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>
             <p style="margin-left: 40%"><form:button style="width:50px; height: 30px;border-radius:20%;">OK</form:button></p>
         </form:form>
-
     </div>
 </body>
 </html>

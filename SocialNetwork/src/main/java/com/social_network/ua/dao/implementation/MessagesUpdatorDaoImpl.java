@@ -36,7 +36,12 @@ public class MessagesUpdatorDaoImpl implements MessagesUpdatorDao{
 
     @Transactional
     public int findCountByIdUserFromAndIdUserTo(long idUserFrom, long idUserTo) {
-        return (int) entityManager.createQuery("select countMessages from MessagesUpdator where (idUserFrom = ?1 and idUserTo = ?2) or (idUserTo = ?1 and idUserFrom=?2)").setParameter(1,idUserFrom).setParameter(2,idUserTo).setMaxResults(1).getSingleResult();
+        try {
+            return (int) entityManager.createQuery("select countMessages from MessagesUpdator where (idUserFrom = ?1 and idUserTo = ?2) or (idUserTo = ?1 and idUserFrom=?2)").setParameter(1, idUserFrom).setParameter(2, idUserTo).setMaxResults(1).getSingleResult();
+        } catch (Exception ex){
+            return 0;
+        }
+
     }
 
     @Transactional

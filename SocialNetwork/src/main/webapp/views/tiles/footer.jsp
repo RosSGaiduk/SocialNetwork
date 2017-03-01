@@ -8,9 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <%--Всі лінки підключені в template.jsp--%>
 </head>
 <body>
-    <%--<h1>footer</h1>--%>
 </body>
 </html>

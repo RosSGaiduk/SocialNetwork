@@ -78,37 +78,45 @@ public class AjaxController extends BaseMethods {
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
-    public String updateMessagesIn2Methods(long userAuthId,long userToId,int countInt){
+    public JSONArray updateMessagesIn2Methods(long userAuthId,long userToId,int countInt){
         //можна зекономити тут, просто не дописувати в messageUpdator ше 1 поле, а доробити змінну countMessages,
         //і просто збільшувати її на 1 між даними 2 користувачами, тоді, запит робитиметься одразу
+
         long countBetween2users = messagesUpdatorService.findCountByIdUserFromAndIdUserTo(userAuthId,userToId);
-        System.out.println("count: "+countBetween2users);
-        //long countBetween2users = messageService.findAllLastBy2ids(userAuthId,userToId);  //було так
+        System.out.println("Count between 2 users in db: "+countBetween2users);
         int limit = (int)(countBetween2users-countInt);
+        System.out.println("Count of messages that must be updated and send to the page: "+limit);
         JSONArray jsonArray = new JSONArray();
+
         if (countBetween2users>countInt) {
+            System.out.println("Updating is started!!!");
             List<Message> messages = messageService.findAllByIdsAndCount(userToId,userAuthId,limit);
-            System.out.println("Size: "+messages.size());
+            System.out.println("Size of our list of messages"+messages.size());
+
             for (int i = messages.size() - 1; i >= 0; i--) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.putOnce("data", messages.get(i).getDateOfMessage() + " FROM " + messages.get(i).getUserFrom().getFirstName());
+                jsonObject.putOnce("data", messages.get(i).getDateOfMessage());
                 jsonObject.putOnce("text", messages.get(i).getText());
-                if (messages.get(i).getUserFrom().getId() == userAuthId) jsonObject.putOnce("fromUser", true);
-                else jsonObject.putOnce("toUser", false);
+                if  (userService.getUserOfMessage(messages.get(i).getId()).getId()==userAuthId) jsonObject.putOnce("fromUser", true);
+                else jsonObject.putOnce("fromUser", false);
                 jsonArray.put(jsonObject);
             }
         }
-        return jsonArray.toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("text","aaaaa");
+        return jsonArray;
     }
 
     @RequestMapping(value = "/update",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
     @ResponseBody
     public String updateMessages(@RequestParam String userToId,@RequestParam String count){
+        System.out.println("UPDATING");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         long userAuthId = Long.parseLong(authentication.getName());
         long user1 = Long.parseLong(userToId);
         int countInt = Integer.parseInt(count);
-        return updateMessagesIn2Methods(user1,userAuthId,countInt);
+        JSONArray jsonArray = updateMessagesIn2Methods(user1,userAuthId,countInt);
+        return jsonArray.toString();
     }
 
     //не працює

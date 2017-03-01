@@ -18,7 +18,7 @@ public class Music {
     private String nameOfSong;
     @Column
     private String urlOfSong;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable( name = "user_music",joinColumns = @JoinColumn(name = "music_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users = new ArrayList<>();
 

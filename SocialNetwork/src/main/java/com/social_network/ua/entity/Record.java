@@ -20,11 +20,13 @@ public class Record implements Comparable<Record>{
     private Date dateOfRecord;
     @Column
     private boolean hasImage;
+    @Column
+    private String urlUserImagePattern;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User userFrom;
 
     public Record(){}
@@ -76,6 +78,7 @@ public class Record implements Comparable<Record>{
 
     public void setUserFrom(User userFrom) {
         this.userFrom = userFrom;
+        setUrlUserImagePattern(userFrom.getNewestImageSrc());
     }
 
     public void setUser(User user) {
@@ -93,5 +96,13 @@ public class Record implements Comparable<Record>{
     @Override
     public int compareTo(Record o) {
         return this.dateOfRecord.compareTo(o.dateOfRecord);
+    }
+
+    public String getUrlUserImagePattern() {
+        return urlUserImagePattern;
+    }
+
+    public void setUrlUserImagePattern(String urlUserImagePattern) {
+        this.urlUserImagePattern = urlUserImagePattern;
     }
 }

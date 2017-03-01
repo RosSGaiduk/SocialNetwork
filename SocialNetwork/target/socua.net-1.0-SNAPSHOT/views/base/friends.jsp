@@ -11,48 +11,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
-    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'>
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
+    <%--Всі лінки підключені в template.jsp--%>
+    <!--Ajax-->
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
+    <!--/Ajax-->
 </head>
 <body>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <div style="width: 50%; height: 50px; background-color: white; float: left; margin-top: 70px;">
 <input class = "inputStyle" id = "inputFriend" style="margin-top: 20px; margin-left: 10%; height: 30px;float: left; font-size: 10px;" placeholder="Enter name of last name:" onkeyup="findFriends()">
 </div>
 <p id = "userThis">${userThis}</p>
-<%--<div style="margin-left: 60%; float: left"></div>--%>
-<%--<div id = "myFriends" style="width: 30%; height: 300px; background-color: white; float: left;overflow: scroll;">
-    <h3 style="float: left">Друзі (знайдено ${friendsOfUser.size()})</h3>
-    <p style="clear: left"/>
-    <c:forEach items="${friendsOfUser}" var="f">
-        <a href="/user/${f.id}" style="text-decoration: none;" >
-            <img src="${f.newestImageSrc}" style="width: 80px; height: 55px; float:left; margin-top: 10px; margin-left: 20%;">
-            <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
-            <p>${f.firstName} ${f.lastName}</p>
-            <p>${f.birthDate}</p>
-            </div>
-            <p style="clear: left"></p>
-        </a>
-    </c:forEach>
-</div>
-    <div style="width: 30%; height: 300px; background-color: white; float: left; overflow: scroll;">
-        <h3 style="float: left">Підписники (знайдено ${subscribersOfUser.size()})</h3>
-    <c:forEach items="${subscribersOfUser}" var="s">
-        <a href="/user/${s.id}" style="text-decoration: none;" >
-            <img src="${s.newestImageSrc}" style="width: 80px; height: 55px; float:left; margin-top: 10px; margin-left: 20%;">
-            <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
-                <p>${s.firstName} ${s.lastName}</p>
-                <p>${s.birthDate}</p>
-            </div>
-            <p style="clear: left"></p>
-        </a>
-    </c:forEach>
-</div>--%>
-
 <div id = "allfriends" style="width: 50%; height: auto; background-color: white; float: left;">
     <h3 style="float: left; margin-left: 10px;">Друзі (знайдено ${friendsOfUser.size()})</h3>
     <p style="clear: left"/>
@@ -126,7 +96,5 @@
         });
     }
 </script>
-
-
 </body>
 </html>

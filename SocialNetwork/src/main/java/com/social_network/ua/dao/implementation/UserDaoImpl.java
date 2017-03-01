@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +96,28 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public User selectUser(long id1, long id2) {
         return (User)entityManager.createQuery("from subscribersCopy where subscriber_id = ?1 and user_id = ?2").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+    }
+
+    @Transactional
+    public List<Music> get3LastMusicOfUser(long userId) {
+        List<Object[]> objects = entityManager.createNativeQuery("select * from user_music join Music on music.id = music_id and user_id = 1 ORDER BY id desc").setMaxResults(3).getResultList();
+        List<Music> getSongs = new ArrayList<>(objects.size());
+        for (Object o[]: objects){
+            Music m = entityManager.find(Music.class,Long.parseLong(o[1].toString()));
+            getSongs.add(m);
+        }
+        return getSongs;
+    }
+
+    @Transactional
+    public User getUserOfMessage(long messageId) {
+        System.out.println("Getting user of message");
+        try {
+            return (User)entityManager.createQuery("select userFrom from Message m where m.id = ?1").setParameter(1, messageId).getSingleResult();
+        }catch (Exception ex){
+            System.out.println("Exception");
+            return null;
+        }
     }
 
     @Transactional

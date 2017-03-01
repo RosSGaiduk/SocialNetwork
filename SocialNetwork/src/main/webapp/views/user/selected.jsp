@@ -13,16 +13,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
-    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'>
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/mainStyle.css" media="screen" type="text/css" />
+    <%--Всі лінки підключені в template.jsp--%>
+    <!--Ajax-->
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
+    <!--/Ajax-->
 </head>
 <body>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
     <sec:authorize access="isAuthenticated()">
         <div class="userPhoto">
@@ -120,11 +118,13 @@
         <div class = "userMusic">
             <a href="/musicOf/${user.id}" style="margin-left: 10px;">Музика</a>
             <p style="clear: left"/>
-            <p style="margin-top: 10px;">${musicOfAuth.nameOfSong}</p>
+            <c:forEach items="${musicOfAuth}" var="m">
+            <p style="margin-top: 10px;">${m.nameOfSong}</p>
             <audio controls style="margin-top: 10px; width: 100%;" >
-                <source src="${musicOfAuth.urlOfSong}" type="audio/mpeg">
+                <source src="${m.urlOfSong}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
+            </c:forEach>
         </div>
 
         <div class="userRecords">
@@ -136,8 +136,7 @@
                        class = "textAreaRecordClass">
              </textarea>
 
-            <button onclick="updateRecords()" class = "sendButton";
-            ">Send</button>
+            <button onclick="updateRecords()" class = "sendButton">Send</button>
 
            <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
                 <form:form id = "formForLoadingPicturesToWall" action="upload/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
@@ -159,7 +158,7 @@
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
                     <p style="clear: left"/>
                     <div style="width:70px; height:50px;
-                            background-image: url(${rec.userFrom.newestImageSrc}); background-size:cover;
+                           background-image: url(${rec.urlUserImagePattern});background-size:cover;
                             float:left; margin-left:10px; margin-top:10px;"></div>
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
                         <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
@@ -183,11 +182,11 @@
     </sec:authorize>
 
     <%--Якщо ніхто не залогінований, тоді форма для заповнення чи реєстрації--%>
-    <sec:authorize access="isAnonymous()">
+    <%--<sec:authorize access="isAnonymous()">
         <div style="margin-top: 20%; float: left; width: 60%; height: auto">
             <form:form method="post" action="/loginprocessing">
                 <br>
-                <%--Тут обов'язково має бути username, не email, не name, навіть якщо такого поля немає у юзера--%>
+                &lt;%&ndash;Тут обов'язково має бути username, не email, не name, навіть якщо такого поля немає у юзера&ndash;%&gt;
                 <input class="inputStyle" name="username" type="text" placeholder="Login"><br><br>
                 <input class="inputStyle" id = "password" name="password" type="password" placeholder="Password">
                 <br><br>
@@ -196,7 +195,7 @@
                 <p id = "strengthValue"></p>
             </form:form>
         </div>
-    </sec:authorize>
+    </sec:authorize>--%>
 </div>
 
 

@@ -16,9 +16,9 @@ public class Album implements Comparable<Album>{
     private String name;
     @Column
     private Date date;
-    @OneToMany(mappedBy = "album",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "album",fetch = FetchType.LAZY)
     private Set<User_Images> user_images = new TreeSet<>();
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
 

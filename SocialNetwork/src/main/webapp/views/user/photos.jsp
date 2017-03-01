@@ -12,14 +12,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
-    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'>
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/simplebox.css" type="text/css">
-    <script type="text/javascript" src="/resources/scripts/simplebox_util.js"></script>
-    <script type="text/javascript" src="/resources/scripts/simplebox.js"></script>
+    <%--Всі лінки підключені в template.jsp--%>
 </head>
 <body id="main">
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>

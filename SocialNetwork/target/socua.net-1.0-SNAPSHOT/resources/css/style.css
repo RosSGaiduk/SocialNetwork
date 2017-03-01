@@ -125,7 +125,7 @@ b{
 }
 .userMusic{
     width: 300px;
-    height: 110px;
+    height: auto;
     float: left;
     background-color: white;
     margin-top: 20px;

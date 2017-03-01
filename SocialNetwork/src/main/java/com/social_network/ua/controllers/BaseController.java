@@ -44,9 +44,16 @@ public class BaseController extends BaseMethods{
         try {
             User user =  userService.findOne(Long.parseLong(authentication.getName()));
             model.addAttribute("user",user);
-            if (user.getMusics().size()>0)
+            /*if (user.getMusics().size()>0)
                 musicOfAuth.addAttribute("musicOfAuth",user.getMusics().get(0));
-            else musicOfAuth.addAttribute("musicOfAuth",new Music());
+            else musicOfAuth.addAttribute("musicOfAuth",new Music());*/
+
+            try {
+                musicOfAuth.addAttribute("musicOfAuth", userService.get3LastMusicOfUser(user.getId()));
+            } catch (Exception ex) {
+                musicOfAuth.addAttribute("musicOfAuth", null);
+            }
+
             System.out.println(userService.findOne(Long.parseLong(authentication.getName())).getId());
         } catch (Exception e){
             model.addAttribute("user","no user");
@@ -82,8 +89,8 @@ public class BaseController extends BaseMethods{
         } catch (Exception ex){
             modelFriends.addAttribute("friendsOfUser", "");
             modelSubscribers.addAttribute("subscribersOfUser", "");
+            return "views-user-login";
         }
-
         try {
             modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
         } catch (Exception ex){

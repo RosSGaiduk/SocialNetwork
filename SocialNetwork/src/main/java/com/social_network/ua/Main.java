@@ -6,9 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -89,7 +87,7 @@ public class Main {
         Music music = entityManager.find(Music.class,1l);
         System.out.println(music.getUsers().size());*/
 
-        List<User> users = entityManager.createQuery("from User").getResultList();
+        /*List<User> users = entityManager.createQuery("from User").getResultList();
         System.out.println(users.size());
 
         String [] names = {
@@ -119,12 +117,47 @@ public class Main {
             messageSend.setText(message);
             messageSend.setDateOfMessage(new Date(System.currentTimeMillis()));
             entityManager.merge(messageSend);
-        }
+        }*/
 
 
         //List<subscribers> subscriberses = entityManager.createQuery("from subscribers").getResultList();
         //System.out.println(subscriberses.size());
 
+        /*List<Object[]> objects = entityManager.createNativeQuery("select * from user_music join Music on music.id = music_id and user_id = 1 ORDER BY id desc").setMaxResults(1).getResultList();
+        List<Music> getSongs = new ArrayList<>(objects.size());
+        for (Object o[]: objects){
+            Music m = entityManager.find(Music.class,Long.parseLong(o[1].toString()));
+            getSongs.add(m);
+        }
+
+        for (Music m: getSongs)
+            System.out.println(m.getNameOfSong());*/
+        //User u  =(User)entityManager.createQuery("select userFrom from Message m where m.id = ?1").setParameter(1,1560l).getSingleResult();
+        //System.out.println(u.getId());
+
+
+        List<User> users = entityManager.createQuery("from User").getResultList();
+
+        for (int i = 0; i < 10000; i++){
+            Message message = new Message();
+            message.setDateOfMessage(new Date(System.currentTimeMillis()));
+            Random random = new Random();
+            int size = random.nextInt(500)+5;
+            String str = "";
+            for (int j = 0; j < size; j++) {
+                str += (char) (random.nextInt(92)+33);
+            }
+            message.setText(str);
+            message.setUserFrom(entityManager.find(User.class,users.get(random.nextInt(users.size())).getId()));
+            message.setUserTo(entityManager.find(User.class,users.get(random.nextInt(users.size())).getId()));
+            entityManager.persist(message);
+            System.out.println("LEFT: "+(10000-i));
+            System.out.println("--------------------------------------------");
+            System.out.println("Message: "+message.getText());
+            //System.out.println("User from: "+message.getUserFrom().getFirstName());
+            //System.out.println("User to: "+message.getUserTo().getFirstName());
+            System.out.println("--------------------------------------------");
+        }
 
         entityManager.getTransaction().commit();
         entityManager.close();

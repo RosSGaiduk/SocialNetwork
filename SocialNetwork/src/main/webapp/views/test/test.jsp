@@ -11,14 +11,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
+    <%--Всі лінки підключені в template.jsp--%>
+    <!--Ajax-->
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
+    <!--/Ajax-->
 </head>
 
 <body>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
 <font id = "pId">asd</font>
 
 <select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
@@ -43,19 +44,6 @@
 Якщо ми використовуємо двні з тегів без тексту, тікі як select,div,inpuut,textarea..., тоді $('#id').val()
 --%>
 
-<%--<script>
-    function doAj(){
-        $.ajax({
-            url: "/testGo",
-            data:({message:$("#textAr").val()}),
-            async:false,
-            success: function(data){
-                alert(data);
-            }
-        });
-    }
-    //var id = setInterval("doAj()",1000);
-</script>--%>
 <script>
     function setSelect(){
         var element = document.getElementById('selct');
@@ -83,7 +71,6 @@
     }
 </script>
 
-
 <script>
     function update(){
         var val = $("#selct").val();
@@ -102,7 +89,6 @@
                     elemData.style = "font-size:12px;margin-top:20px;margin-left:10%;float:left;margin-botom:20px;"
                     elemData.innerHTML = v.data;
                     document.getElementById("messages").appendChild(elemData);
-
 
                     if (v.fromUser) {
                         elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px;";
@@ -124,7 +110,7 @@
             }
         });
     }
-    var id1 = setInterval("update()",500);
+    var id1 = setInterval("update()",100);
 </script>
 
 <script>
@@ -135,6 +121,5 @@
     }
     changedSelect();
 </script>
-
 </body>
 </html>

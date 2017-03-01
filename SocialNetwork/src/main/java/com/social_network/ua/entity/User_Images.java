@@ -17,10 +17,10 @@ public class User_Images implements Comparable<User_Images>{
     @Column
     private Date dateOfImage;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Album album;
 
 

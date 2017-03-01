@@ -11,12 +11,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang = "en" ng-app = "app">
 <head>
-    <title>User</title>
-    <link href="<c:url value="/resources/css/style.css"/>" type="text/css" rel="stylesheet">
-    <link href="<c:url value="/resources/css/formsStyle1.css"/>" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <%--Всі лінки підключені в template.jsp--%>
+    <!--AngularJs-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
-    <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
     <!--Скріпт, у якому міститься контроллер з перевіркою сили паролю-->
     <script type="text/javascript" src="/resources/scripts/passwordStrength.js"></script>
 </head>
@@ -46,22 +43,12 @@
         <form:input path="email" cssStyle="font-size: 18px;  border-radius: 8px;
          background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>
 
-       <%-- <form:label path="password"><h3 style="margin-left: 40%;">Password: </h3></form:label>
-        <font style="color: red"><form:errors path="password" cssStyle="margin-left: 40%"/></font>
-        <form:password id = "userPassword" path="password" onkeyup="doAjax()" cssStyle="font-size: 18px;  border-radius: 8px;
-         background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%;" />
-        <br>
-
-        <label id="levelPassword"></label>
-        <form:label path="confirmPassword"><h3 style="margin-left: 40%;">Confirm password: </h3></form:label>
-
-        <form:password path="confirmPassword" cssStyle="font-size: 18px;  border-radius: 8px;
-         background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>--%>
         <form:label path="password"><h3 style="margin-left: 40%;">Password: </h3></form:label>
         <font style="color: red"><form:errors path="password" cssStyle="margin-left: 40%"/></font>
         <form:password path="password" ng-model = 'password' ng-keyup = 'checkStrength()' cssStyle="font-size: 18px;  border-radius: 8px;
          background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%;" /><br>
         <h3 style="margin-left: 40%; color: {{color}};">{{passwordStrength}}</h3>
+
         <form:label path="confirmPassword"><h3 style="margin-left: 40%;">Confirm password:</h3></form:label>
         <font style="color: red"><form:errors path="confirmPassword" cssStyle="margin-left: 40%"/></font>
         <form:password path="confirmPassword" ng-model = 'confirmPassword' cssStyle="font-size: 18px;  border-radius: 8px;
@@ -69,22 +56,5 @@
         <p style="margin-left: 40%"><form:button style="width:50px; height: 30px;border-radius:20%;">OK</form:button></p>
     </form:form>
 </div>
-
-
-<%--<script>
-    function doAjax(){
-        $.ajax({
-            url: '/levelPassword',
-            data: ({userPassword: $('#userPassword').val()}),
-            async: false,
-            success: function(data) {
-                var attributes = data.split(" ");
-                $('#levelPassword').css("color", attributes[1]);
-                $('#levelPassword').css("margin-left", "40%");
-                $('#levelPassword').html(attributes[0]);
-            }
-        });
-    }
-</script>--%>
 </body>
 </html>

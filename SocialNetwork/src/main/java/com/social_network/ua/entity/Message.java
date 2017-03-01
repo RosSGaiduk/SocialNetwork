@@ -12,9 +12,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private long id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User userFrom;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User userTo;
     @Column
     private String text;

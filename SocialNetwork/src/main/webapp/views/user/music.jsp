@@ -11,17 +11,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
-    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'>
-    <link rel='stylesheet prefetch' href='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.css'>
-    <link rel="stylesheet" href="/resources/css/formsStyle.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/style.css" media="screen" type="text/css" />
-    <link rel="stylesheet" href="/resources/css/mainStyle.css" media="screen" type="text/css" />
+    <%--Всі лінки підключені в template.jsp--%>
 </head>
 <body>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-
 <div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 80px; background-color: white">
     <c:forEach items="${musicAll}" var="mus">
         <p style="clear: left"/>
@@ -49,6 +42,5 @@
         });
     }
 </script>
-
 </body>
 </html>
