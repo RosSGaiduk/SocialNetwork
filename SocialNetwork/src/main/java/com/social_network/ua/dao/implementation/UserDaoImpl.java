@@ -100,7 +100,18 @@ public class UserDaoImpl implements UserDao {
 
     @Transactional
     public List<Music> get3LastMusicOfUser(long userId) {
-        List<Object[]> objects = entityManager.createNativeQuery("select * from user_music join Music on music.id = music_id and user_id = 1 ORDER BY id desc").setMaxResults(3).getResultList();
+        List<Object[]> objects = entityManager.createNativeQuery("select * from user_music join Music on music.id = music_id and user_id = ?1 ORDER BY id desc").setParameter(1,userId).setMaxResults(3).getResultList();
+        List<Music> getSongs = new ArrayList<>(objects.size());
+        for (Object o[]: objects){
+            Music m = entityManager.find(Music.class,Long.parseLong(o[1].toString()));
+            getSongs.add(m);
+        }
+        return getSongs;
+    }
+
+    @Transactional
+    public List<Music> getAllMusicOfUser(long userId) {
+        List<Object[]> objects = entityManager.createNativeQuery("select * from user_music join Music on music.id = music_id and user_id = ?1 ORDER BY id desc").setParameter(1,userId).getResultList();
         List<Music> getSongs = new ArrayList<>(objects.size());
         for (Object o[]: objects){
             Music m = entityManager.find(Music.class,Long.parseLong(o[1].toString()));

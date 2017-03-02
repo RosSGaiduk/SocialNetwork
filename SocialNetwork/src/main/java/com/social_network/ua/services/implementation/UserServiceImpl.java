@@ -105,6 +105,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<Music> getAllMusicOfUser(long userId) {
+        return userDao.getAllMusicOfUser(userId);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }

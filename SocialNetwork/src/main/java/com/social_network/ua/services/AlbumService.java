@@ -1,6 +1,8 @@
 package com.social_network.ua.services;
 
 import com.social_network.ua.entity.Album;
+import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 
 
 import java.util.List;
@@ -15,5 +17,6 @@ public interface AlbumService {
     void delete(Album album);
     Album findOne(long id);
     Album findOneByNameAndUserId(String nameAlbum,long userId);
+    List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

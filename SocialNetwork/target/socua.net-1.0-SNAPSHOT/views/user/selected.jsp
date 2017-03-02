@@ -132,9 +132,8 @@
                     background-size: cover; background-repeat: no-repeat; margin-left: 10px; margin-top: 3px;
                     ">
             </div>
-             <textarea id = "newRecord" placeholder="Do you have something new?"
-                       class = "textAreaRecordClass">
-             </textarea>
+
+           <textarea id = "newRecord" style="height: 50px; width:50%; float: left" placeholder="Введіть повідомлення: "></textarea>
 
             <button onclick="updateRecords()" class = "sendButton">Send</button>
 
@@ -146,9 +145,9 @@
                 </form:form>
             </div>--%>
             <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
-            <form:form action="/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
+            <form:form id =  "newRecordForm" action="" method="post" enctype="multipart/form-data" cssStyle="float: left;">
             <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
-            <input onclick="updateRecords()" type="submit" value="Upload">
+            <input onclick="setActionToForm()" type="submit" value="Upload">
             </form:form>
         </div>
 
@@ -200,8 +199,11 @@
 
 
 <script>
-    function biggerImg(div){
-
+    function setActionToForm(){
+        var textInput =  $("#newRecord").val();
+        if (textInput!="")
+        $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/'+textInput+'?${_csrf.parameterName}=${_csrf.token}');
+        else $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/there is no text here just sent to avoid mistake?${_csrf.parameterName}=${_csrf.token}');
     }
 </script>
 
@@ -228,8 +230,6 @@
 
 <script>
     function updateRecords(){
-        /*alert($('#newRecord').val());*/
-        //alert($('#imageToWall').val());
         $.ajax({
             url: "/updateRecords",
             data: ({
@@ -271,9 +271,10 @@
                     elem.appendChild(elemLeft);
                     var first=document.getElementById("records").childNodes[0];
                     document.getElementById("records").insertBefore(elem,first);
-                  //document.getElementById("records").appendChild(elem);
+                    $("#newRecord").val("");
                 });
             }
+
         });
     }
 </script>

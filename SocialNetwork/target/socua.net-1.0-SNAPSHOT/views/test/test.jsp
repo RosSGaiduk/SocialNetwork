@@ -20,7 +20,8 @@
 </head>
 
 <body>
-<font id = "pId">asd</font>
+<font id = "minId" style="visibility: hidden;">-1</font>
+
 
 <select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
     <c:forEach items="${users}" var="u">
@@ -79,7 +80,7 @@
             dataType: "json",
             data: ({
                 userToId: val,
-                count: document.getElementById("messages").childElementCount/2
+                count: parseInt(document.getElementById("messages").childElementCount/2-1)
             }),
             async: false,
             success: function(data){
@@ -104,6 +105,8 @@
 
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
+                    document.getElementById("minId").innerHTML = v.id;
+
                     myDivMessages.appendChild(elem);
                     myDivMessages.scrollTop = myDivMessages.scrollHeight;
                 });
@@ -117,6 +120,16 @@
     function changedSelect(){
         var element = document.getElementById("messages");
         while(element.firstChild) element.removeChild(element.firstChild);
+
+        var btn = document.createElement("button");
+        btn.innerHTML = "Previous";
+        btn.setAttribute("id","previousMessagesBtn");
+        btn.style = "margin-left:20%;";
+        $("#messages").append(btn);
+
+        $("#previousMessagesBtn").click(function(){
+            alert("Hello");
+        })
         update();
     }
     changedSelect();

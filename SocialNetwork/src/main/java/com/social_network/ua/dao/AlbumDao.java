@@ -1,6 +1,8 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Album;
+import com.social_network.ua.entity.User;
+
 import java.util.List;
 
 /**
@@ -13,5 +15,6 @@ public interface AlbumDao {
     void delete(Album album);
     Album findOne(long id);
     Album findOneByNameAndUserId(String albumName,long userId);
+    List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

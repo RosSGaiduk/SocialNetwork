@@ -144,7 +144,7 @@ public class UserController extends BaseMethods{
     public String musicOfUser(@PathVariable("id")String id,Model modelMusic,Model modelIdAuth,Model modeliIdUserSelected){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(id));
-        modelMusic.addAttribute("musicAll",user.getMusics());
+        modelMusic.addAttribute("musicAll",userService.getAllMusicOfUser(Long.parseLong(id)));
         modelIdAuth.addAttribute("idAuth",authentication.getName());
         modeliIdUserSelected.addAttribute("idUserSelected",id);
         return "views-user-music";

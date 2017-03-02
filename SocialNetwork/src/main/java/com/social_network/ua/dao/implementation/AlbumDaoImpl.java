@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,6 +41,13 @@ public class AlbumDaoImpl implements AlbumDao{
     @Transactional
     public Album findOneByNameAndUserId(String albumName, long userId) {
         return (Album) entityManager.createQuery("from Album where name = ?1 and user like ?2").setParameter(1,albumName).setParameter(2,entityManager.find(User.class,userId)).getSingleResult();
+    }
+
+    @Transactional
+    public List<Album> findAllAlbumsByUser(User user) {
+        List<Album> albums = entityManager.createQuery("from Album where user like ?1 group by id").setParameter(1,user).getResultList();
+        Collections.reverse(albums);
+        return albums;
     }
 
     @Transactional

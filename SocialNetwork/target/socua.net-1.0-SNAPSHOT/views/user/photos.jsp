@@ -21,7 +21,7 @@
         <ul id = "selectAlbum"> <%--onchange="checkImagesFromAlbum()">--%>
             <li><a href="/photosOf/${userPageId}/*" style="text-decoration: none;">*</a></li>
             <c:forEach items="${albums}" var="a">
-             <li><a href="/photosOf/${userPageId}/${a}" style="text-decoration: none;">${a}</a></li>
+             <li><a href="/photosOf/${userPageId}/${a.name}" style="text-decoration: none;">${a.name}</a></li>
             </c:forEach>
         </ul>
         <p id = "userAuthId" style="visibility: hidden;">${userAuthId}</p>
@@ -36,7 +36,7 @@
             <c:if test="${userAuthId==userPageId}">
             <select style="float: left;width:80px;" id="checkAlbum_${im.id}">
                 <c:forEach items="${albums}" var="a">
-                    <option>${a}</option>
+                    <option>${a.name}</option>
                 </c:forEach>
             </select>
             <button style="float: left;" onclick="addImgToAlbum('checkAlbum_${im.id}')">OK</button>
@@ -51,7 +51,7 @@
 
 <script>
     function addImgToAlbum(id) {
-        alert($('#'+id+' option:selected').text());
+        //alert($('#'+id+' option:selected').text());
         $.ajax({
             url: "/addPhotoToAlbum",
             data: ({
@@ -66,43 +66,6 @@
     }
 </script>
 
-<%--<script>
-    function checkImagesFromAlbum(){
-        var element = document.getElementById("photosAll");
-        while(element.firstChild) element.removeChild(element.firstChild);
-        $.ajax({
-           url: "/checkPhotosFromAlbumOfUser",
-            data: ({
-                idUserChecked: $('#userPageId').html(),
-                nameAlbum: $('#selectAlbum').val()
-            }),
-            async: false,
-            dataType: "json",
-            success: function(data){
-                var index = 0;
-                $.each(data,function(k,v){
-                    var url = v.url;
-                    var iD = v.idOfImg;
-                    var elem = document.createElement("div");
-                    elem.className = "albumPhotos";
-                    if (document.getElementById("userAuthId").innerHTML == document.getElementById("userPageId").innerHTML) {
-                            var aElem = document.createElement("a");
-                            aElem.className = "aUrl";
-                            aElem.rel = "simplebox";
-                            aElem.href = url;
-                            aElem.id = "imgId";
-                            var myImg = document.createElement("img");
-                            myImg.src = url;
-                            myImg.style="width: 100%; height: 90%;"
-                            aElem.appendChild(myImg);
-                            elem.appendChild(aElem);
-                            $("#photosAll").append(elem);
-                    }
-                });
-            }
-        });
-    }
-</script>--%>
 
 <script type="text/javascript">(
         function(){

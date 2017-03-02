@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,8 +33,8 @@ public class UploadRecordController {
     private UserService userService;
     @Autowired
     private RecordService recordService;
-    @RequestMapping(value = "/process1",method = RequestMethod.POST)
-    public String saveToTheWall(HttpServletRequest request)
+    @RequestMapping(value = "/newRecordOf/{id}/{text}",method = RequestMethod.POST)
+    public String saveToTheWall(HttpServletRequest request, @PathVariable("id")String id,@PathVariable("text")String text)
     {
         System.out.println("I am here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,13 +42,14 @@ public class UploadRecordController {
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
-        List<Record> records = recordService.findAll();
-        Record record = records.get(records.size()-1);
-
-        System.out.println("Id: "+record.getUser().getId());
+        Record record = new Record();
+        Date date = new Date(System.currentTimeMillis());
+        record.setDateOfRecord(date);
+        if (!text.equals("there is no text here just sent to avoid mistake"))
+        record.setText(text);
 
         //creating a folder inside of this folder
-        Path path1 = Paths.get(path+"\\"+record.getUser().getId()+"\\wall");
+        Path path1 = Paths.get(path+"\\records");
         try {
             Files.createDirectories(path1);
         } catch (IOException e) {
@@ -64,15 +66,20 @@ public class UploadRecordController {
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
                     //in this folder, which we created, write our images
-                    fileItem.write(new File(path+"/"+record.getUser().getId()+"/wall/"+fileItem.getName()));
-                    record.setUrlImage("/resources/"+record.getUser().getId()+"/wall/"+fileItem.getName());
+                    fileItem.write(new File(path+"/records/"+fileItem.getName()));
+                    record.setUrlImage("/resources/records/"+fileItem.getName());
+                    record.setUser(userService.findOne(Long.parseLong(id)));
+                    record.setUserFrom(user);
+                    record.setHasImage(true);
+                    record.setUrlUserImagePattern(user.getNewestImageSrc());
                     recordService.edit(record);
+                    fileItem.delete();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("size: "+lst.size());
-        return "redirect:/user/"+record.getUser().getId();
+        return "redirect:/user/"+id;
     }
 }

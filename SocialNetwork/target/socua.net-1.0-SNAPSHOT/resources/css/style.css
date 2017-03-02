@@ -76,7 +76,7 @@ b{
 }
 
 .userInfo{
-    width: 50%;
+    width: 60%;
     height: 300px;
     float: left;
     margin-left: 15px;
@@ -85,7 +85,7 @@ b{
 }
 
 .userRecords{
-    width: 50%;
+    width: 60%;
     height: auto;
     float: left;
     margin-left: 15px;
@@ -109,7 +109,7 @@ b{
 }
 
 .userRecordsFromDb{
-    width: 50%;
+    width: 60%;
     height: auto;
     float: left;
     margin-left: 15px;
@@ -117,11 +117,9 @@ b{
     margin-top: -130px;
 }
 .textAreaRecordClass{
-    width: 200px;
     height: 50px;
+    width:50%;
     float: left;
-    margin-left: 10px;
-    margin-top: 3px;
 }
 .userMusic{
     width: 300px;
@@ -156,12 +154,13 @@ b{
     float: left;
 }
 
-@media only screen and (max-width: 1180px){
+@media only screen and (max-width: 1360px){
     .menuDivClass {
         width: 10%;
-        margin-left: 7%;
+        margin-left: 5%;
     }
     .userInfo{
+        width: 55%;
         height: 250px;
     }
     .userPhoto{
@@ -169,6 +168,7 @@ b{
         height: 292px;
     }
     .userRecords{
+        width: 55%;
     }
     .userEdit{
         width: 250px;
@@ -180,6 +180,7 @@ b{
         width: 250px;
     }
     .userRecordsFromDb{
+        width: 55%;
         margin-top: -140px;
     }
     .textAreaRecordClass{
@@ -199,14 +200,26 @@ b{
     }
 }
 
-@media only screen and (max-width: 920px){
+@media only screen and (max-width: 1000px){
     .menuDivClass {
         margin-left: 3%;
     }
     .userRecordsFromDb{
         margin-top: -85px;
     }
+    .userInfo {
+        width: 50%;
+    }
+    .userRecords{
+        width: 50%;
+    }
+    .userRecordsFromDb{
+        width: 50%;
+        margin-top: -85px;
+    }
 }
+
+
 /*ВОООООООООООООООООООООООООООООООТ НАРЕШТІ*/
 html {
     min-width: 900px;

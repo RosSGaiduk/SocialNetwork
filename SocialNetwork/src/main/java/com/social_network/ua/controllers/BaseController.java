@@ -1,10 +1,7 @@
 package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.*;
-import com.social_network.ua.services.AlbumService;
-import com.social_network.ua.services.MusicService;
-import com.social_network.ua.services.RecordService;
-import com.social_network.ua.services.UserService;
+import com.social_network.ua.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +25,8 @@ public class BaseController extends BaseMethods{
     private MusicService musicService;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private ImageService imageService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home
@@ -140,17 +139,19 @@ public class BaseController extends BaseMethods{
         System.out.println("Selected album: "+album);
         long idLong = Long.parseLong(id);
         User user = userService.findOne(idLong);
-        Set<String> albumSet = new TreeSet<>();
+        /*Set<String> albumSet = new TreeSet<>();
         for(Album a: user.getAlbums()){
             albumSet.add(a.getName());
-        }
-        albumModel.addAttribute("albums",albumSet);
-        Set<User_Images> user_images = null;
+        }*/
+        List<Album> albums = albumService.findAllAlbumsByUser(user);
+
+        albumModel.addAttribute("albums",albums);
+        List<User_Images> user_images = null;
         if (album.equals("*")) {
-           user_images = user.getUserImages();
+           user_images = imageService.findAllByUser(user);
         } else {
             Album selectedAlbum = albumService.findOneByNameAndUserId(album,idLong);
-            user_images = selectedAlbum.getUser_images();
+            user_images = imageService.findAllByAlbum(selectedAlbum);
         }
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());

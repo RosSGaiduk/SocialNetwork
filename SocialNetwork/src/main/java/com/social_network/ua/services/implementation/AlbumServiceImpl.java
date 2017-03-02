@@ -2,6 +2,7 @@ package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.AlbumDao;
 import com.social_network.ua.entity.Album;
+import com.social_network.ua.entity.User;
 import com.social_network.ua.services.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,11 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public Album findOneByNameAndUserId(String nameAlbum,long userId) {
         return albumDao.findOneByNameAndUserId(nameAlbum,userId);
+    }
+
+    @Override
+    public List<Album> findAllAlbumsByUser(User user) {
+        return albumDao.findAllAlbumsByUser(user);
     }
 
     @Override

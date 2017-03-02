@@ -95,6 +95,7 @@ public class AjaxController extends BaseMethods {
 
             for (int i = messages.size() - 1; i >= 0; i--) {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.putOnce("id", messages.get(i).getId());
                 jsonObject.putOnce("data", messages.get(i).getDateOfMessage());
                 jsonObject.putOnce("text", messages.get(i).getText());
                 if  (userService.getUserOfMessage(messages.get(i).getId()).getId()==userAuthId) jsonObject.putOnce("fromUser", true);

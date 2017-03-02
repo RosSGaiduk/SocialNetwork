@@ -1,6 +1,8 @@
 package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.ImageDao;
+import com.social_network.ua.entity.Album;
+import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,16 @@ public class ImageServiceImpl implements ImageService{
     @Override
     public User_Images findOne(long id) {
         return imageDao.findOne(id);
+    }
+
+    @Override
+    public List<User_Images> findAllByAlbum(Album album) {
+        return imageDao.findAllByAlbum(album);
+    }
+
+    @Override
+    public List<User_Images> findAllByUser(User user) {
+        return imageDao.findAllByUser(user);
     }
 
     @Override

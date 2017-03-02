@@ -20,6 +20,7 @@ public interface UserDao {
     List<User> findAllByInput(String str);
     User selectUser(long id1, long id2);
     List<Music> get3LastMusicOfUser(long userId);
+    List<Music> getAllMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
     List<User> findAll();
 }
