@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -136,9 +137,9 @@ public class Main {
         //System.out.println(u.getId());
 
 
-        List<User> users = entityManager.createQuery("from User").getResultList();
+        /*List<User> users = entityManager.createQuery("from User").getResultList();
 
-        for (int i = 0; i < 10000; i++){
+        for (int i = 0; i < 1000; i++){
             Message message = new Message();
             message.setDateOfMessage(new Date(System.currentTimeMillis()));
             Random random = new Random();
@@ -157,8 +158,32 @@ public class Main {
             //System.out.println("User from: "+message.getUserFrom().getFirstName());
             //System.out.println("User to: "+message.getUserTo().getFirstName());
             System.out.println("--------------------------------------------");
-        }
+        }*/
 
+        /*List<Message> messages = entityManager.createQuery("from Message where id>?3 and (userFrom_id = ?1 and userTo_id = ?2)  or (userTo_id = ?1 and userFrom_id = ?2) order by id desc").setParameter(1,1).setParameter(2,7).setParameter(3,10l).setMaxResults(50).getResultList();
+        System.out.println(messages.size());*/
+
+        /*Object val = entityManager.createQuery("select max(id) from Message where (userFrom_id = ?1 and userTo_id = ?2) or (userTo_id = ?1 and userFrom_id = ?2) order by id").setParameter(1,1l).setParameter(2,7l).getSingleResult();
+        System.out.println((long)val);
+        */
+
+        //List<Message> messages =  entityManager.createQuery("from Message where (userFrom_id = ?1 and userTo_id = ?2)  or (userTo_id = ?1 and userFrom_id = ?2) and id>?3 order by id DESC").setParameter(1,1l).setParameter(2,7l).setParameter(3,22917l).getResultList();
+        //List<Message> messages =  entityManager.createQuery("from Message where id>?3 group by id").setParameter(3,22917l).getResultList();
+
+        List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id>?3 group by id DESC").setParameter(1,1l).setParameter(2,8l).setParameter(3,22917l).getResultList();
+        List<Message> messages = new ArrayList<>(objects.size());
+        for (Object o: objects)
+        {
+            BigInteger bigInteger = (BigInteger)o;
+            Message m = entityManager.find(Message.class,bigInteger.longValue());
+            messages.add(m);
+        }
+        System.out.println(messages.size());
+
+        //System.out.println(objects.size());
+
+
+        //System.out.println(messages.size());
         entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();

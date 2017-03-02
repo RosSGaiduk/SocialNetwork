@@ -20,7 +20,9 @@
 </head>
 
 <body>
-<font id = "minId" style="visibility: hidden;">-1</font>
+<font id = "minId">10</font>
+<font id = "maxId">10</font>
+<font id = "childrenCount"></font>
 
 
 <select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
@@ -73,6 +75,7 @@
 </script>
 
 <script>
+    var was1 = 0;
     function update(){
         var val = $("#selct").val();
         $.ajax({
@@ -80,11 +83,17 @@
             dataType: "json",
             data: ({
                 userToId: val,
-                count: parseInt(document.getElementById("messages").childElementCount/2-1)
+                maxId: document.getElementById("maxId").innerHTML
+                //count: parseInt(document.getElementById("messages").childElementCount/2-1)
             }),
             async: false,
             success: function(data){
                 $.each(data,function(k,v){
+                    if (parseInt(was1)==0) {
+                        alert(was1);
+                        document.getElementById("maxId").innerHTML = v.id;
+                    }
+                    was1++;
                     var elem = document.createElement("div");
                     var elemData = document.createElement("p");
                     elemData.style = "font-size:12px;margin-top:20px;margin-left:10%;float:left;margin-botom:20px;"
@@ -105,10 +114,13 @@
 
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
-                    document.getElementById("minId").innerHTML = v.id;
+                    document.getElementById("maxId").innerHTML = v.id;
+
 
                     myDivMessages.appendChild(elem);
                     myDivMessages.scrollTop = myDivMessages.scrollHeight;
+
+                    document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount/2);
                 });
             }
         });
@@ -126,10 +138,12 @@
         btn.setAttribute("id","previousMessagesBtn");
         btn.style = "margin-left:20%;";
         $("#messages").append(btn);
-
         $("#previousMessagesBtn").click(function(){
             alert("Hello");
         })
+        document.getElementById("maxId").innerHTML = "10";
+        document.getElementById("minId").innerHTML = "10";
+        document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount/2);
         update();
     }
     changedSelect();

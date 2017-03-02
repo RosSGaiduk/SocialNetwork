@@ -122,7 +122,7 @@ public class UserDaoImpl implements UserDao {
 
     @Transactional
     public User getUserOfMessage(long messageId) {
-        System.out.println("Getting user of message");
+        //System.out.println("Getting user of message");
         try {
             return (User)entityManager.createQuery("select userFrom from Message m where m.id = ?1").setParameter(1, messageId).getSingleResult();
         }catch (Exception ex){

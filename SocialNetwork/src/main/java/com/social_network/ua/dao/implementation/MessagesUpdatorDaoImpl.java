@@ -46,7 +46,7 @@ public class MessagesUpdatorDaoImpl implements MessagesUpdatorDao{
 
     @Transactional
     public MessagesUpdator findOneBy2Ids(long id1, long id2) {
-        System.out.println("Trying to find");
+        //System.out.println("Trying to find");
         Object obj = null;
         try {
             obj = entityManager.createQuery("from MessagesUpdator where (idUserFrom = ?1 and idUserTo = ?2) or (idUserTo = ?1 and idUserFrom = ?2)").setParameter(1, id1).setParameter(2, id2).setMaxResults(1).getSingleResult();

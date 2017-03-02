@@ -55,8 +55,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllByIdsAndCount(long id1,long id2, int count) {
-        return messageDao.findAllByIdsAndCount(id1,id2,count);
+    public List<Message> findAllByIdsAndMaxId(long id1,long id2, long maxId) {
+        return messageDao.findAllByIdsAndMaxId(id1,id2,maxId);
+    }
+
+    @Override
+    public long findLastIdOfMessageBetweenUsers(long id1, long id2) {
+        return messageDao.findLastIdOfMessageBetweenUsers(id1,id2);
     }
 
     @Override

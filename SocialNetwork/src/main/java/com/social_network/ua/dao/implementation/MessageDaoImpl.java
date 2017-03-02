@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,9 +52,28 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Transactional
-    public List<Message> findAllByIdsAndCount(long id1, long id2, int count) {
-        return entityManager.createQuery("from Message where (userFrom_id = ?1 and userTo_id = ?2)  or (userTo_id = ?1 and userFrom_id = ?2)  order by id desc").setParameter(1,id1).setParameter(2,id2).setMaxResults(count).getResultList();
+    public long findLastIdOfMessageBetweenUsers(long id1, long id2) {
+        try{
+            return (long)entityManager.createQuery("select max(id) from Message where (userFrom_id = ?1 and userTo_id = ?2) or (userTo_id = ?1 and userFrom_id = ?2) order by id").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+        } catch (Exception ex){
+            return 0;
+        }
     }
+
+    @Transactional
+    public List<Message> findAllByIdsAndMaxId(long id1, long id2, long maxId) {
+        List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id>?3 group by id DESC").setParameter(1,id1).setParameter(2,id2).setParameter(3,maxId).setMaxResults(50).getResultList();
+        List<Message> messages = new ArrayList<>(objects.size());
+        for (Object o: objects)
+        {
+            BigInteger bigInteger = (BigInteger)o;
+            Message m = entityManager.find(Message.class,bigInteger.longValue());
+            messages.add(m);
+        }
+        System.out.println(messages.size());
+        return messages;
+    }
+
 
     @Transactional
     public List<Message> findAll() {

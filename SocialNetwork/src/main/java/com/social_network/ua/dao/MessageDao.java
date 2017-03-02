@@ -13,6 +13,7 @@ public interface MessageDao {
     Message findOne(long id);
     long findAllLastBy2ids(long id1,long id2);
     long findAllByIds(long id1,long id2);
-    List<Message> findAllByIdsAndCount(long id1, long id2,int count);
+    long findLastIdOfMessageBetweenUsers(long id1,long id2);
+    List<Message> findAllByIdsAndMaxId(long id1, long id2,long maxId);
     List<Message> findAll();
 }

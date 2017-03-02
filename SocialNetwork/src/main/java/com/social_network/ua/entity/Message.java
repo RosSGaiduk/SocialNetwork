@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by Rostyslav on 09.11.2016.
  */
 @Entity
-public class Message {
+public class Message implements Comparable<Message>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -69,5 +69,10 @@ public class Message {
 
     public void setDateOfMessage(Date dateOfMessage) {
         this.dateOfMessage = dateOfMessage;
+    }
+
+    @Override
+    public int compareTo(Message o) {
+        return (int)(this.id-o.id);
     }
 }
