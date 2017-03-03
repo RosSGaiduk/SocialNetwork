@@ -15,5 +15,6 @@ public interface MessageDao {
     long findAllByIds(long id1,long id2);
     long findLastIdOfMessageBetweenUsers(long id1,long id2);
     List<Message> findAllByIdsAndMaxId(long id1, long id2,long maxId);
+    List<Message> findAllByIdsAndMinId(long id1, long id2,long minId);
     List<Message> findAll();
 }

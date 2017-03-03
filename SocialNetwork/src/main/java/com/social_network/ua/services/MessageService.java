@@ -19,5 +19,6 @@ public interface MessageService {
     long findAllByIds(long id1,long id2);
     List<Message> findAllByIdsAndMaxId(long id1, long id2, long maxId);
     long findLastIdOfMessageBetweenUsers(long id1, long id2);
+    List<Message> findAllByIdsAndMinId(long id1, long id2, long minId);
     List<Message> findAll();
 }

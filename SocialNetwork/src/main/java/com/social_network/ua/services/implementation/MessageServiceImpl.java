@@ -65,6 +65,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findAllByIdsAndMinId(long id1, long id2, long minId) {
+        return messageDao.findAllByIdsAndMinId(id1,id2,minId);
+    }
+
+    @Override
     public List<Message> findAll() {
         return messageDao.findAll();
     }

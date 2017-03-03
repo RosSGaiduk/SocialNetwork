@@ -89,10 +89,9 @@
             async: false,
             success: function(data){
                 $.each(data,function(k,v){
-                    if (parseInt(was1)==0) {
-                        alert(was1);
-                        document.getElementById("maxId").innerHTML = v.id;
-                    }
+                    /*if (parseInt(was1)==0) {
+                        document.getElementById("minId").innerHTML = v.id;
+                    }*/
                     was1++;
                     var elem = document.createElement("div");
                     var elemData = document.createElement("p");
@@ -114,8 +113,8 @@
 
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
-                    document.getElementById("maxId").innerHTML = v.id;
-
+                    document.getElementById("maxId").innerHTML = v.maxId;
+                    document.getElementById("minId").innerHTML = v.minId;
 
                     myDivMessages.appendChild(elem);
                     myDivMessages.scrollTop = myDivMessages.scrollHeight;
@@ -138,8 +137,59 @@
         btn.setAttribute("id","previousMessagesBtn");
         btn.style = "margin-left:20%;";
         $("#messages").append(btn);
-        $("#previousMessagesBtn").click(function(){
-            alert("Hello");
+
+        $("#previousMessagesBtn").click(function() {
+            $.ajax({
+                url: "/getPreviousMessages",
+                dataType: "json",
+                async: false,
+                data: ({
+                    userToId: $("#selct").val(),
+                    minId: document.getElementById("minId").innerHTML
+                }),
+                success: function (data) {
+                    /*var first=document.getElementById("records").childNodes[0];
+                    document.getElementById("records").insertBefore(elem,first);*/
+
+                    $.each(data, function (k, v) {
+                        document.getElementById("minId").innerHTML = v.id;
+
+                        var elem = document.createElement("div");
+                        var elemData = document.createElement("p");
+                        elemData.style = "font-size:12px;margin-top:20px;margin-left:10%;float:left;margin-botom:20px;"
+                        elemData.innerHTML = v.data;
+                        //document.getElementById("messages").appendChild(elemData);
+                        var first = document.getElementById("messages").childNodes[1];
+                        document.getElementById("messages").insertBefore(elemData, first);
+
+
+                        if (v.fromUser) {
+                            elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px;";
+                        }
+                        else elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px; margin-left:20%";
+
+                        var divNew = document.createElement("div");
+                        divNew.style = "padding: 14px;border-left: 1px solid #cfdae1;float: left;color: black; width: 214px;";
+
+                        var elemText = document.createElement("p");
+                        elemText.innerHTML = v.text;
+                        divNew.appendChild(elemText);
+
+                        elem.appendChild(divNew);
+                        var myDivMessages = document.getElementById('messages');
+
+
+                        myDivMessages.appendChild(elem);
+
+                        var second = document.getElementById("messages").childNodes[2];
+                        document.getElementById("messages").insertBefore(elem, second);
+                        //myDivMessages.scrollTop = myDivMessages.scrollHeight;
+
+                        document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount / 2);
+
+                    })
+                }
+            })
         })
         document.getElementById("maxId").innerHTML = "10";
         document.getElementById("minId").innerHTML = "10";

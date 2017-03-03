@@ -74,6 +74,20 @@ public class MessageDaoImpl implements MessageDao {
         return messages;
     }
 
+    @Transactional
+    public List<Message> findAllByIdsAndMinId(long id1, long id2, long minId) {
+        List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id<?3 group by id DESC").setParameter(1,id1).setParameter(2,id2).setParameter(3,minId).setMaxResults(50).getResultList();
+        List<Message> messages = new ArrayList<>(objects.size());
+        for (Object o: objects)
+        {
+            BigInteger bigInteger = (BigInteger)o;
+            Message m = entityManager.find(Message.class,bigInteger.longValue());
+            messages.add(m);
+        }
+        System.out.println(messages.size());
+        return messages;
+    }
+
 
     @Transactional
     public List<Message> findAll() {

@@ -86,7 +86,8 @@ public class AjaxController extends BaseMethods {
 
                 for (int i = messages.size() - 1; i >= 0; i--) {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.putOnce("id", messages.get(i).getId());
+                    jsonObject.putOnce("minId", messages.get(messages.size()-1).getId());
+                    jsonObject.putOnce("maxId", messages.get(0).getId());
                     jsonObject.putOnce("data", messages.get(i).getDateOfMessage());
                     jsonObject.putOnce("text", messages.get(i).getText());
                     if (userService.getUserOfMessage(messages.get(i).getId()).getId() == userAuthId)
@@ -288,4 +289,32 @@ public class AjaxController extends BaseMethods {
         }
         return jsonArray.toString();
     }
+
+
+    @RequestMapping(value = "/getPreviousMessages", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @ResponseBody
+    public String getPreviousMessages(@RequestParam String userToId,@RequestParam String minId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        long authId = Long.parseLong(authentication.getName());
+        long userToIdLong = Long.parseLong(userToId);
+        long minIdLong = Long.parseLong(minId);
+        System.out.println("Auth: "+authId+", user to: "+userToIdLong+", minIdLong: "+minIdLong);
+
+        JSONArray jsonArray = new JSONArray();
+        List<Message> messages = messageService.findAllByIdsAndMinId(authId,userToIdLong,minIdLong);
+        System.out.println("Size of messages: "+messages.size());
+        for (int i = 0; i < messages.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id", messages.get(i).getId());
+            jsonObject.putOnce("data", messages.get(i).getDateOfMessage());
+            jsonObject.putOnce("text", messages.get(i).getText());
+            if (userService.getUserOfMessage(messages.get(i).getId()).getId() == authId)
+                jsonObject.putOnce("fromUser", true);
+            else jsonObject.putOnce("fromUser", false);
+            jsonArray.put(jsonObject);
+        }
+
+        return jsonArray.toString();
+    }
+
 }
