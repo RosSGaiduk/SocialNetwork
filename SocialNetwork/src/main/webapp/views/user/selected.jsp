@@ -42,8 +42,8 @@
             <div style="float: left; height: 30px; margin-top:10px; margin-left: 30px; width: 100px;">
                 <form:form id = "formForLoadingPictures" action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
                            enctype="multipart/form-data" cssStyle="float: left;">
-                    <input type="file" name="file1" style="float: left;"/>
-                    <input type="submit" value="Upload" style="float: left;">
+                    <input type="file" name="file1"  style="float: left;"/>
+                    <button type="submit" style="float: left;margin-top: 3px;" class="buttonFileStyle">Upload</button>
                 </form:form>
             </div>
         </div>
@@ -135,7 +135,7 @@
 
            <textarea id = "newRecord" style="height: 50px; width:50%; float: left" placeholder="Введіть повідомлення: "></textarea>
 
-            <button onclick="updateRecords()" class = "sendButton">Send</button>
+            <button onclick="updateRecords()" class = "buttonSendRecordStyle">Send</button>
 
            <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
                 <form:form id = "formForLoadingPicturesToWall" action="upload/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
@@ -147,7 +147,7 @@
             <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
             <form:form id =  "newRecordForm" action="" method="post" enctype="multipart/form-data" cssStyle="float: left;">
             <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
-            <input onclick="setActionToForm()" type="submit" value="Upload">
+            <button onclick="setActionToForm()" type="submit" class="buttonFileStyle">Upload</button>
             </form:form>
         </div>
 

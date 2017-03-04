@@ -133,7 +133,7 @@ b{
     margin-top: 30px;
     margin-left: 10px;
     background-color: #6ea0ff;
-    color: white
+    color: white;
 }
 .logos {
     width: 20%;
@@ -243,4 +243,57 @@ html {
 .aUrl {
     width: auto;
     height: auto;
+}
+
+.buttonFileStyle{
+    background-color: #6ea0ff;
+    border-radius: 5px;
+    cursor: hand;
+    color: white;
+    border-color: #6ea0ff;
+    outline: none;
+}
+
+.buttonSendRecordStyle{
+    background-color: #6ea0ff;
+    cursor: hand;
+    color: white;
+    border-color: #6ea0ff;
+    outline: none;
+    height: 27px;
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
+.buttonPreviousMessagesStyle{
+    background-color: #6ea0ff;
+    border-radius: 5px;
+    height: 30px;
+    cursor: hand;
+    color: white;
+    border-color: #6ea0ff;
+    outline: none;
+}
+
+.sendButtonStyle{
+    background-color: #6ea0ff;
+    border-radius: 5px;
+    height: 30px;
+    cursor: hand;
+    color: white;
+    border-color: #6ea0ff;
+    float: left;
+    margin-left: 45%;
+    width: 80px;
+    outline: none;
+}
+
+
+.buttonPreviousMessagesStyle:hover{
+    background-color: mediumspringgreen;
+    border-color: mediumspringgreen;
+}
+.sendButtonStyle:hover{
+    background-color: mediumspringgreen;
+    border-color: mediumspringgreen;
 }

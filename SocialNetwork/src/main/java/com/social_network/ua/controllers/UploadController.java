@@ -85,7 +85,6 @@ public class UploadController {
             e.printStackTrace();
             return "fail";
         }
-
-        return "views-base-friends";
+        return "redirect:/";
     }
 }

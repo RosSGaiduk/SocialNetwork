@@ -20,9 +20,9 @@
 </head>
 
 <body>
-<font id = "minId">10</font>
-<font id = "maxId">10</font>
-<font id = "childrenCount"></font>
+<font id = "minId" style="visibility: hidden;">10</font>
+<font id = "maxId" style="visibility: hidden;">10</font>
+<font id = "childrenCount" style="visibility: hidden;"></font>
 
 
 <select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
@@ -39,7 +39,7 @@
 </div>
 
 <textarea id = "textAr" style="height: 50px; width:50%; float: left" onkeyup="doAj()" placeholder="Введіть повідомлення: "></textarea>
-<button onclick="sendMessage()" style="float: left; margin-left: 45%;">Send</button>
+<button onclick="sendMessage()"  class="sendButtonStyle">Send</button>
 
 <%--
 Якщо у функцію ajax ми хочемо передати значення з тегів p,span,h1,h2,...h6,font,...
@@ -57,26 +57,28 @@
 
 <script>
     function sendMessage(){
-        $.ajax({
-           url: "/sendMessage",
-            data:(
-            {
-                message:$("#textAr").val(),
-                userToId: $("#selct").val()
-            }),
-            async:false,
-            /*dataType: "json",*/
-            success: function(data){
-                document.getElementById("textAr").value = "";
-                update();
-            }
-        });
+        if (document.getElementById("textAr").value != "") {
+            $.ajax({
+                url: "/sendMessage",
+                data: (
+                {
+                    message: $("#textAr").val(),
+                    userToId: $("#selct").val()
+                }),
+                async: false,
+                /*dataType: "json",*/
+                success: function (data) {
+                    document.getElementById("textAr").value = "";
+                    update(true);
+                }
+            });
+        }
     }
 </script>
 
 <script>
     var was1 = 0;
-    function update(){
+    function update(value){
         var val = $("#selct").val();
         $.ajax({
            url: "/update",
@@ -88,6 +90,7 @@
             }),
             async: false,
             success: function(data){
+                var heightValue = document.getElementById('messages').scrollHeight;
                 $.each(data,function(k,v){
                     /*if (parseInt(was1)==0) {
                         document.getElementById("minId").innerHTML = v.id;
@@ -117,15 +120,30 @@
                     document.getElementById("minId").innerHTML = v.minId;
 
                     myDivMessages.appendChild(elem);
-                    myDivMessages.scrollTop = myDivMessages.scrollHeight;
-
+                    //якщо повідомлення надіслав даний користувач
+                    if (value==true) {
+                        myDivMessages.scrollTop = myDivMessages.scrollHeight;
+                        //alert("true"+value);
+                    } else {
+                        //alert(""+(myDivMessages.scrollHeight-myDivMessages.scrollTop)); //590 або 577 в різних браузерах
+                        //alert(""+(myDivMessages.scrollTop+" "+myDivMessages.scrollHeight));
+                        //alert(myDivMessages.scrollHeight+" "+heightValue); //4385 4304
+                        var heightMessage = myDivMessages.scrollHeight-heightValue;
+                        if (parseInt(myDivMessages.scrollHeight-(myDivMessages.scrollTop+heightMessage))<600){
+                            myDivMessages.scrollTop = myDivMessages.scrollHeight;
+                        }
+                        else {
+                            alert("New message, scroll down to read it");
+                        }
+                    }
                     document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount/2);
                 });
             }
         });
     }
-    var id1 = setInterval("update()",100);
+    var id1 = setInterval("update(false)",100);
 </script>
+
 
 <script>
     function changedSelect(){
@@ -134,6 +152,7 @@
 
         var btn = document.createElement("button");
         btn.innerHTML = "Previous";
+        btn.setAttribute("class","buttonPreviousMessagesStyle")
         btn.setAttribute("id","previousMessagesBtn");
         btn.style = "margin-left:20%;";
         $("#messages").append(btn);
@@ -148,9 +167,12 @@
                     minId: document.getElementById("minId").innerHTML
                 }),
                 success: function (data) {
+                    var height = element.scrollHeight;
+                    //alert("Height: "+height+" top: "+element.scrollTop);
                     /*var first=document.getElementById("records").childNodes[0];
                     document.getElementById("records").insertBefore(elem,first);*/
-
+                    var scroll = document.getElementById("messages").scrollTop;
+                    //alert(parseInt(scroll+200));
                     $.each(data, function (k, v) {
                         document.getElementById("minId").innerHTML = v.id;
 
@@ -183,7 +205,12 @@
 
                         var second = document.getElementById("messages").childNodes[2];
                         document.getElementById("messages").insertBefore(elem, second);
-                        //myDivMessages.scrollTop = myDivMessages.scrollHeight;
+
+                        var heightUpdated = myDivMessages.scrollHeight;
+                        myDivMessages.scrollTop = heightUpdated-height;
+
+
+                        //myDivMessages.scrollTop = scroll+5450;
 
                         document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount / 2);
 
@@ -194,7 +221,7 @@
         document.getElementById("maxId").innerHTML = "10";
         document.getElementById("minId").innerHTML = "10";
         document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount/2);
-        update();
+        update(true);
     }
     changedSelect();
 </script>
