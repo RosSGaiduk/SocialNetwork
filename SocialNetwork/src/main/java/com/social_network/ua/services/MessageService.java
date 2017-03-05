@@ -4,6 +4,7 @@ import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.User;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -20,5 +21,6 @@ public interface MessageService {
     List<Message> findAllByIdsAndMaxId(long id1, long id2, long maxId);
     long findLastIdOfMessageBetweenUsers(long id1, long id2);
     List<Message> findAllByIdsAndMinId(long id1, long id2, long minId);
+    Set<Message> getAllChatsWithAuthUser(User user);
     List<Message> findAll();
 }

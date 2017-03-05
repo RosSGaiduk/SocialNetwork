@@ -27,6 +27,8 @@ public class BaseController extends BaseMethods{
     private AlbumService albumService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private MessageService messageService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home
@@ -172,5 +174,25 @@ public class BaseController extends BaseMethods{
     public String musicAll(Model model){
         model.addAttribute("musicAll",musicService.findAll());
         return "views-base-music";
+    }
+
+    @RequestMapping(value = "/messages",method = RequestMethod.GET)
+    public String getMessages(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        Set<Message> getAllChats = messageService.getAllChatsWithAuthUser(user);
+        Set<Message> getLastMessages = new TreeSet<>();
+        for (Message m: getAllChats)
+        {
+            Message message = messageService.findOne(messageService.findLastIdOfMessageBetweenUsers(userService.getUserOfMessage(m.getId()).getId(),userService.getUserToOfMessage(m.getId()).getId()));
+            getLastMessages.add(message);
+        }
+        List<Message> finalMessagesList = new ArrayList<>(getLastMessages.size());
+        for (Message m: getLastMessages)
+            finalMessagesList.add(m);
+        Collections.reverse(finalMessagesList);
+        model.addAttribute("messages",finalMessagesList);
+        model.addAttribute("userAuth",user);
+        return "views-base-messages";
     }
 }

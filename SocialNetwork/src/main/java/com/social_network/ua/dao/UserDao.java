@@ -22,5 +22,6 @@ public interface UserDao {
     List<Music> get3LastMusicOfUser(long userId);
     List<Music> getAllMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
+    User getUserToOfMessage(long messageId);
     List<User> findAll();
 }

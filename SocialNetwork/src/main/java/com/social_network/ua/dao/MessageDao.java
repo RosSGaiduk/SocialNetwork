@@ -1,7 +1,10 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Message;
+import com.social_network.ua.entity.User;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -16,5 +19,6 @@ public interface MessageDao {
     long findLastIdOfMessageBetweenUsers(long id1,long id2);
     List<Message> findAllByIdsAndMaxId(long id1, long id2,long maxId);
     List<Message> findAllByIdsAndMinId(long id1, long id2,long minId);
+    Set<Message> getAllChatsWithAuthUser(User user);
     List<Message> findAll();
 }

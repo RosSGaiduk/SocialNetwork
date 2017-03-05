@@ -288,7 +288,18 @@ html {
     outline: none;
 }
 
-
+.messageFromChats{
+    float: left;
+    margin-top: 0px;
+    width: 100%;
+    height: auto;
+    background-color: white;
+    border-color: gainsboro;
+}
+.messageFromChats:hover{
+    background-color: gainsboro;
+    color: black;
+}
 .buttonPreviousMessagesStyle:hover{
     background-color: mediumspringgreen;
     border-color: mediumspringgreen;

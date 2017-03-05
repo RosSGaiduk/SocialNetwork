@@ -132,6 +132,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Transactional
+    public User getUserToOfMessage(long messageId) {
+        //System.out.println("Getting user of message");
+        try {
+            return (User)entityManager.createQuery("select userTo from Message m where m.id = ?1").setParameter(1, messageId).getSingleResult();
+        }catch (Exception ex){
+            System.out.println("Exception");
+            return null;
+        }
+    }
+
+    @Transactional
     public List<User> findAll() {
         return entityManager.createQuery("from User").getResultList();
     }

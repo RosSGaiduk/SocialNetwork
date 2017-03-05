@@ -110,6 +110,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User getUserToOfMessage(long messageId) {
+        return userDao.getUserToOfMessage(messageId);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }

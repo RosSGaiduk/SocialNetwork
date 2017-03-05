@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -67,6 +68,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findAllByIdsAndMinId(long id1, long id2, long minId) {
         return messageDao.findAllByIdsAndMinId(id1,id2,minId);
+    }
+
+    @Override
+    public Set<Message> getAllChatsWithAuthUser(User user) {
+        return messageDao.getAllChatsWithAuthUser(user);
     }
 
     @Override

@@ -54,7 +54,6 @@ public class Main {
 
         //User user = entityManager.find(User.class,8l);
 
-
         //System.out.println(user.getFirstName());
 
         //user1.getFriends().add(user);
@@ -93,7 +92,6 @@ public class Main {
 
         String [] names = {
                 "Ross","Oleg","Name1"
-
         };
 
 
@@ -104,7 +102,6 @@ public class Main {
                 "I am "+(randomForNames.nextInt(80)+10),"My name is "+names[randomForNames.nextInt(names.length)],
                 "I am "+names[randomForNames.nextInt(names.length)]
         };
-
 
 
         for (int i = 0; i < 100; i++){
@@ -170,7 +167,7 @@ public class Main {
         //List<Message> messages =  entityManager.createQuery("from Message where (userFrom_id = ?1 and userTo_id = ?2)  or (userTo_id = ?1 and userFrom_id = ?2) and id>?3 order by id DESC").setParameter(1,1l).setParameter(2,7l).setParameter(3,22917l).getResultList();
         //List<Message> messages =  entityManager.createQuery("from Message where id>?3 group by id").setParameter(3,22917l).getResultList();
 
-        List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id>?3 group by id DESC").setParameter(1,1l).setParameter(2,8l).setParameter(3,22917l).getResultList();
+        /*List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id>?3 group by id DESC").setParameter(1,1l).setParameter(2,8l).setParameter(3,22917l).getResultList();
         List<Message> messages = new ArrayList<>(objects.size());
         for (Object o: objects)
         {
@@ -178,12 +175,48 @@ public class Main {
             Message m = entityManager.find(Message.class,bigInteger.longValue());
             messages.add(m);
         }
-        System.out.println(messages.size());
+        System.out.println(messages.size());*/
 
         //System.out.println(objects.size());
 
+        //System.out.println(args instanceof Object);
 
         //System.out.println(messages.size());
+        /*Integer int2 = new Integer(42);
+        Double d1 = 1d;
+        Double d2 = 1d;
+        double d3 = 1;
+        double d4 = 1;
+        System.out.println(d1==d2);
+        System.out.println(d3==d4);
+        System.out.println(d1==d3);*/
+
+        User user = entityManager.find(User.class,1l);
+
+        //List<Message> messages = entityManager.createQuery("from Message where userFrom = ?1 group by userTo.id").setParameter(1,user).getResultList();
+
+        /*List<Message> messages = entityManager.createQuery("from Message where userFrom = ?1 group by userTo.id").setParameter(1,user).getResultList();
+
+        for (Message message: messages)
+            System.out.println(message.getUserFrom().getId()+" "+message.getUserTo().getId());*/
+
+        /*List<Message> messages = entityManager.createQuery("from Message where userFrom =?1 group by userTo.id").setParameter(1,user).getResultList();
+        List<Message> anotherCase = entityManager.createQuery("from Message where userTo =?1 group by userFrom.id").setParameter(1,user).getResultList();
+        Set<Message> messageSet = new TreeSet<>();
+        for (Message m: messages)
+            messageSet.add(m);
+        for (Message m:anotherCase)
+            messageSet.add(m);
+
+        for (Message m:messageSet)
+            System.out.println(m.getUserFrom().getId()+" "+m.getUserTo().getId());*/
+
+        String str = "Hello world";
+        str = str.substring(0,5);
+        System.out.println(str);
+
+
+
         entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();

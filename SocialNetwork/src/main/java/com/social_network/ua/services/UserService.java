@@ -24,5 +24,6 @@ public interface UserService {
     List<Music> get3LastMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
     List<Music> getAllMusicOfUser(long userId);
+    User getUserToOfMessage(long messageId);
     List<User> findAll();
 }

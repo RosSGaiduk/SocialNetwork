@@ -25,7 +25,7 @@
 <font id = "childrenCount" style="visibility: hidden;"></font>
 
 
-<select id = "selct" onchange="changedSelect()" style="margin-top: 70px;">
+<select id = "selct" onchange="changedSelect()" style="margin-top: 70px; visibility: hidden;">
     <c:forEach items="${users}" var="u">
         <option>${u.id}</option>
     </c:forEach>

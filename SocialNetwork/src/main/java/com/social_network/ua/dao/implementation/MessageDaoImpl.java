@@ -2,6 +2,7 @@ package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.MessageDao;
 import com.social_network.ua.entity.Message;
+import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,6 +10,8 @@ import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Rostyslav on 21.11.2016.
@@ -86,6 +89,18 @@ public class MessageDaoImpl implements MessageDao {
         }
         System.out.println(messages.size());
         return messages;
+    }
+
+    @Transactional
+    public Set<Message> getAllChatsWithAuthUser(User user) {
+        List<Message> messages = entityManager.createQuery("from Message where userFrom =?1 group by userTo.id").setParameter(1,user).getResultList();
+        List<Message> anotherCase = entityManager.createQuery("from Message where userTo =?1 group by userFrom.id").setParameter(1,user).getResultList();
+        Set<Message> messageSet = new TreeSet<>();
+        for (Message m: messages)
+            messageSet.add(m);
+        for (Message m:anotherCase)
+            messageSet.add(m);
+        return messageSet;
     }
 
 
