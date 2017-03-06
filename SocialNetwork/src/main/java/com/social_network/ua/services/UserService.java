@@ -25,5 +25,6 @@ public interface UserService {
     User getUserOfMessage(long messageId);
     List<Music> getAllMusicOfUser(long userId);
     User getUserToOfMessage(long messageId);
+    boolean findUserByEmail(String email);
     List<User> findAll();
 }

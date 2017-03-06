@@ -6,6 +6,7 @@ import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +140,16 @@ public class UserDaoImpl implements UserDao {
         }catch (Exception ex){
             System.out.println("Exception");
             return null;
+        }
+    }
+
+    @Transactional
+    public boolean findUserByEmail(String email) {
+        try {
+            entityManager.createQuery("from User where email like ?1").setParameter(1,email).getSingleResult();
+            return true;
+        } catch (Exception ex){
+            return false;
         }
     }
 

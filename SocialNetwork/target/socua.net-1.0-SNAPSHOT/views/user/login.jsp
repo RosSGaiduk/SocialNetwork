@@ -11,7 +11,7 @@
 <head>
     <%--Всі лінки підключені в template.jsp--%>
 </head>
-<body>
+<body ng-app = "app">
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
 <div style="margin-top: 20%; float: left; width: 60%; height: auto">
     <form:form method="post" action="/loginprocessing">

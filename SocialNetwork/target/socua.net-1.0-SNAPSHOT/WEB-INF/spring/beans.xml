@@ -17,11 +17,11 @@
     </bean>
 
 
-    <!--<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basename" value="messages"/>
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="fallbackToSystemLocale" value="false"/>
-    </bean>-->
+    </bean>
 
     <context:component-scan base-package="com.social_network.ua.*"/>
     <jpa:repositories base-package="com.social_network.ua.repository"/>

@@ -115,6 +115,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public boolean findUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }
@@ -132,11 +137,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return  null;
         }
 
-
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        org.springframework.security.core.userdetails.User user1 = new org.springframework.security.core.userdetails.User(String.valueOf(user.getId()),user.getPassword(),authorities);
-        return user1;
+        return new org.springframework.security.core.userdetails.User(String.valueOf(user.getId()),user.getPassword(),authorities);
     }
 
 }

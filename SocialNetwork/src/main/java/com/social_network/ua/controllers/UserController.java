@@ -4,12 +4,14 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.*;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
+import com.social_network.ua.validations.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -26,6 +28,8 @@ public class UserController extends BaseMethods{
     private UserService userService;
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private UserValidator userValidator;
 
     @RequestMapping(value = "/addUser",method = RequestMethod.GET)
     public String addUserPage(Model model){
@@ -35,15 +39,10 @@ public class UserController extends BaseMethods{
 
     @RequestMapping(value = "/createUser",method = RequestMethod.POST)
     public String createUser(@ModelAttribute("newUser")User newUser,
-                             @RequestParam("birthDateUser")String dateCalendar
+                             @RequestParam("birthDateUser")String dateCalendar,
+                             BindingResult bindingResult
     ){
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = formatter.parse(dateCalendar);
-            newUser.setBirthDate(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         newUser.setFirstName(stringUTF_8Encode(newUser.getFirstName()));
         newUser.setLastName(stringUTF_8Encode(newUser.getLastName()));
 
@@ -51,9 +50,23 @@ public class UserController extends BaseMethods{
         newUser.setLastName(newUser.getLastName());*/
 
         /*userValidator.validate(newUser,bindingResult);*/
-       /* if (bindingResult.hasErrors()){
+        /* if (bindingResult.hasErrors()){
             return "views-user-new";
         }*/
+        try {
+            Date date = formatter.parse(dateCalendar);
+            newUser.setBirthDate(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            bindingResult.rejectValue("birthDate","birthDate.empty");
+        }
+
+        userValidator.validate(newUser,bindingResult);
+        if (bindingResult.hasErrors()){
+            return "views-user-new";
+        }
+
+
 
         userService.add(newUser);
         return "redirect:/";

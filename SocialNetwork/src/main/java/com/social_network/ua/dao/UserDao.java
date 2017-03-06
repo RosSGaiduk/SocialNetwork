@@ -23,5 +23,6 @@ public interface UserDao {
     List<Music> getAllMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
     User getUserToOfMessage(long messageId);
+    boolean findUserByEmail(String email);
     List<User> findAll();
 }

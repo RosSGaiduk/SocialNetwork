@@ -38,14 +38,14 @@ public class AjaxController extends BaseMethods {
     @Autowired
     private SubscriberService subscriberService;
 
-    @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String testGo(@RequestParam String message){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return message;
     }
 
-    @RequestMapping(value = "/sendMessage",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/sendMessage",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String sendMessage(@RequestParam String message,@RequestParam String userToId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -99,7 +99,7 @@ public class AjaxController extends BaseMethods {
         return jsonArray;
     }
 
-    @RequestMapping(value = "/update",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/update",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String updateMessages(@RequestParam String userToId,@RequestParam String maxId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,7 +111,7 @@ public class AjaxController extends BaseMethods {
     }
 
     //не працює
-    @RequestMapping(value = "/checkIfNewMessages",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/checkIfNewMessages",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String checkMessages(@RequestParam String userToId){
         long idUser = Long.parseLong(userToId);
@@ -124,7 +124,7 @@ public class AjaxController extends BaseMethods {
     }
 
 
-    @RequestMapping(value = "/findFriends",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/findFriends",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String findFriends(@RequestParam String friend,@RequestParam String user){
         List<User> users = userService.findAllByInput(friend);
@@ -165,7 +165,7 @@ public class AjaxController extends BaseMethods {
         return "views-base-home";
     }
 
-    @RequestMapping(value = "/updateRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/updateRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String updateRecords(@RequestParam String newRecord,
                                 @RequestParam String image,
@@ -199,7 +199,7 @@ public class AjaxController extends BaseMethods {
         return jsonArray.toString();
     }
 
-    @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String deleteRecord(@RequestParam String idRecord){
         long idRec = Long.parseLong(idRecord);
@@ -207,7 +207,7 @@ public class AjaxController extends BaseMethods {
         return idRecord;
     }
 
-    @RequestMapping(value = "/addMusicToUser",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/addMusicToUser",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String addMusicToUser(@RequestParam String idMusic){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -217,7 +217,7 @@ public class AjaxController extends BaseMethods {
         return "";
     }
 
-    @RequestMapping(value = "/addPhotoToAlbum", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/addPhotoToAlbum", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String addPhotoToAlbum(@RequestParam String idPhoto,@RequestParam String nameAlbum){
         User_Images user_images = imageService.findOne(Long.parseLong(idPhoto));
@@ -228,7 +228,7 @@ public class AjaxController extends BaseMethods {
         return "Success!";
     }
 
-    @RequestMapping(value = "/checkPhotosFromAlbumOfUser", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/checkPhotosFromAlbumOfUser", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String checkPhotosFromAlbumOfUser(@RequestParam String idUserChecked,@RequestParam String nameAlbum){
         if (nameAlbum.equals("*")){
@@ -291,7 +291,7 @@ public class AjaxController extends BaseMethods {
     }
 
 
-    @RequestMapping(value = "/getPreviousMessages", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8"})
+    @RequestMapping(value = "/getPreviousMessages", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String getPreviousMessages(@RequestParam String userToId,@RequestParam String minId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -317,4 +317,19 @@ public class AjaxController extends BaseMethods {
         return jsonArray.toString();
     }
 
+    @RequestMapping(value = "/angularFindEmail",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String findUserByEmail(@RequestParam String email){
+        System.out.println(email);
+        JSONObject jsonObject = new JSONObject();
+        if (userService.findUserByEmail(email)){
+            jsonObject.putOnce("color","orangered");
+            jsonObject.putOnce("message","There is user with the same email");
+        }
+        else {
+            jsonObject.putOnce("color","blue");
+            jsonObject.putOnce("message","OK");
+        }
+        return jsonObject.toString();
+    }
 }

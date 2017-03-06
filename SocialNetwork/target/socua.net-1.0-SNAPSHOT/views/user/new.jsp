@@ -15,39 +15,40 @@
     <!--AngularJs-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
     <!--Скріпт, у якому міститься контроллер з перевіркою сили паролю-->
-    <script type="text/javascript" src="/resources/scripts/passwordStrength.js"></script>
+    <script type="text/javascript" src="/resources/scripts/angularControllers.js"></script>
 </head>
 <body>
 <div class="forms" style="margin-top: 150px; margin-left: 5%;" ng-controller = "passwordCtrl">
     <form:form action="/createUser" method="post" modelAttribute="newUser">
         <form:label path="firstName"><h3 style="margin-left: 40%;">First name: </h3></form:label>
-        <font style="color: red"><form:errors path="firstName" cssStyle="margin-left: 40%"/></font>
         <form:input path="firstName" cssStyle="font-size: 18px;  border-radius: 8px;
          background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>
+        <font style="color: red"><form:errors path="firstName" cssStyle="margin-left: 40%"/></font>
 
         <form:label path="lastName"><h3 style="margin-left: 40%;">Last name: </h3></form:label>
-
-        <font style="color: red"><form:errors path="lastName" cssStyle="margin-left: 40%"/></font>
         <form:input path="lastName" cssStyle="font-size: 18px;  border-radius: 8px;
          background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>
-
+        <font style="color: red"><form:errors path="lastName" cssStyle="margin-left: 40%"/></font>
 
         <label><h3 style="margin-left: 40%;">Date: </h3></label>
-        <font style="color: red"><form:errors path="birthDate" cssStyle="margin-left: 40%"/></font>
         <input name="birthDateUser" type="date" style="margin-left:40%;
         height: 35px; font-size: 18px;border-radius: 3px;
         padding: 0 3px;"/>
+        <font style="color: red"><form:errors path="birthDate" cssStyle="margin-left: 40%"/></font>
 
+        <div ng-controller = "emailCheck">
         <form:label path="email"><h3 style="margin-left: 40%;">Email: </h3></form:label>
-        <font style="color: red"><form:errors path="email" cssStyle="margin-left: 40%"/></font>
         <form:input path="email" cssStyle="font-size: 18px;  border-radius: 8px;
-         background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%; " /><br>
+         background: #F6F6f6;padding: 6px 0 4px 10px; margin-left: 40%;" ng-change="checkingEmail()" ng-model="email" /><br>
+        <h3 style="margin-left: 40%; color: {{color}};">{{message}}</h3>
+        </div>
+        <font style="color: red"><form:errors path="email" cssStyle="margin-left: 40%"/></font>
 
         <form:label path="password"><h3 style="margin-left: 40%;">Password: </h3></form:label>
-        <font style="color: red"><form:errors path="password" cssStyle="margin-left: 40%"/></font>
         <form:password path="password" ng-model = 'password' ng-keyup = 'checkStrength()' cssStyle="font-size: 18px;  border-radius: 8px;
          background: #F6F6f6; padding: 6px 0 4px 10px; margin-left: 40%;" /><br>
         <h3 style="margin-left: 40%; color: {{color}};">{{passwordStrength}}</h3>
+        <font style="color: red"><form:errors path="password" cssStyle="margin-left: 40%"/></font>
 
         <form:label path="confirmPassword"><h3 style="margin-left: 40%;">Confirm password:</h3></form:label>
         <font style="color: red"><form:errors path="confirmPassword" cssStyle="margin-left: 40%"/></font>
