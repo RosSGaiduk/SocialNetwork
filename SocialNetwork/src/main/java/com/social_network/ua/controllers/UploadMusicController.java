@@ -47,7 +47,7 @@ public class UploadMusicController extends BaseMethods{
         community_music.setCommunity_id(Long.parseLong(communityId));
         community_music.setMusic_id(music.getId());
         communityMusicService.add(community_music);
-        return "redirect:/";
+        return "redirect:/community/"+communityId;
     }
 
 

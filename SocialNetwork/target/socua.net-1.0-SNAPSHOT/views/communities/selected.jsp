@@ -78,9 +78,9 @@
     </c:if>
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
         <!--Фото якихось 6 підписників-->
-        <a href="/subscribersOf/${community.id}" style="text-decoration: none;">
+        <p onclick="showModalWinWithSubscribers()" style="cursor: hand;">
          <span style="margin: 20px 0px 0px 20px; color: blue;"><strong>Підписники <span id = "countSubscribers">${community.countSubscribers}</span></strong></span>
-        </a>
+        </p>
         <div id = "subscribersBlock" style="float: left; width: 100%; height: 120px; margin-top: 30px;">
             <c:forEach items="${subscribers}" var="s">
                 <a href="/user/${s.id}">
@@ -100,11 +100,11 @@
         <!--Між блоками завжди така дів-->
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
         <!--Аудіозаписи-->
-        <p>
-        <a href="/musicOfCommunity/${community.id}" style="text-decoration: none;">
+
+        <p onclick="showModalWinWithMusics()" style="text-decoration: none; cursor: hand;">
             <span style="margin: 20px 0px 0px 20px; color: blue;"><strong>Аудіозаписи</strong></span>
-        </a>
         </p>
+
         <div style="float: left; width: 100%; height: auto; margin-top: 0px;">
             <c:forEach items="${musics}" var="mus">
                 <p style="clear: left"/>
@@ -121,6 +121,20 @@
         <!--Відеозаписи-->
         <div style="float: left; width: 100%; height: 120px; margin-top: 50px;"></div>
 </div>
+
+<div style="text-align: center; overflow: scroll;" id="popupWin" class="modalwin">
+    <%--<form:form action="/musicToCommunity/${community.id}?${_csrf.parameterName}=${_csrf.token}" method="post"
+               enctype="multipart/form-data" cssStyle="float: left;">
+        <input type="file" name="file1"  style="float: left;"/>
+        <input type="submit" value="Upload" style="float: left;">
+    </form:form>--%>
+
+    <p>Hello world</p>
+
+</div>
+
+
+
 <script>
     function setActionToForm(){
         var textInput =  $("#newRecord").val();
@@ -168,6 +182,8 @@
             success: function(data){
                 var element = document.getElementById("subscribersBlock");
                 while (element.firstChild) element.removeChild(element.firstChild);
+                //$("#popupWin div").remove();
+
                 $.each(data, function (k, v) {
                     var aMain = document.createElement("a");
                     aMain.href = "/user/"+ v.id;
@@ -188,6 +204,141 @@
         })
     }
 
+</script>
+
+<script type="text/javascript">
+    function showModalWinWithSubscribers() {
+
+        var darkLayer = document.createElement('div'); // слой затемнения
+        darkLayer.id = 'shadow'; // id чтобы подхватить стиль
+        document.body.appendChild(darkLayer); // включаем затемнение
+
+        var modalWin = document.getElementById('popupWin'); // находим наше "окно"
+        modalWin.style.display = 'block'; // "включаем" его
+
+        darkLayer.onclick = function () {  // при клике на слой затемнения все исчезнет
+            darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
+            modalWin.style.display = 'none'; // делаем окно невидимым
+            return false;
+        };
+
+        $.ajax({
+            url: "/showAllSubscribersOfCommunity/${community.id}",
+            dataType: "json",
+            async: false,
+            method: "get",
+            data: {
+
+            },
+            success: function(data){
+                var element = document.getElementById("popupWin");
+                while (element.firstChild) element.removeChild(element.firstChild);
+
+                //$("#popupWin div").remove();
+
+                $.each(data,function(k,v){
+                    var aElem = document.createElement("a");
+                    aElem.href = "/user/"+ v.id;
+                    var mainDiv = document.createElement("div");
+                    mainDiv.style = "float:left; margin-left:20px; margin-top:10px; width:150px; height:150px; background-size: cover;";
+                    var image = document.createElement("img");
+                    image.setAttribute("src",v.urlImage);
+                    image.style = "width:120px; height:120px; border-radius:50%;";
+                    var pInfo = document.createElement("p");
+                    pInfo.innerHTML = v.firstName+" "+ v.lastName;
+                    mainDiv.appendChild(image);
+                    mainDiv.appendChild(pInfo);
+                    aElem.appendChild(mainDiv);
+                    element.appendChild(aElem);
+                })
+            }
+        })
+    }
+
+
+    function showModalWinWithMusics(){
+        var darkLayer = document.createElement('div'); // слой затемнения
+        darkLayer.id = 'shadow'; // id чтобы подхватить стиль
+        document.body.appendChild(darkLayer); // включаем затемнение
+
+        var modalWin = document.getElementById('popupWin'); // находим наше "окно"
+        modalWin.style.display = 'block'; // "включаем" его
+
+        darkLayer.onclick = function () {  // при клике на слой затемнения все исчезнет
+            darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
+            modalWin.style.display = 'none'; // делаем окно невидимым
+            return false;
+        };
+
+        $.ajax({
+            url: "/showAllMusicOfCommunity/${community.id}",
+            dataType: "json",
+            async: false,
+            method: "get",
+            contentType: "text/html; charset/UTF-8; charset=windows-1251;",
+            data: {
+
+            },
+            success: function(data){
+                var element = document.getElementById("popupWin");
+                while (element.firstChild) element.removeChild(element.firstChild);
+
+
+                var form = document.createElement("form");
+                form.action = "/musicToCommunity/${community.id}?${_csrf.parameterName}=${_csrf.token}";
+                form.method = "post";
+                form.enctype = "multipart/form-data";
+
+                var input1 = document.createElement("input");
+                input1.type = "file";
+                input1.name = "file1";
+                input1.style = "float:left";
+
+                form.appendChild(input1);
+
+                var input2 = document.createElement("input");
+                input2.type = "submit";
+                input2.value = "Upload";
+                input2.style = "float:left";
+
+
+                form.appendChild(input2);
+
+
+                element.appendChild(form);
+
+
+                $.each(data,function(k,v){
+                    /*<p style="clear: left"/>
+                    <p style="margin-top: 10px;">${mus.nameOfSong}</p>
+                            <audio controls style="margin-top: 10px; width: 100%;">
+                            <source src="${mus.urlOfSong}" type="audio/mpeg" style="cursor: hand">
+                            Your browser does not support the audio element.
+                    </audio>*/
+
+                    var pElem = document.createElement("p");
+                    pElem.style = "clear:left;";
+
+                    var pNameSong = document.createElement("p");
+                    pNameSong.style = "margin-top: 10px; text-align:left; margin-left:25%;";
+                    pNameSong.innerHTML = v.nameOfSong;
+
+                    var audio = document.createElement("audio");
+                    audio.style = "margin-top: 10px; width: 50%;";
+                    audio.controls = "true";
+
+                    var source = document.createElement("source");
+                    source.src = v.urlOfSong;
+                    source.type = "audio/mpeg";
+
+                    audio.appendChild(source);
+                    element.appendChild(pElem);
+                    element.appendChild(pNameSong);
+                    element.appendChild(audio);
+                })
+            }
+        })
+    }
 </script>
 
 </body>

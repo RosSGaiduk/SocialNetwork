@@ -39,6 +39,8 @@ public class AjaxController extends BaseMethods {
     private CommunityService communityService;
     @Autowired
     private CommunitySubscriberService communitySubscriberService;
+    @Autowired
+    private MusicService musicService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
@@ -375,4 +377,42 @@ public class AjaxController extends BaseMethods {
         }
         return jsonArray.toString();
     }
+
+
+    @RequestMapping(value = "/showAllSubscribersOfCommunity/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String showSubscribers(@PathVariable("communityId") String communityId){
+        Community community = communityService.findOne(Long.parseLong(communityId));
+        List<User> users = userService.findAllUsersOfCommunity(community,Integer.MAX_VALUE);
+
+        JSONArray jsonArray = new JSONArray();
+        for (User u: users){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",u.getId());
+            jsonObject.putOnce("firstName",u.getFirstName());
+            jsonObject.putOnce("lastName",u.getLastName());
+            jsonObject.putOnce("urlImage",u.getNewestImageSrc());
+            jsonArray.put(jsonObject);
+        }
+        System.out.println("Size of JSON array: "+jsonArray.length());
+        return jsonArray.toString();
+    }
+
+
+    @RequestMapping(value = "/showAllMusicOfCommunity/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String showMusic(@PathVariable("communityId") String communityId){
+        List<Music> musics = musicService.findAllByCommunityId(Long.parseLong(communityId),Integer.MAX_VALUE);
+        JSONArray jsonArray = new JSONArray();
+        for (Music m: musics){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",m.getId());
+            jsonObject.putOnce("nameOfSong",m.getNameOfSong());
+            jsonObject.putOnce("urlOfSong",m.getUrlOfSong());
+            jsonArray.put(jsonObject);
+        }
+        System.out.println("Size of JSON array: "+jsonArray.length());
+        return jsonArray.toString();
+    }
+
 }
