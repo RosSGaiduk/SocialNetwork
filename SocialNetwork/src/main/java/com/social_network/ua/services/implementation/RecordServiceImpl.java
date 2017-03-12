@@ -1,6 +1,7 @@
 package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.RecordDao;
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.services.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public void edit(long id, String text, String urlOfImage, Date dateOfRecord) {
         Record record = recordDao.findOne(id);
-        record.setText(text); record.setUrlImage(urlOfImage); record.setDateOfRecord(dateOfRecord);
+        record.setText(text); record.setUrl(urlOfImage); record.setDateOfRecord(dateOfRecord);
         recordDao.edit(record);
     }
 
@@ -52,6 +53,11 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<Record> findAll() {
         return recordDao.findAll();
+    }
+
+    @Override
+    public List<Record> findAllByCommunity(Community community) {
+        return recordDao.findAllByCommunity(community);
     }
 
     @Override

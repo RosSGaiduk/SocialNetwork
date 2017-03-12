@@ -19,6 +19,8 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
+
+    <script src="/resources/scripts/main.js"></script>
 </head>
 <body>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
@@ -163,14 +165,14 @@
                         <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
                         <div style="width: 50%; float: left; height: 50px;"></div>
                         <c:if test="${rec.hasImage == true}">
-                        <img src="${rec.urlImage}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
+                        <img src="${rec.url}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
                         background-size: cover;
                         "></c:if>
                         <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
                     <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)"
-                            style="visibility: visible"
+                            style="visibility: visible; float: left;"
                     >Delete</button>
                     </c:if>
                 </div>
@@ -299,21 +301,5 @@
     }
 </script>
 
-<script>
-    function deleteRecord(recId){
-        $.ajax({
-            url: "/deleteRecord",
-            data:({
-                idRecord: recId
-            }),
-            async: false,
-            success: function(data){
-                var mainDiv = document.getElementById("records");
-                var deletedDiv = document.getElementById(recId+' div');
-                mainDiv.removeChild(deletedDiv);
-            }
-        })
-    }
-</script>
 </body>
 </html>

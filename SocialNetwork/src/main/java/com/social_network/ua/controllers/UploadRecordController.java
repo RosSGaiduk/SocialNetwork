@@ -38,7 +38,7 @@ public class UploadRecordController {
     {
         System.out.println("I am here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
@@ -47,6 +47,12 @@ public class UploadRecordController {
         record.setDateOfRecord(date);
         if (!text.equals("there is no text here just sent to avoid mistake"))
         record.setText(text);
+
+        record.setUser(userService.findOne(Long.parseLong(id)));
+        record.setUserFrom(user);
+        record.setUrlUserImagePattern(user.getNewestImageSrc());
+
+        recordService.add(record);
 
         //creating a folder inside of this folder
         Path path1 = Paths.get(path+"\\records");
@@ -62,18 +68,14 @@ public class UploadRecordController {
         List<FileItem> lst = null;
         try {
             lst = upload.parseRequest(request);
-            User user = userService.findOne(Long.parseLong(authentication.getName()));
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
                     //in this folder, which we created, write our images
                     fileItem.write(new File(path+"/records/"+fileItem.getName()));
-                    record.setUrlImage("/resources/records/"+fileItem.getName());
-                    record.setUser(userService.findOne(Long.parseLong(id)));
-                    record.setUserFrom(user);
+                    record.setUrl("/resources/records/"+fileItem.getName());
                     record.setHasImage(true);
-                    record.setUrlUserImagePattern(user.getNewestImageSrc());
                     recordService.edit(record);
-                    fileItem.delete();
+                    //fileItem.delete();
                 }
             }
         } catch (Exception e) {

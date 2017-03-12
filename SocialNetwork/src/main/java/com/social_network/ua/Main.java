@@ -1,11 +1,13 @@
 package com.social_network.ua;
 
+import com.social_network.ua.controllers.AjaxController;
 import com.social_network.ua.entity.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -46,6 +48,56 @@ public class Main {
         }
 
     }
+
+    /*private static int searchElement(int val,int []arr){
+        int firstIndex = 0;
+        int lastIndex = arr.length-1;
+        int middleIndex = (firstIndex+lastIndex)/2;
+
+        if (val==arr[lastIndex]){
+            return lastIndex;
+        }
+        while (val!=arr[middleIndex]) {
+            if (arr[middleIndex] < val) {
+                firstIndex = middleIndex;
+                middleIndex+=(lastIndex-firstIndex)/2;
+            } else {
+                middleIndex = (firstIndex+middleIndex)/2;
+            }
+        }
+        return middleIndex;
+    }*/
+
+    private static int searchElement(int val,int []arr,int firstIndex,int middleIndex){
+        int lastIndex = arr.length-1;
+        if (val==arr[lastIndex]){
+            return lastIndex;
+        }
+        if (val!=arr[middleIndex]) {
+            if (arr[middleIndex] < val) {
+                firstIndex = middleIndex;
+                middleIndex+=(lastIndex-firstIndex)/2;
+            } else {
+                middleIndex = (firstIndex+middleIndex)/2;
+            }
+            return searchElement(val,arr,firstIndex,middleIndex);
+        }
+        return middleIndex;
+    }
+
+
+
+
+
+
+    private static int searchElement(int val,int []arr){
+            int firstIndex = 0;
+            int lastIndex = arr.length-1;
+            int middleIndex = (firstIndex+lastIndex)/2;
+        return searchElement(val,arr,firstIndex,middleIndex);
+    }
+
+
 
     public static void main(String[] args) {
         entityManagerFactory = Persistence.createEntityManagerFactory("Main");
@@ -191,7 +243,7 @@ public class Main {
         System.out.println(d3==d4);
         System.out.println(d1==d3);*/
 
-        User user = entityManager.find(User.class,1l);
+        //User user = entityManager.find(User.class,1l);
 
         //List<Message> messages = entityManager.createQuery("from Message where userFrom = ?1 group by userTo.id").setParameter(1,user).getResultList();
 
@@ -211,11 +263,51 @@ public class Main {
         for (Message m:messageSet)
             System.out.println(m.getUserFrom().getId()+" "+m.getUserTo().getId());*/
 
-        String str = "Hello world";
+        /*String str = "Hello world";
         str = str.substring(0,5);
-        System.out.println(str);
+        System.out.println(str);*/
+
+        /*int []arr = new int[1000];
+        for (int i = 0; i < arr.length; i++){
+            Random random = new Random();
+            arr[i] = random.nextInt(20000);
+            //System.out.println(arr[i]);
+        }
+
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length; i++){
+            System.out.println(arr[i]);
+        }
+        System.out.println("**********************");
+        for (int i = 0; i < arr.length; i++){
+            System.out.println("val: "+arr[i]+" index: "+searchElement(arr[i],arr));
+        }
+
+        int a = 10;
+        int b = 11;
+
+        int newVal = (a>b) ? a : b;
+        System.out.println(newVal);
+*/
+        /*for (int val: arr) {
+            System.out.println("val: "+val+" index: "+searchElement(val, arr));
+        }*/
 
 
+        /*AjaxController[] strings = new AjaxController[10];
+        Arrays.sort(strings);
+
+        for (AjaxController str: strings)
+            System.out.println(str);*/
+
+
+        List<Object[]> objects = entityManager.createNativeQuery("select u.id from User u JOIN Community_Subscriber c on u.id = c.subscriber_id and c.community_id = ?1").setParameter(1,5l).getResultList();
+
+        for (Object o: objects){
+            BigInteger bigInteger = (BigInteger) o;
+            System.out.println(bigInteger.longValue());
+            System.out.println(entityManager.find(User.class,bigInteger.longValue()).getEmail());
+        }
 
         entityManager.getTransaction().commit();
         entityManager.close();

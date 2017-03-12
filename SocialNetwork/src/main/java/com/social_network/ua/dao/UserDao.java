@@ -1,5 +1,6 @@
 package com.social_network.ua.dao;
 
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import java.util.List;
@@ -18,6 +19,7 @@ public interface UserDao {
     List<User> findAllThatArentFriendsOfUserAndArentSubscribersOfUser(Long[]idsOf);
     List<Long> findAllIdsOfSubscribersOfUser(long id);
     List<User> findAllByInput(String str);
+    List<User> findAllUsersOfCommunity(Community community,int limit);
     User selectUser(long id1, long id2);
     List<Music> get3LastMusicOfUser(long userId);
     List<Music> getAllMusicOfUser(long userId);

@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,6 +35,10 @@ public class AjaxController extends BaseMethods {
     private AlbumService albumService;
     @Autowired
     private SubscriberService subscriberService;
+    @Autowired
+    private CommunityService communityService;
+    @Autowired
+    private CommunitySubscriberService communitySubscriberService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
@@ -332,4 +334,33 @@ public class AjaxController extends BaseMethods {
         }
         return jsonObject.toString();
     }
+
+    @RequestMapping(value = "/subscribe/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String subscribe(@RequestParam String userId,@PathVariable("communityId")String communityId){
+        String message = "";
+        Community community = communityService.findOne(Long.parseLong(communityId));
+        Community_Subscriber community_subscriber = communitySubscriberService.findOneByUserIdAndCommunityId(Long.parseLong(userId),Long.parseLong(communityId));
+            if (community_subscriber==null) {
+                community_subscriber = new Community_Subscriber();
+                community_subscriber.setCommunity_id(Long.parseLong(communityId));
+                community_subscriber.setSubscriber_id(Long.parseLong(userId));
+                communitySubscriberService.add(community_subscriber);
+                message = "subscribed";
+                community.setCountSubscribers(community.getCountSubscribers()+1);
+            }
+            else {
+                communitySubscriberService.delete(community_subscriber);
+                community.setCountSubscribers(community.getCountSubscribers()-1);
+                message = "cancelled";
+            }
+        communityService.edit(community);
+        return message;
+    }
+
+    /*@RequestMapping(value = "/subscrb/{communityId}",method = RequestMethod.POST)
+    public String check(@PathVariable("communityId")String communityId){
+        System.out.println(communityId);
+        return "redirect:/";
+    }*/
 }

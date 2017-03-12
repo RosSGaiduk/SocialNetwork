@@ -1,5 +1,6 @@
 package com.social_network.ua.services;
 
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
 import java.util.Date;
 import java.util.List;
@@ -15,5 +16,6 @@ public interface RecordService {
     void delete(long id);
     Record findOne(long id);
     List<Record> findAll();
+    List<Record> findAllByCommunity(Community community);
     List<Record> findAllInTheWallOf(long id);
 }

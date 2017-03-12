@@ -29,8 +29,13 @@
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
                 <a href="/photosOf/<sec:authentication property="name"/>/*" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
             </div>
+
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
                 <a href="/music" style="text-decoration: none"><h4 style="text-align: center">Музика</h4></a>
+            </div>
+
+            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
+                <a href="/communities" style="text-decoration: none"><h4 style="text-align: center">Спільноти</h4></a>
             </div>
 
             <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">

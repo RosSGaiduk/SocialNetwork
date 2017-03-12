@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Rostyslav on 24.11.2016.
@@ -44,7 +46,7 @@ public class UploadController {
         String path = request.getRealPath("/resources");
 
         //creating a folder inside of this folder
-        Path path1 = Paths.get(path+"\\"+authentication.getName());
+        Path path1 = Paths.get(path+"\\users");
         try {
             Files.createDirectories(path1);
         } catch (IOException e) {
@@ -68,14 +70,26 @@ public class UploadController {
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
                             ) {
                         //in this folder, which we created, write our images
-                        fileItem.write(new File(path + "/" + authentication.getName() + "/" + fileItem.getName()));
+
+                        boolean exists = true;
+                        String nameImage = "";
+                        Random random = new Random();
+                        while (exists){
+                            int number = random.nextInt(Integer.MAX_VALUE-1);
+                            nameImage = "imageOf_"+authentication.getName()+"_"+number;
+                            nameImage+="."+extension;
+                            User_Images user_images = imageService.findOneByUserIdAndName(userService.findOne(Long.parseLong(authentication.getName())),"/resources/users/"+nameImage);
+                            if (user_images==null)
+                                exists = false;
+                        }
+                        fileItem.write(new File(path + "/users/" + nameImage));
                         User_Images user_images = new User_Images();
                         //System.out.println("File item: "+fileItem.getName());
                         //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
-                        user_images.setUrlOfImage("/resources/" + authentication.getName() + "/" + fileItem.getName());
+                        user_images.setUrlOfImage("/resources/users/" + nameImage);
                         user_images.setDateOfImage(new Date(System.currentTimeMillis()));
                         user_images.setUser(user);
-                        user.setNewestImageSrc("/resources/" + authentication.getName() + "/" + fileItem.getName());
+                        user.setNewestImageSrc("/resources/users/" + nameImage);
                         userService.edit(user);
                         imageService.add(user_images);
                     }
@@ -87,4 +101,5 @@ public class UploadController {
         }
         return "redirect:/";
     }
+
 }

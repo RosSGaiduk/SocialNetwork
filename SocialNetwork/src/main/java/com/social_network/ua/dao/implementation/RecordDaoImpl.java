@@ -1,11 +1,14 @@
 package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.RecordDao;
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,6 +45,14 @@ public class RecordDaoImpl implements RecordDao {
     public List<Record> findAll() {
         return entityManager.createQuery("from Record").getResultList();
     }
+
+    @Transactional
+    public List<Record> findAllByCommunity(Community community) {
+        List<Record> records = entityManager.createQuery("from Record where community = ?1 group by id").setParameter(1,community).getResultList();
+        Collections.reverse(records);
+        return records;
+    }
+
     @Transactional
     public List<Record> findAllInTheWallOf(long id) {
         return entityManager.createQuery("from Record where user_id = ?1 group by dateOfRecord").setParameter(1,id).getResultList();

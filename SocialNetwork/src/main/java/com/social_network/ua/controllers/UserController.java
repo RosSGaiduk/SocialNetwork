@@ -66,8 +66,6 @@ public class UserController extends BaseMethods{
             return "views-user-new";
         }
 
-
-
         userService.add(newUser);
         return "redirect:/";
     }

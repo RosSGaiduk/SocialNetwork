@@ -308,3 +308,24 @@ html {
     background-color: mediumspringgreen;
     border-color: mediumspringgreen;
 }
+
+.imageSubscriberInCommunity{
+    width: 30%;
+    height: 60px;
+    margin-left: 3%;
+    float:left;
+    background-size: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.underImageSubscriberInCommunityInfo{
+    width: 90%;
+    height: 50%;
+    color: white;
+    background-color: #333f4d;
+    margin-top: 25%;
+    margin-left:5%;
+    visibility: hidden;
+    opacity: 0.5;
+}

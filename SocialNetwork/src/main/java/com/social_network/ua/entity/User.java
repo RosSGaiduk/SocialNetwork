@@ -32,6 +32,12 @@ public class User implements Comparable<User>{
     private String lastOnline;
     @Transient
     private String confirmPassword;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Community_Subscriber",
+            joinColumns = @JoinColumn(name = "subscriber_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id"))
+    private List<Community> communities = new ArrayList<>();
+
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private Set<Record> recordsToUser = new TreeSet<>();
@@ -39,6 +45,8 @@ public class User implements Comparable<User>{
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "userFrom")
     private Set<Record> recordsFromUser = new TreeSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    private List<Community> communitiesCreated = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="subscribers",
@@ -237,5 +245,29 @@ public class User implements Comparable<User>{
 
     public void setLastOnline(String lastOnline) {
         this.lastOnline = lastOnline;
+    }
+
+    public Boolean getOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(Boolean online) {
+        isOnline = online;
+    }
+
+    public List<Community> getCommunities() {
+        return communities;
+    }
+
+    public void setCommunities(List<Community> communities) {
+        this.communities = communities;
+    }
+
+    public List<Community> getCommunitiesCreated() {
+        return communitiesCreated;
+    }
+
+    public void setCommunitiesCreated(List<Community> communitiesCreated) {
+        this.communitiesCreated = communitiesCreated;
     }
 }

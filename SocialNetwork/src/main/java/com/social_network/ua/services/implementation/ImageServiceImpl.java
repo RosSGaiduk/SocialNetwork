@@ -63,6 +63,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public User_Images findOneByUserIdAndName(User user, String urlImage) {
+        return imageDao.findOneByUserIdAndName(user,urlImage);
+    }
+
+    @Override
     public List<User_Images> findAll() {
         return  imageDao.fundAll();
     }

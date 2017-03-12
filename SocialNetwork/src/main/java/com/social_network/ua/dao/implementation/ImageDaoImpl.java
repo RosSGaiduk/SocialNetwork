@@ -55,6 +55,16 @@ public class ImageDaoImpl implements ImageDao {
     }
 
     @Transactional
+    public User_Images findOneByUserIdAndName(User user, String urlImage) {
+        try {
+            User_Images user_images = (User_Images) entityManager.createQuery("from User_Images where user = ?1 and urlOfImage = ?2").setParameter(1, user).setParameter(2, urlImage).getSingleResult();
+            return user_images;
+        } catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Transactional
     public List<User_Images> fundAll() {
         return entityManager.createQuery("from User_Images").getResultList();
     }

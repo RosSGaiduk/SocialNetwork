@@ -15,13 +15,18 @@ public class Record implements Comparable<Record>{
     @Column
     private String text;
     @Column
-    private String urlImage;
+    private String url;
     @Column
     private Date dateOfRecord;
     @Column
     private boolean hasImage;
     @Column
     private String urlUserImagePattern;
+    @Column
+    private String type;//image,video,audio
+    @Column
+    private String nameRecord; //бо коли в нас музика або відео, потрібно вказати його назву і вивести її на сторінці,
+    //якщо це зображення, тоді nameRecord = ""
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -29,11 +34,14 @@ public class Record implements Comparable<Record>{
     @ManyToOne(fetch = FetchType.LAZY)
     private User userFrom;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Community community;
+
     public Record(){}
 
-    public Record(String text, String urlImage,Date dateOfImage) {
+    public Record(String text, String url,Date dateOfImage) {
         this.text = text;
-        this.urlImage = urlImage;
+        this.url = url;
     }
 
     public long getId() {
@@ -52,12 +60,12 @@ public class Record implements Comparable<Record>{
         this.text = text;
     }
 
-    public String getUrlImage() {
-        return urlImage;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
+    public void setUrl(String urlImage) {
+        this.url = urlImage;
     }
 
     public Date getDateOfRecord() {
@@ -104,5 +112,29 @@ public class Record implements Comparable<Record>{
 
     public void setUrlUserImagePattern(String urlUserImagePattern) {
         this.urlUserImagePattern = urlUserImagePattern;
+    }
+
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNameRecord() {
+        return nameRecord;
+    }
+
+    public void setNameRecord(String nameRecord) {
+        this.nameRecord = nameRecord;
     }
 }

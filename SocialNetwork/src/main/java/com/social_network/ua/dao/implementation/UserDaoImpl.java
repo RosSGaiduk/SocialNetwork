@@ -1,6 +1,7 @@
 package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.UserDao;
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Transient;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +92,21 @@ public class UserDaoImpl implements UserDao {
                 System.out.println("Exception from method findAllByInput(String str) from UserDaoImpl");
                 users = entityManager.createQuery("from User where  (firstName like ?1 or lastName like ?1)").setParameter(1, str.split(" ")[0]).getResultList();
             }
+        }
+        return users;
+    }
+
+    @Transactional
+    public List<User> findAllUsersOfCommunity(Community community,int limit) {
+        List<Object[]> objects = null;
+        if (limit <= 0)
+        objects = entityManager.createNativeQuery("select u.id from User u JOIN Community_Subscriber c on u.id = c.subscriber_id and c.community_id = ?1").setParameter(1,5l).getResultList();
+        else objects = entityManager.createNativeQuery("select u.id from User u JOIN Community_Subscriber c on u.id = c.subscriber_id and c.community_id = ?1").setParameter(1,5l).setMaxResults(limit).getResultList();
+        List<User> users = new ArrayList<>(objects.size());
+
+        for (Object o: objects){
+            BigInteger bigInteger = (BigInteger) o;
+            users.add(findOne(bigInteger.longValue()));
         }
         return users;
     }
