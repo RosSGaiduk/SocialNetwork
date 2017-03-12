@@ -3,6 +3,7 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.RecordDao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
+import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,6 +53,12 @@ public class RecordDaoImpl implements RecordDao {
         Collections.reverse(records);
         return records;
     }
+
+    @Transactional
+    public void updateUserImageSrcOfRecords(User user) {
+        entityManager.createNativeQuery("UPDATE Record SET urlUserImagePattern = ?2 where userFrom_id = ?1").setParameter(1,user).setParameter(2,user.getNewestImageSrc()).executeUpdate();
+    }
+
 
     @Transactional
     public List<Record> findAllInTheWallOf(long id) {

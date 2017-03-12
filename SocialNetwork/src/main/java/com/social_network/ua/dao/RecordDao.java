@@ -2,6 +2,8 @@ package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
+import com.social_network.ua.entity.User;
+
 import java.util.List;
 
 /**
@@ -14,5 +16,6 @@ public interface RecordDao {
     Record findOne(long id);
     List<Record> findAll();
     List<Record> findAllByCommunity(Community community);
+    void updateUserImageSrcOfRecords(User user);
     List<Record> findAllInTheWallOf(long id);
 }

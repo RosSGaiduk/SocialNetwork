@@ -76,6 +76,16 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findAllByUser(User user) {
+        return messageDao.findAllByUser(user);
+    }
+
+    @Override
+    public void updateMessagesImageOfUser(User user, String imageSrc) {
+        messageDao.updateMessagesImageOfUser(user,imageSrc);
+    }
+
+    @Override
     public List<Message> findAll() {
         return messageDao.findAll();
     }

@@ -20,7 +20,7 @@
 </head>
 
 <body>
-<font id = "minId" style="visibility: hidden;">10</font>
+<font id = "minId" style="visibility: hidden;"></font>
 <font id = "maxId" style="visibility: hidden;">10</font>
 <font id = "childrenCount" style="visibility: hidden;"></font>
 
@@ -69,7 +69,12 @@
                 /*dataType: "json",*/
                 success: function (data) {
                     document.getElementById("textAr").value = "";
-                    update(true);
+                    //$("#messages").children('div').eq(0).remove();
+                    //$("#messages").children('p').eq(0).remove();
+                    //changedSelect();
+                    //alert(document.getElementById("minId").innerHTML);
+                    //alert(document.getElementById("maxId").innerHTML);
+                    update(true,false);
                 }
             });
         }
@@ -78,7 +83,7 @@
 
 <script>
     var was1 = 0;
-    function update(value){
+    function update(value,updateMinId){
         var val = $("#selct").val();
         $.ajax({
            url: "/update",
@@ -117,7 +122,9 @@
                     elem.appendChild(divNew);
                     var myDivMessages = document.getElementById('messages');
                     document.getElementById("maxId").innerHTML = v.maxId;
-                    document.getElementById("minId").innerHTML = v.minId;
+                    if (updateMinId) {
+                        document.getElementById("minId").innerHTML = v.minId;
+                    }
 
                     myDivMessages.appendChild(elem);
                     //якщо повідомлення надіслав даний користувач
@@ -141,7 +148,7 @@
             }
         });
     }
-    var id1 = setInterval("update(false)",100);
+    var id1 = setInterval("update(false,false)",100);
 </script>
 
 
@@ -218,10 +225,10 @@
                 }
             })
         })
-        document.getElementById("maxId").innerHTML = "10";
-        document.getElementById("minId").innerHTML = "10";
+        //document.getElementById("maxId").innerHTML = "10";
+        //document.getElementById("minId").innerHTML = "10";
         document.getElementById("childrenCount").innerHTML = parseInt(document.getElementById("messages").childElementCount/2);
-        update(true);
+        update(true,true);
     }
     changedSelect();
 </script>

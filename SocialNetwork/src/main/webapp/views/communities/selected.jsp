@@ -17,7 +17,7 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
-    <script src="/resources/scripts/main.js"></script>
+    <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body>
 

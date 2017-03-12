@@ -78,7 +78,18 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Transactional
+    public List<Message> findAllByUser(User user) {
+        return entityManager.createQuery("from Message where userFrom = ?1").setParameter(1,user).getResultList();
+    }
+
+    @Transactional
     public List<Message> findAllByIdsAndMinId(long id1, long id2, long minId) {
+        BigInteger val = (BigInteger) entityManager.createNativeQuery("SELECT min(id) from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1))").setParameter(1,id1).setParameter(2,id2).getSingleResult();
+        System.out.println("min id: "+val);
+        if (val.longValue()==minId) {
+            System.out.println("EQUALS");
+            return null;
+        }
         List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id<?3 group by id DESC").setParameter(1,id1).setParameter(2,id2).setParameter(3,minId).setMaxResults(50).getResultList();
         List<Message> messages = new ArrayList<>(objects.size());
         for (Object o: objects)
@@ -92,6 +103,11 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Transactional
+    public void updateMessagesImageOfUser(User user,String imageSrc) {
+        entityManager.createNativeQuery("UPDATE Message set newestUserFromUrlImagePattern = ?1 where userFrom_id = ?2").setParameter(1,imageSrc).setParameter(2,user.getId()).executeUpdate();
+    }
+
+    @Transactional
     public Set<Message> getAllChatsWithAuthUser(User user) {
         List<Message> messages = entityManager.createQuery("from Message where userFrom =?1 group by userTo.id").setParameter(1,user).getResultList();
         List<Message> anotherCase = entityManager.createQuery("from Message where userTo =?1 group by userFrom.id").setParameter(1,user).getResultList();
@@ -102,7 +118,6 @@ public class MessageDaoImpl implements MessageDao {
             messageSet.add(m);
         return messageSet;
     }
-
 
     @Transactional
     public List<Message> findAll() {

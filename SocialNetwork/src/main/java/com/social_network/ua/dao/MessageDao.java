@@ -18,7 +18,9 @@ public interface MessageDao {
     long findAllByIds(long id1,long id2);
     long findLastIdOfMessageBetweenUsers(long id1,long id2);
     List<Message> findAllByIdsAndMaxId(long id1, long id2,long maxId);
+    List<Message> findAllByUser(User user);
     List<Message> findAllByIdsAndMinId(long id1, long id2,long minId);
+    void updateMessagesImageOfUser(User user,String imageSrc);
     Set<Message> getAllChatsWithAuthUser(User user);
     List<Message> findAll();
 }

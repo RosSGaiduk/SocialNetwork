@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="/resources/css/simplebox.css" type="text/css">
     <script type="text/javascript" src="/resources/scripts/simplebox_util.js"></script>
     <script type="text/javascript" src="/resources/scripts/simplebox.js"></script>
+    <script src="/resources/scripts/bootstrap.js"></script>
+    <script src="/resources/scripts/bootstrap.min.js"></script>
+    <script src="/resources/scripts/main.js"></script>
 </head>
 <body style="background-color: gainsboro">
 <div><tiles:insertAttribute name="header"/></div>

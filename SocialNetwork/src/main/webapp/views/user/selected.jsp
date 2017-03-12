@@ -20,7 +20,7 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
 
-    <script src="/resources/scripts/main.js"></script>
+    <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body>
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">

@@ -301,13 +301,19 @@ public class Main {
             System.out.println(str);*/
 
 
-        List<Object[]> objects = entityManager.createNativeQuery("select u.id from User u JOIN Community_Subscriber c on u.id = c.subscriber_id and c.community_id = ?1").setParameter(1,5l).getResultList();
+        /*List<Object[]> objects = entityManager.createNativeQuery("select u.id from User u JOIN Community_Subscriber c on u.id = c.subscriber_id and c.community_id = ?1").setParameter(1,5l).getResultList();
 
         for (Object o: objects){
             BigInteger bigInteger = (BigInteger) o;
             System.out.println(bigInteger.longValue());
             System.out.println(entityManager.find(User.class,bigInteger.longValue()).getEmail());
-        }
+        }*/
+        /*User user = entityManager.find(User.class,1l);
+        entityManager.createNativeQuery("UPDATE Message set newestUserFromUrlImagePattern = ?1 where userFrom_id = ?2").setParameter(1,"").setParameter(2,user.getId()).executeUpdate();
+*/
+
+        BigInteger val = (BigInteger) entityManager.createNativeQuery("SELECT min(id) from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1))").setParameter(1,1l).setParameter(2,7l).getSingleResult();
+        System.out.println(val.longValue());
 
         entityManager.getTransaction().commit();
         entityManager.close();

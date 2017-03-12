@@ -22,5 +22,7 @@ public interface MessageService {
     long findLastIdOfMessageBetweenUsers(long id1, long id2);
     List<Message> findAllByIdsAndMinId(long id1, long id2, long minId);
     Set<Message> getAllChatsWithAuthUser(User user);
+    List<Message> findAllByUser(User user);
+    void updateMessagesImageOfUser(User user,String imageSrc);
     List<Message> findAll();
 }

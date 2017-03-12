@@ -1,8 +1,11 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.services.ImageService;
+import com.social_network.ua.services.MessageService;
+import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -36,6 +39,10 @@ public class UploadController {
     private UserService userService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private RecordService recordService;
 
     @RequestMapping(value = "/process",method = RequestMethod.POST)
     public String save(HttpServletRequest request)
@@ -55,7 +62,6 @@ public class UploadController {
 
         DiskFileItemFactory d = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(d);
-
 
         try {
             //getting a list of items, from which, we will get our image
@@ -90,6 +96,8 @@ public class UploadController {
                         user_images.setDateOfImage(new Date(System.currentTimeMillis()));
                         user_images.setUser(user);
                         user.setNewestImageSrc("/resources/users/" + nameImage);
+                        messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());
+                        recordService.updateUserImageSrcOfRecords(user);
                         userService.edit(user);
                         imageService.add(user_images);
                     }

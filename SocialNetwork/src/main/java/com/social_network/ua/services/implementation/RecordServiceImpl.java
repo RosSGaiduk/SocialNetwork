@@ -3,6 +3,7 @@ package com.social_network.ua.services.implementation;
 import com.social_network.ua.dao.RecordDao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
+import com.social_network.ua.entity.User;
 import com.social_network.ua.services.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,11 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<Record> findAll() {
         return recordDao.findAll();
+    }
+
+    @Override
+    public void updateUserImageSrcOfRecords(User user) {
+        recordDao.updateUserImageSrcOfRecords(user);
     }
 
     @Override
