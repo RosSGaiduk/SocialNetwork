@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,5 +42,15 @@ public class MusicDaoImpl implements MusicDao {
     @Transactional
     public List<Music> findAll() {
         return entityManager.createQuery("from Music").getResultList();
+    }
+
+    @Transactional
+    public List<Music> findAllByCommunityId(long communityId,int limit) {
+        List<BigInteger> ids = entityManager.createNativeQuery("SELECT c.music_id from Community_Music c where c.community_id = ?1 ORDER BY c.music_id DESC").setParameter(1,5l).setMaxResults(limit).getResultList();
+        List<Music> musics = new ArrayList<>(ids.size());
+        for (BigInteger i: ids){
+            musics.add(findOne(i.longValue()));
+        }
+        return musics;
     }
 }

@@ -346,21 +346,33 @@ public class AjaxController extends BaseMethods {
                 community_subscriber.setCommunity_id(Long.parseLong(communityId));
                 community_subscriber.setSubscriber_id(Long.parseLong(userId));
                 communitySubscriberService.add(community_subscriber);
-                message = "subscribed";
                 community.setCountSubscribers(community.getCountSubscribers()+1);
+                message = "subscribed|"+community.getCountSubscribers();
             }
             else {
                 communitySubscriberService.delete(community_subscriber);
                 community.setCountSubscribers(community.getCountSubscribers()-1);
-                message = "cancelled";
+                message = "cancelled|"+community.getCountSubscribers();
             }
         communityService.edit(community);
         return message;
     }
 
-    /*@RequestMapping(value = "/subscrb/{communityId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateLogosSubscribersOfCommuity/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
     public String check(@PathVariable("communityId")String communityId){
-        System.out.println(communityId);
-        return "redirect:/";
-    }*/
+        System.out.println("HEEEREEEEEE");
+        Community community = communityService.findOne(Long.parseLong(communityId));
+        List<User> users = userService.findAllUsersOfCommunity(community,6);
+        JSONArray jsonArray = new JSONArray();
+
+        for (User user: users){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",user.getId());
+            jsonObject.putOnce("urlImage",user.getNewestImageSrc());
+            jsonObject.putOnce("firstName",user.getFirstName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray.toString();
+    }
 }

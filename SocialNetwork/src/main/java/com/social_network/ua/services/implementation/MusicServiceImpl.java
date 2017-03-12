@@ -36,6 +36,11 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    public List<Music> findAllByCommunityId(long communityId,int limit) {
+        return musicDao.findAllByCommunityId(communityId,limit);
+    }
+
+    @Override
     public List<Music> findAll() {
         return musicDao.findAll();
     }

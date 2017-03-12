@@ -1,12 +1,10 @@
 package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.Community;
+import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
-import com.social_network.ua.services.CommunityService;
-import com.social_network.ua.services.CommunitySubscriberService;
-import com.social_network.ua.services.RecordService;
-import com.social_network.ua.services.UserService;
+import com.social_network.ua.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +32,8 @@ public class CommunityController {
     private RecordService recordService;
     @Autowired
     private CommunitySubscriberService communitySubscriberService;
+    @Autowired
+    private MusicService musicService;
 
     @RequestMapping(value = "/communities",method = RequestMethod.GET)
     public String communitiesPage(Model model){
@@ -76,6 +76,16 @@ public class CommunityController {
         model.addAttribute("userAuth",userService.findOne(Long.parseLong(authentication.getName())));
         model.addAttribute("subscribed",communitySubscriberService.checkIfUserSubscribed(Long.parseLong(authentication.getName()),Long.parseLong(id)));
         model.addAttribute("subscribers",userService.findAllUsersOfCommunity(community,6));
+        model.addAttribute("musics",musicService.findAllByCommunityId(community.getId(),3));
         return "views-communities-selected";
+    }
+
+    @RequestMapping(value = "/musicOfCommunity/{communityId}",method = RequestMethod.GET)
+    public String musicOfCommunity(@PathVariable("communityId")String communityId,Model model){
+        //List<Music> musics = musicService.fi
+        List<Music> musics = musicService.findAllByCommunityId(Long.parseLong(communityId),Integer.MAX_VALUE);
+        model.addAttribute("musics",musics);
+        model.addAttribute("community",communityService.findOne(Long.parseLong(communityId)));
+        return "views-communities-audios";
     }
 }

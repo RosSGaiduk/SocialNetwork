@@ -21,6 +21,12 @@ public class Music {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable( name = "user_music",joinColumns = @JoinColumn(name = "music_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Community_Music",
+            joinColumns = @JoinColumn(name = "music_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id")
+    )
+    private List<Community> communities = new ArrayList<>();
 
     public Music() {}
 
@@ -59,5 +65,13 @@ public class Music {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public List<Community> getCommunities() {
+        return communities;
+    }
+
+    public void setCommunities(List<Community> communities) {
+        this.communities = communities;
     }
 }

@@ -12,4 +12,5 @@ public interface MusicDao {
     void delete(Music music);
     Music findOne(long id);
     List<Music> findAll();
+    List<Music> findAllByCommunityId(long communityId,int limit);
 }

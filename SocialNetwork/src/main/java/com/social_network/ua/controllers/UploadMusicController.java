@@ -1,12 +1,16 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.dao.CommunityMusicDao;
+import com.social_network.ua.entity.Community_Music;
 import com.social_network.ua.entity.Music;
+import com.social_network.ua.services.CommunityMusicService;
 import com.social_network.ua.services.MusicService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
@@ -23,16 +27,35 @@ import java.util.List;
 public class UploadMusicController extends BaseMethods{
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private CommunityMusicService communityMusicService;
 
     @RequestMapping(value = "/musicProcess",method = RequestMethod.POST)
     public String saveToTheWall(HttpServletRequest request)
     {
         System.out.println("I am here");
+        writeFile(request,"audio");
+        return "redirect:/";
+    }
 
+    @RequestMapping(value = "/musicToCommunity/{communityId}",method = RequestMethod.POST)
+    public String saveToTheCommunity(HttpServletRequest request, @PathVariable("communityId")String communityId)
+    {
+        System.out.println("I am here");
+        Music music = writeFile(request,"communities");
+        Community_Music community_music = new Community_Music();
+        community_music.setCommunity_id(Long.parseLong(communityId));
+        community_music.setMusic_id(music.getId());
+        communityMusicService.add(community_music);
+        return "redirect:/";
+    }
+
+
+    public Music writeFile(HttpServletRequest request,String pathAfterResources){
         String path = request.getRealPath("/resources");
         System.out.println("Path"+path);
 
-        Path path1 = Paths.get(path+"\\"+"audio");
+        Path path1 = Paths.get(path+"\\"+pathAfterResources);
         try {
             Files.createDirectories(path1);
         } catch (IOException e) {
@@ -41,7 +64,7 @@ public class UploadMusicController extends BaseMethods{
 
         DiskFileItemFactory d = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(d);
-
+        Music music = null;
         List<FileItem> lst = null;
         try {
             lst = upload.parseRequest(request);
@@ -63,10 +86,10 @@ public class UploadMusicController extends BaseMethods{
                             extension.equalsIgnoreCase("wma")
                             ) {
                         //in this folder, which we created, write our images
-                        fileItem.write(new File(path + "/audio/" + fileItem.getName()));
-                        Music music = new Music();
+                        fileItem.write(new File(path + "/"+pathAfterResources+"/" + fileItem.getName()));
+                        music = new Music();
                         music.setNameOfSong(fileItem.getName());
-                        music.setUrlOfSong("/resources/audio/" + fileItem.getName());
+                        music.setUrlOfSong("/resources/"+pathAfterResources+"/" + fileItem.getName());
                         musicService.add(music);
                     }
                 }
@@ -74,7 +97,8 @@ public class UploadMusicController extends BaseMethods{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "redirect:/";
+        return music;
     }
+
 }
 

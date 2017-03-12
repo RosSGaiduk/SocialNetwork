@@ -17,34 +17,36 @@
     <div class="menuDivClass">
         <sec:authorize access="isAuthenticated()">
 
-        <div style="width: 100%; height: 10px; float: left; margin-top: 120px;">
-            <a href="/" style="text-decoration: none"><h4 style="text-align: center">Моя сторінка</h4></a>
+        <div class="menuOption" style="margin-top: 120px;">
+            <a href="/" style="text-decoration: none;">
+                <h4 style="text-align: left; ">Моя сторінка</h4>
+            </a>
         </div>
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/messages" style="text-decoration: none"><h4 style="text-align: center">Повідомлення</h4></a>
+            <div class="menuOption">
+                <a href="/messages" style="text-decoration: none"><h4 style="text-align: left;">Повідомлення</h4></a>
             </div>
-        <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-            <a href="/friendsOf/<sec:authentication property="name"/>" style="text-decoration: none"><h4 style="text-align: center">Друзі</h4></a>
+        <div class="menuOption">
+            <a href="/friendsOf/<sec:authentication property="name"/>" style="text-decoration: none"><h4 style="text-align: left;">Друзі</h4></a>
         </div>
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/photosOf/<sec:authentication property="name"/>/*" style="text-decoration: none"><h4 style="text-align: center">Фотографії</h4></a>
+            <div class="menuOption">
+                <a href="/photosOf/<sec:authentication property="name"/>/*" style="text-decoration: none"><h4 style="text-align: left">Фотографії</h4></a>
             </div>
 
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/music" style="text-decoration: none"><h4 style="text-align: center">Музика</h4></a>
+            <div class="menuOption">
+                <a href="/music" style="text-decoration: none"><h4 style="text-align: left">Музика</h4></a>
             </div>
 
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/communities" style="text-decoration: none"><h4 style="text-align: center">Спільноти</h4></a>
+            <div class="menuOption">
+                <a href="/communities" style="text-decoration: none"><h4 style="text-align: left">Спільноти</h4></a>
             </div>
 
-            <div style="width: 100%; height: 10px; float: left; margin-top: 20px;">
-                <a href="/news" style="text-decoration: none"><h4 style="text-align: center">Новини</h4></a>
+            <div class="menuOption">
+                <a href="/news" style="text-decoration: none"><h4 style="text-align: left">Новини</h4></a>
             </div>
 
             <div style="width: 100%; height: 10px; float: left; margin-top: 40px;">
             <form:form method="post" action="/logout">
-                <p style="text-align: center"><button type="submit" style="
+                <p style="text-align: left"><button type="submit" style="
                 background-color: darkslateblue;
                 color:white;
                 cursor: hand;

@@ -11,5 +11,6 @@ public interface MusicService {
     void edit(Music music);
     void delete(Music music);
     Music findOne(long id);
+    List<Music> findAllByCommunityId(long communityId,int limit);
     List<Music> findAll();
 }

@@ -312,8 +312,14 @@ public class Main {
         entityManager.createNativeQuery("UPDATE Message set newestUserFromUrlImagePattern = ?1 where userFrom_id = ?2").setParameter(1,"").setParameter(2,user.getId()).executeUpdate();
 */
 
-        BigInteger val = (BigInteger) entityManager.createNativeQuery("SELECT min(id) from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1))").setParameter(1,1l).setParameter(2,7l).getSingleResult();
-        System.out.println(val.longValue());
+        /*BigInteger val = (BigInteger) entityManager.createNativeQuery("SELECT min(id) from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1))").setParameter(1,1l).setParameter(2,7l).getSingleResult();
+        System.out.println(val.longValue());*/
+
+
+        List<BigInteger> ids = entityManager.createNativeQuery("SELECT c.music_id from Community_Music c where c.community_id = ?1 ORDER BY c.music_id DESC").setParameter(1,5l).getResultList();
+
+        for (BigInteger i: ids)
+            System.out.println(i.longValue());
 
         entityManager.getTransaction().commit();
         entityManager.close();

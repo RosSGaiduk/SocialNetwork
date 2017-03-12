@@ -33,6 +33,12 @@ public class Community {
     private List<User> subscribers = new ArrayList<>();
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "community")
     private List<Record> records = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Community_Music",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "music_id")
+    )
+    private List<Music> musics = new ArrayList<>();
 
 
 
@@ -110,5 +116,13 @@ public class Community {
 
     public void setCountSubscribers(int countSubscribers) {
         this.countSubscribers = countSubscribers;
+    }
+
+    public List<Music> getMusics() {
+        return musics;
+    }
+
+    public void setMusics(List<Music> musics) {
+        this.musics = musics;
     }
 }

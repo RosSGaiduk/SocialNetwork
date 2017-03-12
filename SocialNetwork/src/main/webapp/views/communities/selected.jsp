@@ -48,7 +48,9 @@
                 </audio>
             </c:if>
             <p style="clear: left"/>
+            <c:if test="${belong}">
             <button onclick="deleteRecord(${rec.id})" style="margin-top: 10px;">Delete</button>
+            </c:if>
             <div style="width: 100%; height: 1px; background-color: gainsboro; float: left; margin-top: 10px;"></div>
         </div>
     </c:forEach>
@@ -76,14 +78,18 @@
     </c:if>
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
         <!--Фото якихось 6 підписників-->
-         <h4 style="margin: 20px 0px 0px 20px">Підписники ${community.countSubscribers}</h4>
-        <div style="float: left; width: 100%; height: 120px; margin-top: 50px;">
+        <a href="/subscribersOf/${community.id}" style="text-decoration: none;">
+         <span style="margin: 20px 0px 0px 20px; color: blue;"><strong>Підписники <span id = "countSubscribers">${community.countSubscribers}</span></strong></span>
+        </a>
+        <div id = "subscribersBlock" style="float: left; width: 100%; height: 120px; margin-top: 30px;">
             <c:forEach items="${subscribers}" var="s">
+                <a href="/user/${s.id}">
                 <div class="imageSubscriberInCommunity" style="background-image: url(${s.newestImageSrc});">
                     <div class="underImageSubscriberInCommunityInfo">
                         ${s.firstName}
                     </div>
                 </div>
+                </a>
                 <%--<img src="${s.newestImageSrc}" width="70" height="70" style="background-size: cover; border-radius: 50%;">--%>
             </c:forEach>
         </div>
@@ -93,11 +99,26 @@
         <div style="float: left; width: 100%; height: 120px; margin-top: 50px;"></div>
         <!--Між блоками завжди така дів-->
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
-        <!--Відеозаписи-->
-        <div style="float: left; width: 100%; height: 120px; margin-top: 50px;"></div>
+        <!--Аудіозаписи-->
+        <p>
+        <a href="/musicOfCommunity/${community.id}" style="text-decoration: none;">
+            <span style="margin: 20px 0px 0px 20px; color: blue;"><strong>Аудіозаписи</strong></span>
+        </a>
+        </p>
+        <div style="float: left; width: 100%; height: auto; margin-top: 0px;">
+            <c:forEach items="${musics}" var="mus">
+                <p style="clear: left"/>
+                <p style="margin-top: 10px;">${mus.nameOfSong}</p>
+                <audio controls style="margin-top: 10px; width: 100%;">
+                    <source src="${mus.urlOfSong}" type="audio/mpeg" style="cursor: hand">
+                    Your browser does not support the audio element.
+                </audio>
+                <%--<button id = "button ${mus.id}"onclick="addMusicToUser(${mus.id})">Add</button>--%>
+            </c:forEach>
+        </div>
         <!--Між блоками завжди така дів-->
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
-        <!--Аудіозаписи-->
+        <!--Відеозаписи-->
         <div style="float: left; width: 100%; height: 120px; margin-top: 50px;"></div>
 </div>
 <script>
@@ -110,7 +131,6 @@
 </script>
 
 <script>
-
     function subscribe(){
         $.ajax({
             url: "/subscribe/${community.id}",
@@ -122,12 +142,48 @@
             success: function (data) {
                 //alert(data);
 
-                if (data=='subscribed') {
+                if (data.split("|")[0]=='subscribed') {
                     $("#subscribeBtn").text("Відписатись");
+
                 }
                 else {
                     $("#subscribeBtn").text("Підписатись");
                 }
+                document.getElementById("countSubscribers").innerHTML = data.split("|")[1];
+                updateSubscribersLogos();
+            }
+        })
+    }
+
+
+    function updateSubscribersLogos(){
+        $.ajax({
+            url: "/updateLogosSubscribersOfCommuity/${community.id}",
+            async: false,
+            data: {
+
+            },
+            dataType: "json",
+            method: "get",
+            success: function(data){
+                var element = document.getElementById("subscribersBlock");
+                while (element.firstChild) element.removeChild(element.firstChild);
+                $.each(data, function (k, v) {
+                    var aMain = document.createElement("a");
+                    aMain.href = "/user/"+ v.id;
+
+                    var divImage = document.createElement("div");
+                    divImage.setAttribute("class","imageSubscriberInCommunity");
+                    divImage.style = "background-image: url("+v.urlImage +");";
+
+                    var divInfo= document.createElement("div");
+                    divInfo.setAttribute("class","underImageSubscriberInCommunityInfo");
+                    divInfo.text = v.firstName;
+
+                    divImage.appendChild(divInfo);
+                    aMain.appendChild(divImage);
+                    document.getElementById("subscribersBlock").appendChild(aMain);
+                })
             }
         })
     }
