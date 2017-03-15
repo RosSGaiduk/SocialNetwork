@@ -227,9 +227,11 @@
             success: function(data){
                 $.each(data,function(k,v){
                     //alert(v.userUrlImage);
+                    var aHref = document.createElement("a");
+                    aHref.href = "/user/"+v.id;
                     var mainDiv = document.createElement("div");
                     mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ v.userUrlImage+"); border-radius:50%;";
-
+                    aHref.appendChild(mainDiv);
                     var divP = document.createElement("div");
                     divP.style = "float:left; width: 60%;";
                     var textP = document.createElement("p");
@@ -239,7 +241,7 @@
                     clearP.style = "clear:left;"
                     divP.appendChild(textP);
 
-                    document.getElementById("comments").appendChild(mainDiv);
+                    document.getElementById("comments").appendChild(aHref);
                     document.getElementById("comments").appendChild(divP);
                     document.getElementById("comments").appendChild(clearP);
                 })
@@ -268,10 +270,11 @@
             },
             success: function (data) {
                 //alert(data);
-
+                var aHref = document.createElement("a");
+                aHref.href = "/user/"+data.id;
                 var mainDiv = document.createElement("div");
-                mainDiv.style = "float:left; margin-left:opx; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+");";
-
+                mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+"); border-radius:50%;";
+                aHref.appendChild(mainDiv);
                 var textP = document.createElement("p");
                 textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
                 textP.innerHTML = data.text;
@@ -279,7 +282,7 @@
                 clearP.style = "clear:left;"
 
                 var first=document.getElementById("comments").childNodes[0];
-                document.getElementById("comments").insertBefore(mainDiv,first);
+                document.getElementById("comments").insertBefore(aHref,first);
 
                 var second=document.getElementById("comments").childNodes[1];
                 document.getElementById("comments").insertBefore(textP,second);
@@ -287,10 +290,11 @@
                 var third=document.getElementById("comments").childNodes[2];
                 document.getElementById("comments").insertBefore(clearP,third);
 
-
                 //document.getElementById("comments").appendChild(mainDiv);
                 //document.getElementById("comments").appendChild(textP);
                 //document.getElementById("comments").appendChild(clearP);
+
+                $("#textAr").val("");
             }
         })
     }

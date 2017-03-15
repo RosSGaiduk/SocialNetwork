@@ -434,6 +434,7 @@ public class AjaxController extends BaseMethods {
         comment.setUserFromNewestUrlImage(user.getNewestImageSrc());
         commentService.add(comment);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("id",comment.getUserFromIdPattern());
         jsonObject.putOnce("text",comment.getText());
         jsonObject.putOnce("imageSrc",comment.getUserFromNewestUrlImage());
         return jsonObject.toString();
@@ -449,6 +450,7 @@ public class AjaxController extends BaseMethods {
         System.out.println("Size: "+comments.size());
         for (Comment comment: comments){
             JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",comment.getUserFromIdPattern());
             jsonObject.putOnce("text",comment.getText());
             jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
             jsonArray.put(jsonObject);
