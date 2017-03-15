@@ -4,6 +4,7 @@ import com.social_network.ua.dao.UserDao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -147,6 +148,11 @@ public class UserDaoImpl implements UserDao {
             System.out.println("Exception");
             return null;
         }
+    }
+
+    @Transactional
+    public User getUserOfImage(User_Images user_images) {
+        return (User) entityManager.createQuery("select user from User_Images where id = ?1").setParameter(1,user_images.getId()).getSingleResult();
     }
 
     @Transactional

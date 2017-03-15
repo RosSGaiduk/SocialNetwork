@@ -43,6 +43,8 @@ public class AjaxController extends BaseMethods {
     private MusicService musicService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
@@ -304,11 +306,11 @@ public class AjaxController extends BaseMethods {
         long authId = Long.parseLong(authentication.getName());
         long userToIdLong = Long.parseLong(userToId);
         long minIdLong = Long.parseLong(minId);
-        System.out.println("Auth: "+authId+", user to: "+userToIdLong+", minIdLong: "+minIdLong);
+        //System.out.println("Auth: "+authId+", user to: "+userToIdLong+", minIdLong: "+minIdLong);
 
         JSONArray jsonArray = new JSONArray();
         List<Message> messages = messageService.findAllByIdsAndMinId(authId,userToIdLong,minIdLong);
-        System.out.println("Size of messages: "+messages.size());
+        //System.out.println("Size of messages: "+messages.size());
         for (int i = 0; i < messages.size(); i++){
             JSONObject jsonObject = new JSONObject();
             jsonObject.putOnce("id", messages.get(i).getId());
@@ -326,7 +328,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/angularFindEmail",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String findUserByEmail(@RequestParam String email){
-        System.out.println(email);
+        //System.out.println(email);
         JSONObject jsonObject = new JSONObject();
         if (userService.findUserByEmail(email)){
             jsonObject.putOnce("color","orangered");
@@ -365,7 +367,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/updateLogosSubscribersOfCommuity/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String check(@PathVariable("communityId")String communityId){
-        System.out.println("HEEEREEEEEE");
+        //System.out.println("HEEEREEEEEE");
         Community community = communityService.findOne(Long.parseLong(communityId));
         List<User> users = userService.findAllUsersOfCommunity(community,6);
         JSONArray jsonArray = new JSONArray();
@@ -396,7 +398,7 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("urlImage",u.getNewestImageSrc());
             jsonArray.put(jsonObject);
         }
-        System.out.println("Size of JSON array: "+jsonArray.length());
+        //System.out.println("Size of JSON array: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -413,7 +415,7 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("urlOfSong",m.getUrlOfSong());
             jsonArray.put(jsonObject);
         }
-        System.out.println("Size of JSON array: "+jsonArray.length());
+        //System.out.println("Size of JSON array: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -443,11 +445,11 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/loadCommentsUnderImage",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadComments(@RequestParam String id){
-        System.out.println("Updating comments "+id);
+        //System.out.println("Updating comments "+id);
         User_Images image = imageService.findOne(Long.parseLong(id));
         JSONArray jsonArray = new JSONArray();
         List<Comment> comments = commentService.findAllByImageId(image.getId());
-        System.out.println("Size: "+comments.size());
+        //System.out.println("Size: "+comments.size());
         for (Comment comment: comments){
             JSONObject jsonObject = new JSONObject();
             jsonObject.putOnce("id",comment.getUserFromIdPattern());
@@ -455,7 +457,81 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
             jsonArray.put(jsonObject);
         }
-        System.out.println("Json array length: "+jsonArray.length());
+        //System.out.println("Json array length: "+jsonArray.length());
         return jsonArray.toString();
+    }
+
+    @RequestMapping(value = "/leaveLike",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String leavelike(@RequestParam String type,@RequestParam String id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        switch (type){
+            case "image":{
+                User_Images user_images = imageService.findOne(Long.parseLong(id));
+                LLike likeSearch = likeService.findOneByUserAndImage(user,user_images);
+                if (likeSearch==null) {
+                    LLike like = new LLike();
+                    like.setUser(user);
+                    like.setUserImage(user_images);
+                    likeService.add(like);
+                    user_images.setCountLikes(user_images.getCountLikes()+1);
+                    imageService.edit(user_images);
+                }
+                else {
+                    user_images.setCountLikes(user_images.getCountLikes()-1);
+                    imageService.edit(user_images);
+                    likeService.delete(likeSearch);
+                }
+            } break;
+
+            case "record":{
+                LLike like = new LLike();
+                like.setUser(user);
+                Record record = recordService.findOne(Long.parseLong(id));
+                like.setRecord(record);
+                likeService.add(like);
+            } break;
+
+            case "comment":{
+                LLike like = new LLike();
+                like.setUser(user);
+                Comment comment = commentService.findOne(Long.parseLong(id));
+                like.setComment(comment);
+                likeService.add(like);
+            } break;
+        }
+        return "success";
+    }
+
+    @RequestMapping(value = "/getCountLikesOfEntity/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getCountLikesOfEntity(@PathVariable("id") String id,@RequestParam String type){
+        System.out.println("getting likes");
+        JSONObject jsonObject = new JSONObject();
+        //String returnValue = "";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        switch (type) {
+            case "image":{
+                User_Images image = imageService.findOne(Long.parseLong(id));
+                //returnValue = ""+image.getCountLikes();
+                jsonObject.putOnce("countLikes",image.getCountLikes());
+                LLike like = likeService.findOneByUserAndImage(user,image);
+                if (like==null) jsonObject.putOnce("liked",false);
+                else jsonObject.putOnce("liked",true);
+            } break;
+
+            case "comment":{
+                System.out.println("Getting count of likes from Comment");
+                //some code here
+            } break;
+
+            case "record":{
+                System.out.println("Getting count of likes from Record");
+                //some code here
+            } break;
+        }
+        return jsonObject.toString();
     }
 }

@@ -4,6 +4,7 @@ import com.social_network.ua.dao.UserDao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.repository.UserRepo;
 import com.social_network.ua.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserToOfMessage(long messageId) {
         return userDao.getUserToOfMessage(messageId);
+    }
+
+    @Override
+    public User getUserOfImage(User_Images user_images) {
+        return userDao.getUserOfImage(user_images);
     }
 
     @Override

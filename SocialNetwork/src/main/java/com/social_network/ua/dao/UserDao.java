@@ -3,6 +3,8 @@ package com.social_network.ua.dao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Images;
+
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ public interface UserDao {
     List<Music> get3LastMusicOfUser(long userId);
     List<Music> getAllMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
+    User getUserOfImage(User_Images user_images);
     User getUserToOfMessage(long messageId);
     boolean findUserByEmail(String email);
     List<User> findAll();

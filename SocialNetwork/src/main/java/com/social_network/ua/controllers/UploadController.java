@@ -98,6 +98,8 @@ public class UploadController {
                         imageService.add(user_images);
                         user.setNewestImageSrc("/resources/users/" + nameImage);
                         user.setNewestImageId(user_images.getId());
+                        //треба обновити всі повідомлення, userFrom.id яких такий як user.getId() - це ми зробили
+                        //але треба ще обновити всі urlUserTo повідомень
                         messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());
                         recordService.updateUserImageSrcOfRecords(user);
                         userService.edit(user);

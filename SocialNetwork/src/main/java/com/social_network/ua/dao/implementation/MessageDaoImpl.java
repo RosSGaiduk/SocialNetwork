@@ -105,6 +105,7 @@ public class MessageDaoImpl implements MessageDao {
     @Transactional
     public void updateMessagesImageOfUser(User user,String imageSrc) {
         entityManager.createNativeQuery("UPDATE Message set newestUserFromUrlImagePattern = ?1 where userFrom_id = ?2").setParameter(1,imageSrc).setParameter(2,user.getId()).executeUpdate();
+        entityManager.createNativeQuery("UPDATE Message set newestUserToUrlImagePattern = ?1 where userTo_id = ?2").setParameter(1,imageSrc).setParameter(2,user.getId()).executeUpdate();
     }
 
     @Transactional

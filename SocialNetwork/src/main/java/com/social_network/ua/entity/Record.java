@@ -1,7 +1,9 @@
 package com.social_network.ua.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Rostyslav on 26.11.2016.
@@ -36,6 +38,9 @@ public class Record implements Comparable<Record>{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "record")
+    private List<LLike> likes = new ArrayList<>();
 
     public Record(){}
 
@@ -136,5 +141,13 @@ public class Record implements Comparable<Record>{
 
     public void setNameRecord(String nameRecord) {
         this.nameRecord = nameRecord;
+    }
+
+    public List<LLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LLike> likes) {
+        this.likes = likes;
     }
 }

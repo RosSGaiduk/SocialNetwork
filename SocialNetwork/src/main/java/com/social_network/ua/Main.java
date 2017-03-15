@@ -1,7 +1,13 @@
 package com.social_network.ua;
 
 import com.social_network.ua.controllers.AjaxController;
+import com.social_network.ua.dao.implementation.ImageDaoImpl;
+import com.social_network.ua.dao.implementation.LikeDaoImpl;
 import com.social_network.ua.entity.*;
+import com.social_network.ua.services.ImageService;
+import com.social_network.ua.services.LikeService;
+import com.social_network.ua.services.implementation.ImageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,7 +23,7 @@ import java.util.*;
 public class Main {
     private static EntityManagerFactory entityManagerFactory;
     private static EntityManager entityManager;
-
+    private static ImageDaoImpl imageDao = new ImageDaoImpl();
     private static void saveMp3File(String urlToFile,String urlWhereToSaveNewFile){
         File f = new File(urlToFile);
         InputStream is = null;
@@ -316,10 +322,18 @@ public class Main {
         System.out.println(val.longValue());*/
 
 
-        List<BigInteger> ids = entityManager.createNativeQuery("SELECT c.music_id from Community_Music c where c.community_id = ?1 ORDER BY c.music_id DESC").setParameter(1,5l).getResultList();
+       /* List<BigInteger> ids = entityManager.createNativeQuery("SELECT c.music_id from Community_Music c where c.community_id = ?1 ORDER BY c.music_id DESC").setParameter(1,5l).getResultList();
 
         for (BigInteger i: ids)
-            System.out.println(i.longValue());
+            System.out.println(i.longValue());*/
+
+        //User_Images user_images = entityManager.find(User_Images.class,111l);
+        //entityManager.remove(entityManager.contains(user_images)? user_images: entityManager.merge(user_images));
+        //entityManager.remove(user_images);
+
+
+        LLike like = entityManager.find(LLike.class,7l);
+        entityManager.remove(entityManager.contains(like)?like: entityManager.merge(like));
 
         entityManager.getTransaction().commit();
         entityManager.close();

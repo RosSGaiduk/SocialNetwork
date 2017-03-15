@@ -1,6 +1,8 @@
 package com.social_network.ua.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Rostyslav on 14.03.2017.
@@ -21,6 +23,8 @@ public class Comment {
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private User_Images userImage;
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "comment")
+    private List<LLike> likes = new ArrayList<>();
 
     public Comment(){}
 
@@ -70,5 +74,13 @@ public class Comment {
 
     public void setUserImage(User_Images userImage) {
         this.userImage = userImage;
+    }
+
+    public List<LLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LLike> likes) {
+        this.likes = likes;
     }
 }

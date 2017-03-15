@@ -19,7 +19,7 @@ public class User_Images implements Comparable<User_Images>{
     @Column
     private Date dateOfImage;
 
-    @OneToMany(mappedBy = "userImage",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userImage",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,6 +28,11 @@ public class User_Images implements Comparable<User_Images>{
     @ManyToOne(fetch = FetchType.LAZY)
     private Album album;
 
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "userImage")
+    private List<LLike> likes = new ArrayList<>();
+
+    @Column
+    private int countLikes = 0;
 
     public User_Images(){}
     public User_Images(String urlOfImage,Date date) {
@@ -94,5 +99,21 @@ public class User_Images implements Comparable<User_Images>{
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<LLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LLike> likes) {
+        this.likes = likes;
+    }
+
+    public int getCountLikes() {
+        return countLikes;
+    }
+
+    public void setCountLikes(int countLikes) {
+        this.countLikes = countLikes;
     }
 }

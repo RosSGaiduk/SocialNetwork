@@ -204,18 +204,39 @@
             width: 75%; height: 64%; float: left;
             margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
             background-repeat: no-repeat; background-size: cover; cursor: hand;
-            " class="magnify">
+            " class="magnify" onclick="nextImage()">
     </div>
     <textarea id = "textAr" style="height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;" placeholder="Введіть повідомлення: "></textarea>
     <button onclick="leaveComment(${user.newestImageId})" class="sendButtonStyle" style="float: left; margin-left: 10px; margin-top: 40px;">Send</button>
+    <img id = "currentImage" src="/resources/img/icons/like.png" id = "likeImg" style="float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;" onclick="leaveLike('image','${user.newestImageId}')">
+    <span id = "countLikesUnderPhoto" style="float: left; margin-top: 20px; margin-left: 7px;">1</span>
     <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;">
     </div>
 </div>
 
 
 <script>
+    function leaveLike(typeOfEntity,idOfEntity){
+        //alert(typeOfEntity+" "+idOfEntity);
+        $.ajax({
+            url: "/leaveLike",
+            async: false,
+            data: {
+                type: typeOfEntity,
+                id: idOfEntity
+            },
+            success: function (data) {
+                loadCountLikes(typeOfEntity,idOfEntity);
+            }
+        })
+    }
+
+    function nextImage(){
+    }
+</script>
+
+<script>
     function updateCommentsGo(imageId){
-        //alert(imageId);
         $.ajax({
             url: "/loadCommentsUnderImage",
             async: false,
@@ -226,7 +247,6 @@
             },
             success: function(data){
                 $.each(data,function(k,v){
-                    //alert(v.userUrlImage);
                     var aHref = document.createElement("a");
                     aHref.href = "/user/"+v.id;
                     var mainDiv = document.createElement("div");
@@ -238,7 +258,7 @@
                     textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
                     textP.innerHTML = v.text;
                     var clearP = document.createElement("p");
-                    clearP.style = "clear:left;"
+                    clearP.style = "clear:left;";
                     divP.appendChild(textP);
 
                     document.getElementById("comments").appendChild(aHref);
@@ -255,12 +275,37 @@
         var element = document.getElementById("comments");
         while(element.firstChild) element.removeChild(element.firstChild);
         header();
+        /*var likeImg = document.createElement("img");
+        likeImg.src = "/resources/img/icons/like.png";
+        likeImg.style = "float:left; width:16px;height:16px;";
+        document.getElementById("popupWin").appendChild(likeImg);*/
+        loadCountLikes('image',idPhoto);
         updateCommentsGo(idPhoto);
     }
 
+    function loadCountLikes(typeEntity,idEntity){
+        $.ajax({
+            url: "/getCountLikesOfEntity/"+idEntity,
+            method: "get",
+            dataType: "json",
+            async: false,
+            data:{
+                type: typeEntity
+            },
+            success: function (data) {
+                $("#countLikesUnderPhoto").html(data.countLikes);
+                if (!data.liked){
+                    var image = document.getElementById("currentImage");
+                    image.src = "/resources/img/icons/likeClear.png";
+                } else {
+                    var image = document.getElementById("currentImage");
+                    image.src = "/resources/img/icons/like.png";
+                }
+            }
+        })
+    }
 
     function leaveComment(imageId){
-        //alert($("#textAr").val());
         $.ajax({
             url: "/leaveComment/"+imageId,
             async: false,
@@ -269,7 +314,6 @@
                 text: $("#textAr").val()
             },
             success: function (data) {
-                //alert(data);
                 var aHref = document.createElement("a");
                 aHref.href = "/user/"+data.id;
                 var mainDiv = document.createElement("div");
@@ -346,7 +390,6 @@
             dataType: "json",
             async:false,
             success: function(data){
-                //alert("Hello");
                 $.each(data,function(k,v){
                   var elem = document.createElement("div");
                     elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";

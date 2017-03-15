@@ -83,6 +83,9 @@ public class User implements Comparable<User>{
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    private List<LLike> likes = new ArrayList<>();
+
     public User(){}
 
     public long getId() {
@@ -290,5 +293,13 @@ public class User implements Comparable<User>{
 
     public void setNewestImageId(long newestImageId) {
         this.newestImageId = newestImageId;
+    }
+
+    public List<LLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LLike> likes) {
+        this.likes = likes;
     }
 }
