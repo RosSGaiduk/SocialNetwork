@@ -27,6 +27,8 @@ public class User implements Comparable<User>{
     @Column
     private String newestImageSrc;
     @Column
+    private long newestImageId;
+    @Column
     private Boolean isOnline;
     @Column
     private String lastOnline;
@@ -77,6 +79,9 @@ public class User implements Comparable<User>{
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<Album> albums = new TreeSet<>();
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
     public User(){}
 
@@ -269,5 +274,21 @@ public class User implements Comparable<User>{
 
     public void setCommunitiesCreated(List<Community> communitiesCreated) {
         this.communitiesCreated = communitiesCreated;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public long getNewestImageId() {
+        return newestImageId;
+    }
+
+    public void setNewestImageId(long newestImageId) {
+        this.newestImageId = newestImageId;
     }
 }

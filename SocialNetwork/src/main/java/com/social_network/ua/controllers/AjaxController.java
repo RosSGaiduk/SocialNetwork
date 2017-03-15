@@ -41,6 +41,8 @@ public class AjaxController extends BaseMethods {
     private CommunitySubscriberService communitySubscriberService;
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private CommentService commentService;
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
@@ -415,4 +417,43 @@ public class AjaxController extends BaseMethods {
         return jsonArray.toString();
     }
 
+
+    @RequestMapping(value = "/leaveComment/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String leaveComment(@PathVariable("id")String id,@RequestParam String text){
+        //System.out.println("adding a comment, text: "+text+", id: "+id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        User_Images image = imageService.findOne(Long.parseLong(id));
+        //System.out.println("User image: id: "+image.getId()+",url: "+image.getUrlOfImage());
+        Comment comment = new Comment();
+        comment.setText(text);
+        comment.setUser(user);
+        comment.setUserImage(image);
+        comment.setUserFromIdPattern(Long.parseLong(authentication.getName()));
+        comment.setUserFromNewestUrlImage(user.getNewestImageSrc());
+        commentService.add(comment);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("text",comment.getText());
+        jsonObject.putOnce("imageSrc",comment.getUserFromNewestUrlImage());
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/loadCommentsUnderImage",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadComments(@RequestParam String id){
+        System.out.println("Updating comments "+id);
+        User_Images image = imageService.findOne(Long.parseLong(id));
+        JSONArray jsonArray = new JSONArray();
+        List<Comment> comments = commentService.findAllByImageId(image.getId());
+        System.out.println("Size: "+comments.size());
+        for (Comment comment: comments){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("text",comment.getText());
+            jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
+            jsonArray.put(jsonObject);
+        }
+        System.out.println("Json array length: "+jsonArray.length());
+        return jsonArray.toString();
+    }
 }

@@ -17,6 +17,7 @@ public interface ImageService {
     void edit(User_Images user_images);
     User_Images findOne(long id);
     List<User_Images> findAllByAlbum(Album album);
+    User_Images findByPath(String path);
     List<User_Images> findAllByUser(User user);
     User_Images findOneByUserIdAndName(User user, String urlImage);
     List<User_Images> findAll();

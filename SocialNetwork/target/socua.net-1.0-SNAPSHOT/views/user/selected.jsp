@@ -23,10 +23,10 @@
     <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body>
-<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
+<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
     <sec:authorize access="isAuthenticated()">
         <div class="userPhoto">
-            <div id = "photoOfUser" style="
+            <div onclick="openPhotoUser(${user.newestImageId})" id = "photoOfUser" style="
                     width: 75%; height: 64%; float: left;
                     margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
                     background-repeat: no-repeat; background-size: cover;
@@ -198,6 +198,105 @@
         </div>
     </sec:authorize>--%>
 </div>
+
+<div style="text-align: center; overflow: scroll; cursor: default" id="popupWin" class="modalwin">
+    <div style="
+            width: 75%; height: 64%; float: left;
+            margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
+            background-repeat: no-repeat; background-size: cover; cursor: hand;
+            " class="magnify">
+    </div>
+    <textarea id = "textAr" style="height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;" placeholder="Введіть повідомлення: "></textarea>
+    <button onclick="leaveComment(${user.newestImageId})" class="sendButtonStyle" style="float: left; margin-left: 10px; margin-top: 40px;">Send</button>
+    <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;">
+    </div>
+</div>
+
+
+<script>
+    function updateCommentsGo(imageId){
+        //alert(imageId);
+        $.ajax({
+            url: "/loadCommentsUnderImage",
+            async: false,
+            method: "get",
+            dataType: "json",
+            data: {
+                id: imageId
+            },
+            success: function(data){
+                $.each(data,function(k,v){
+                    //alert(v.userUrlImage);
+                    var mainDiv = document.createElement("div");
+                    mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ v.userUrlImage+"); border-radius:50%;";
+
+                    var divP = document.createElement("div");
+                    divP.style = "float:left; width: 60%;";
+                    var textP = document.createElement("p");
+                    textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+                    textP.innerHTML = v.text;
+                    var clearP = document.createElement("p");
+                    clearP.style = "clear:left;"
+                    divP.appendChild(textP);
+
+                    document.getElementById("comments").appendChild(mainDiv);
+                    document.getElementById("comments").appendChild(divP);
+                    document.getElementById("comments").appendChild(clearP);
+                })
+            }
+        })
+    }
+</script>
+
+<script>
+    function openPhotoUser(idPhoto){
+        var element = document.getElementById("comments");
+        while(element.firstChild) element.removeChild(element.firstChild);
+        header();
+        updateCommentsGo(idPhoto);
+    }
+
+
+    function leaveComment(imageId){
+        //alert($("#textAr").val());
+        $.ajax({
+            url: "/leaveComment/"+imageId,
+            async: false,
+            dataType: "json",
+            data: {
+                text: $("#textAr").val()
+            },
+            success: function (data) {
+                //alert(data);
+
+                var mainDiv = document.createElement("div");
+                mainDiv.style = "float:left; margin-left:opx; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+");";
+
+                var textP = document.createElement("p");
+                textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+                textP.innerHTML = data.text;
+                var clearP = document.createElement("p");
+                clearP.style = "clear:left;"
+
+                var first=document.getElementById("comments").childNodes[0];
+                document.getElementById("comments").insertBefore(mainDiv,first);
+
+                var second=document.getElementById("comments").childNodes[1];
+                document.getElementById("comments").insertBefore(textP,second);
+
+                var third=document.getElementById("comments").childNodes[2];
+                document.getElementById("comments").insertBefore(clearP,third);
+
+
+                //document.getElementById("comments").appendChild(mainDiv);
+                //document.getElementById("comments").appendChild(textP);
+                //document.getElementById("comments").appendChild(clearP);
+            }
+        })
+    }
+</script>
+
+
 
 
 <script>

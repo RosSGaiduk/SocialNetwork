@@ -95,11 +95,13 @@ public class UploadController {
                         user_images.setUrlOfImage("/resources/users/" + nameImage);
                         user_images.setDateOfImage(new Date(System.currentTimeMillis()));
                         user_images.setUser(user);
+                        imageService.add(user_images);
                         user.setNewestImageSrc("/resources/users/" + nameImage);
+                        user.setNewestImageId(user_images.getId());
                         messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());
                         recordService.updateUserImageSrcOfRecords(user);
                         userService.edit(user);
-                        imageService.add(user_images);
+
                     }
                 }
             }

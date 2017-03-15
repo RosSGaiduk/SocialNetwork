@@ -58,6 +58,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public User_Images findByPath(String path) {
+        return imageDao.findByPath(path);
+    }
+
+    @Override
     public List<User_Images> findAllByUser(User user) {
         return imageDao.findAllByUser(user);
     }

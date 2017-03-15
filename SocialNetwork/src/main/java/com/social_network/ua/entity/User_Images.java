@@ -1,7 +1,9 @@
 package com.social_network.ua.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Rostyslav on 24.11.2016.
@@ -16,6 +18,9 @@ public class User_Images implements Comparable<User_Images>{
     private String urlOfImage;
     @Column
     private Date dateOfImage;
+
+    @OneToMany(mappedBy = "userImage",fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -81,5 +86,13 @@ public class User_Images implements Comparable<User_Images>{
 
     public void setAlbum(Album album) {
         this.album = album;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
