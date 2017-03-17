@@ -154,10 +154,10 @@
         </div>
 
         <div id = "records" class="userRecordsFromDb">
-            <c:forEach var="rec" items="${records}">
+            <%--<c:forEach var="rec" items="${records}">
                 <div id = "${rec.id} div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
-                    <p style="clear: left"/>
+                    <p style="clear: left;"/>
                     <div style="width:70px; height:50px;
                            background-image: url(${rec.urlUserImagePattern});background-size:cover;
                             float:left; margin-left:10px; margin-top:10px;"></div>
@@ -176,8 +176,8 @@
                     >Delete</button>
                     </c:if>
                 </div>
-            </c:forEach>
-            <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
+            </c:forEach>--%>
+            <%--<div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>--%>
         </div>
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
     </sec:authorize>
@@ -208,12 +208,50 @@
     </div>
     <textarea id = "textAr" style="height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;" placeholder="Введіть повідомлення: "></textarea>
     <button onclick="leaveComment(${user.newestImageId})" class="sendButtonStyle" style="float: left; margin-left: 10px; margin-top: 40px;">Send</button>
+    <c:if test="${user.newestImageId != 0}">
     <img id = "currentImage" src="/resources/img/icons/like.png" id = "likeImg" style="float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;" onclick="leaveLike('image','${user.newestImageId}')">
     <span id = "countLikesUnderPhoto" style="float: left; margin-top: 20px; margin-left: 7px;">1</span>
+    </c:if>
     <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;">
     </div>
 </div>
 
+
+<script>
+    function loadRecords(){
+        $.ajax({
+            url: "/loadAllRecords",
+            data: ({
+                userId: document.getElementById("userId").innerHTML
+            }),
+            dataType: "json",
+            async:false,
+            success: function(data){
+                $.each(data,function(k,v){
+                    var codeGenerator = "<div id = '" + v.id + " div' style='width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;'>" +
+                            "<p style='float:left; margin-left:10px;'>" + v.date + "</p>" +
+                            "<p style='clear: left;'/>" +
+                            "<div style='width:70px; height:50px;background-image: url(" + v.urlUserImage + ");background-size:cover;float:left; margin-left:10px; margin-top:10px;'></div>" +
+                            "<div style = 'width:50%; height:auto; background-color:white; float:left;margin-top:20px;'>" +
+                            "<p style='float:left; margin-left:10px; margin-top:10px;'>" + v.text + "</p>" +
+                            "<div style='width: 50%; float: left; height: 50px;'></div>";
+
+                    if (v.hasImage == 'true'){
+                        $("#records").append(codeGenerator+"<img src="+v.urlImage+" style='margin-left: 0px; margin-left: -20px; width: 100%; height: auto;background-size: cover;'>"+
+                                "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
+                        } else {
+                        $("#records").append(codeGenerator+"<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>")
+                    }
+                    if (${user.id == userAuth.id}){
+                        $("#records").append("<button id = '"+v.id+" button' onclick='deleteRecord(document.getElementById("+ v.id +").innerHTML)'"
+                        +" style='margin-top: 20px; visibility: visible; float: left;'>Delete</button>");
+                    }
+                })
+            }
+        })
+    }
+    loadRecords();
+</script>
 
 <script>
     function leaveLike(typeOfEntity,idOfEntity){

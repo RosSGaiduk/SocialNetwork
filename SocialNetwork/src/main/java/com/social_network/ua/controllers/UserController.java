@@ -65,7 +65,7 @@ public class UserController extends BaseMethods{
         if (bindingResult.hasErrors()){
             return "views-user-new";
         }
-
+        newUser.setNewestImageSrc("/resources/img/icons/image.png");
         userService.add(newUser);
         return "redirect:/";
     }

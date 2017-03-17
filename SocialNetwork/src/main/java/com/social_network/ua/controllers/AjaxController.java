@@ -534,4 +534,28 @@ public class AjaxController extends BaseMethods {
         }
         return jsonObject.toString();
     }
+
+    @RequestMapping(value = "/loadAllRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadAllRecordsOfUser(@RequestParam String userId){
+        System.out.println("Loading all records of user: "+userId);
+        JSONArray jsonArray = new JSONArray();
+        List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(userId));
+        for (int i = records.size()-1; i >=0; i--){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",records.get(i).getId());
+            jsonObject.putOnce("date",records.get(i).getDateOfRecord());
+            jsonObject.putOnce("urlImage",records.get(i).getUrl());
+            if (records.get(i).getText()!=null && records.get(i).getText()!="")
+            jsonObject.putOnce("text",records.get(i).getText());
+            else jsonObject.putOnce("text","");
+            jsonObject.putOnce("urlUserImage",records.get(i).getUrlUserImagePattern());
+            if (records.get(i).isHasImage())
+            jsonObject.putOnce("hasImage","true");
+            else jsonObject.putOnce("hasImage","false");
+            jsonArray.put(jsonObject);
+        }
+        System.out.println("Size of jsonArray "+jsonArray.length());
+        return jsonArray.toString();
+    }
 }
