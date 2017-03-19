@@ -1,7 +1,9 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import org.apache.commons.fileupload.FileItem;
@@ -33,7 +35,8 @@ public class UploadRecordController {
     private UserService userService;
     @Autowired
     private RecordService recordService;
-    @RequestMapping(value = "/newRecordOf/{id}/{text}",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/newRecordOf/{id}/{text}",method = RequestMethod.POST,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     public String saveToTheWall(HttpServletRequest request, @PathVariable("id")String id,@PathVariable("text")String text)
     {
         System.out.println("I am here");
@@ -69,19 +72,57 @@ public class UploadRecordController {
         try {
             lst = upload.parseRequest(request);
             for (FileItem fileItem: lst){
-                if (fileItem.isFormField()==false){
-                    //in this folder, which we created, write our images
-                    fileItem.write(new File(path+"/records/"+fileItem.getName()));
-                    record.setUrl("/resources/records/"+fileItem.getName());
-                    record.setHasImage(true);
-                    recordService.edit(record);
-                    //fileItem.delete();
+                if (fileItem.isFormField()==false) {
+                    String file = fileItem.getName().toString();
+                    String[] extensions = file.split("\\.");
+                    String extension = extensions[extensions.length - 1];
+                    //якщо файлу немає тому, що якщо файл є, то мінімум має бути length == 2
+                    if (extensions.length==1){
+                        record.setType(RecordType.TEXT.toString());
+                        recordService.edit(record);
+                        break;
+                    }
+                    if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
+                            extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            ) {
+                        System.out.println("Image");
+                        //in this folder, which we created, write our images
+                        fileItem.write(new File(path + "/records/" + fileItem.getName()));
+                        record.setUrl("/resources/records/" + fileItem.getName());
+                        record.setHasImage(true);
+                        record.setType(RecordType.IMAGE.toString());
+                        recordService.edit(record);
+                        //fileItem.delete();
+                    } else if (extension.equalsIgnoreCase("mp3") || extension.equalsIgnoreCase("aud") ||
+                            extension.equalsIgnoreCase("aif") || extension.equalsIgnoreCase("flac") ||
+                            extension.equalsIgnoreCase("iff") || extension.equalsIgnoreCase("m3u") ||
+                            extension.equalsIgnoreCase("m4a") || extension.equalsIgnoreCase("m4b") ||
+                            extension.equalsIgnoreCase("m4r") || extension.equalsIgnoreCase("mid") ||
+                            extension.equalsIgnoreCase("midi") || extension.equalsIgnoreCase("mod") ||
+                            extension.equalsIgnoreCase("mpa") || extension.equalsIgnoreCase("ogg") ||
+                            extension.equalsIgnoreCase("wav") || extension.equalsIgnoreCase("ra") ||
+                            extension.equalsIgnoreCase("ram") || extension.equalsIgnoreCase("sib") ||
+                            extension.equalsIgnoreCase("wma")
+                            ) {
+                        fileItem.write(new File(path + "/records/" + fileItem.getName()));
+                        record.setType(RecordType.AUDIO.toString());
+                        record.setUrl("/resources/records/" + fileItem.getName());
+                        record.setNameRecord(fileItem.getName());
+                        recordService.edit(record);
+                    } else if (extension.equalsIgnoreCase("mp4")){
+                        fileItem.write(new File(path + "/records/" + fileItem.getName()));
+                        record.setType(RecordType.VIDEO.toString());
+                        record.setUrl("/resources/communities/" + fileItem.getName());
+                        recordService.edit(record);
+                    }
                 }
             }
         } catch (Exception e) {
+            System.out.println("Exception");
             e.printStackTrace();
         }
-        System.out.println("size: "+lst.size());
+        System.out.println("Lst size: "+lst.size());
         return "redirect:/user/"+id;
     }
+
 }

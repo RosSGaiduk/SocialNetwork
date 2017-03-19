@@ -35,12 +35,12 @@
     </c:if>
     <div id = "records">
     <c:forEach items="${records}" var="rec">
-        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${rec.id} div" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
+        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${rec.id}_div" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
             <p style="margin-bottom: 20px;">${rec.text}</p>
-            <c:if test="${rec.type == 'image'}">
+            <c:if test="${rec.type == 'IMAGE'}">
                 <img src="${rec.url}" style="background-size: cover; background-repeat: no-repeat; float: left;" width="300" height="200">
             </c:if>
-            <c:if test="${rec.type == 'audio'}">
+            <c:if test="${rec.type == 'AUDIO'}">
                 <p style="margin-top: 10px;">${rec.nameRecord}</p>
                 <audio controls style="margin-top: 10px;">
                     <source src="${rec.url}" type="audio/mpeg" style="cursor: hand">
@@ -137,71 +137,13 @@
 <script>
     function setActionToForm(){
         var textInput =  $("#newRecord").val();
+        textInput = fixString(textInput);
         if (textInput!="")
             $('#newRecordForm').attr('action', '/uploadRecordToCommunity/${community.id}/'+textInput+'?${_csrf.parameterName}=${_csrf.token}');
         else $('#newRecordForm').attr('action', '/uploadRecordToCommunity/${community.id}/there is no text here just sent to avoid mistake?${_csrf.parameterName}=${_csrf.token}');
     }
 </script>
 
-<script>
-    function openRecord(recordType,recordText,recordUrl,recordName){
-        //alert("clicked");
-        header();
-        //alert("TYPE: "+recordType+"\nTEXT: "+recordText+"\nURL: "+recordUrl+"\nNAME: "+recordName);
-
-        var main = document.getElementById("popupWin");
-        while (main.firstChild) (main.removeChild(main.firstChild));
-
-        switch (recordType){
-            case "": {
-                var element = document.createElement("p");
-                element.style = "margin-top: 25%; width: 60%; margin-left:20%;";
-                element.innerText = recordText;
-                document.getElementById("popupWin").appendChild(element);
-            } break;
-
-            case "audio": {
-                var divMain = document.createElement("div");
-                divMain.style = "float:left; margin-left:30px;margin-top:25%;width:80%";
-
-                var pNameSong = document.createElement("p");
-                pNameSong.style = "float:left; margin-top: 10px; text-align:left; margin-left:30px;";
-                pNameSong.innerHTML = recordName;
-
-                var audio = document.createElement("audio");
-                audio.style = "float:left; width: 50%; margin-left:30px; margin-top:10px;";
-                audio.controls = "true";
-
-                var source = document.createElement("source");
-                source.src = recordUrl;
-                source.type = "audio/mpeg";
-
-                var pElem = document.createElement("p");
-                pElem.style = "float:left;margin-left:30px; margin-top:20px; text-align:left; clear:left;";
-                pElem.innerHTML = recordText;
-
-                audio.appendChild(source);
-                divMain.appendChild(pNameSong);
-                divMain.appendChild(audio);
-                divMain.appendChild(pElem)
-                main.appendChild(divMain);
-            } break;
-            case "image": {
-                var mainDiv = document.createElement("div");
-                mainDiv.style = "width: 75%; height: 64%; float: left; margin-top: 20px; margin-left: 30px;" +
-                        "background-image: url("+recordUrl+");"+
-                "background-repeat: no-repeat; background-size: cover; cursor: hand;";
-
-                var elementText = document.createElement("p");
-                elementText.style = "float:left; margin-top:10px; margin-left: 30px; text-align: left; clear:left;";
-                elementText.innerText = recordText;
-
-                main.appendChild(mainDiv);
-                main.appendChild(elementText);
-            } break;
-        }
-    }
-</script>
 
 <script>
     function subscribe(){
@@ -379,6 +321,7 @@
         })
     }
 </script>
+
 
 </body>
 </html>

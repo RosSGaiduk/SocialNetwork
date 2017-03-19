@@ -31,8 +31,7 @@
         <p style="clear: left"/>
         <p style="margin-top: 10px; margin-left: 20%;">${mus.nameOfSong}</p>
         <audio controls style="margin-top: 10px; margin-left: 20%;">
-            <source src="${mus.urlOfSong}" type="audio/mpeg" style="cursor: hand">
-            Your browser does not support the audio element.
+            <source src="${mus.urlOfSong}">
         </audio>
         <button id = "button ${mus.id}"onclick="addMusicToUser(${mus.id})">Add</button>
     </c:forEach>

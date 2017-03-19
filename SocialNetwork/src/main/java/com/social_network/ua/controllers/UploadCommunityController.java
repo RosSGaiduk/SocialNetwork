@@ -4,6 +4,7 @@ import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.CommunityService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
@@ -110,6 +111,8 @@ public class UploadCommunityController {
             //return "redirect:/community/"+id;
         //}
 
+        System.out.println("Adding record to community");
+        System.out.println(text);
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
@@ -131,12 +134,19 @@ public class UploadCommunityController {
                     String file = fileItem.getName().toString();
                     String[] extensions = file.split("\\.");
                     String extension = extensions[extensions.length-1];
+                    System.out.println("Length: "+extensions.length);
+                    //якщо файлу немає тому, що якщо файл є, то мінімум має бути length == 2
+                    if (extensions.length==1){
+                        record.setType(RecordType.TEXT.toString());
+                        recordService.edit(record);
+                        break;
+                    }
                     if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
                             ) {
                         fileItem.write(new File(path + "/communities/" + fileItem.getName()));
                         record.setHasImage(true);
-                        record.setType("image");
+                        record.setType(RecordType.IMAGE.toString());
                         record.setUrl("/resources/communities/" + fileItem.getName());
                         recordService.edit(record);
                         communityService.edit(community);
@@ -152,14 +162,14 @@ public class UploadCommunityController {
                             extension.equalsIgnoreCase("wma")
                             ) {
                         fileItem.write(new File(path + "/communities/" + fileItem.getName()));
-                        record.setType("audio");
+                        record.setType(RecordType.AUDIO.toString());
                         record.setUrl("/resources/communities/" + fileItem.getName());
                         record.setNameRecord(fileItem.getName());
                         recordService.edit(record);
                         communityService.edit(community);
                     } else if (extension.equalsIgnoreCase("mp4")){
                         fileItem.write(new File(path + "/communities/" + fileItem.getName()));
-                        record.setType("video");
+                        record.setType(RecordType.VIDEO.toString());
                         record.setUrl("/resources/communities/" + fileItem.getName());
                         recordService.edit(record);
                         communityService.edit(community);
@@ -170,7 +180,6 @@ public class UploadCommunityController {
             e.printStackTrace();
             return "fail";
         }
-
         return "redirect:/community/"+id;
     }
 }

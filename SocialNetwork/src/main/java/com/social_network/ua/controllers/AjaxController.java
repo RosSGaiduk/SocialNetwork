@@ -2,6 +2,7 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.*;
+import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
 import org.json.JSONArray;
@@ -194,17 +195,17 @@ public class AjaxController extends BaseMethods {
 
         if (image.equals("")) record.setHasImage(false);
         else record.setHasImage(true);
-
+        record.setType(RecordType.TEXT.toString());
         recordService.add(record);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.putOnce("userFromImage",user.getNewestImageSrc());
+        jsonObject.putOnce("id",record.getId());
         jsonObject.putOnce("text",newRecord);
         jsonObject.putOnce("date",date);
 
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(jsonObject);
-        return jsonArray.toString();
+
+        return jsonObject.toString();
     }
 
     @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
@@ -507,7 +508,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/getCountLikesOfEntity/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String getCountLikesOfEntity(@PathVariable("id") String id,@RequestParam String type){
-        System.out.println("getting likes");
+        //System.out.println("getting likes");
         JSONObject jsonObject = new JSONObject();
         //String returnValue = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -523,12 +524,12 @@ public class AjaxController extends BaseMethods {
             } break;
 
             case "comment":{
-                System.out.println("Getting count of likes from Comment");
+                //System.out.println("Getting count of likes from Comment");
                 //some code here
             } break;
 
             case "record":{
-                System.out.println("Getting count of likes from Record");
+                //System.out.println("Getting count of likes from Record");
                 //some code here
             } break;
         }
@@ -538,24 +539,26 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/loadAllRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadAllRecordsOfUser(@RequestParam String userId){
-        System.out.println("Loading all records of user: "+userId);
+        //System.out.println("Loading all records of user: "+userId);
         JSONArray jsonArray = new JSONArray();
         List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(userId));
         for (int i = records.size()-1; i >=0; i--){
             JSONObject jsonObject = new JSONObject();
             jsonObject.putOnce("id",records.get(i).getId());
             jsonObject.putOnce("date",records.get(i).getDateOfRecord());
-            jsonObject.putOnce("urlImage",records.get(i).getUrl());
+            jsonObject.putOnce("url",records.get(i).getUrl());
             if (records.get(i).getText()!=null && records.get(i).getText()!="")
             jsonObject.putOnce("text",records.get(i).getText());
             else jsonObject.putOnce("text","");
             jsonObject.putOnce("urlUserImage",records.get(i).getUrlUserImagePattern());
-            if (records.get(i).isHasImage())
+            jsonObject.putOnce("nameRecord",records.get(i).getNameRecord());
+            /*if (records.get(i).isHasImage())
             jsonObject.putOnce("hasImage","true");
-            else jsonObject.putOnce("hasImage","false");
+            else jsonObject.putOnce("hasImage","false");*/
+            jsonObject.putOnce("type",records.get(i).getType());
             jsonArray.put(jsonObject);
         }
-        System.out.println("Size of jsonArray "+jsonArray.length());
+        //System.out.println("Size of jsonArray "+jsonArray.length());
         return jsonArray.toString();
     }
 }

@@ -33,7 +33,6 @@
                     " class="magnify">
             </div>
 
-
             <a href="/messagesWithUser/${user.id}" id = "messageA" style="text-decoration: none; color: black;">
                     <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;
                     color: white;background-color: darkslateblue;">
@@ -147,15 +146,15 @@
                 </form:form>
             </div>--%>
             <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
-            <form:form id =  "newRecordForm" action="" method="post" enctype="multipart/form-data" cssStyle="float: left;">
+            <form:form id =  "newRecordForm" action="/newRecordOf/${user.id}/?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
             <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
             <button onclick="setActionToForm()" type="submit" class="buttonFileStyle">Upload</button>
             </form:form>
         </div>
 
         <div id = "records" class="userRecordsFromDb">
-            <%--<c:forEach var="rec" items="${records}">
-                <div id = "${rec.id} div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;">
+            <c:forEach var="rec" items="${records}">
+                <div id = "${rec.id}_div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
                     <p style="clear: left;"/>
                     <div style="width:70px; height:50px;
@@ -164,39 +163,27 @@
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
                         <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
                         <div style="width: 50%; float: left; height: 50px;"></div>
-                        <c:if test="${rec.hasImage == true}">
+                        <c:if test="${rec.type == 'IMAGE'}">
                         <img src="${rec.url}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
                         background-size: cover;
                         "></c:if>
+                        <c:if test="${rec.type == 'AUDIO'}">
+                            <p style='float:left;'>${rec.nameRecord}</p>
+                            <audio controls  style='width: 160%; height: auto; float: left; margin-top: 50px;'>
+                                <source src="${rec.url}" type="audio/mpeg" style="cursor: hand">
+                            </audio>
+                        </c:if>
                         <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
-                    <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)"
-                            style="visibility: visible; float: left;"
-                    >Delete</button>
+                    <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)">Delete</button>
                     </c:if>
                 </div>
-            </c:forEach>--%>
-            <%--<div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>--%>
+            </c:forEach>
+            <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
         </div>
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
     </sec:authorize>
-
-    <%--Якщо ніхто не залогінований, тоді форма для заповнення чи реєстрації--%>
-    <%--<sec:authorize access="isAnonymous()">
-        <div style="margin-top: 20%; float: left; width: 60%; height: auto">
-            <form:form method="post" action="/loginprocessing">
-                <br>
-                &lt;%&ndash;Тут обов'язково має бути username, не email, не name, навіть якщо такого поля немає у юзера&ndash;%&gt;
-                <input class="inputStyle" name="username" type="text" placeholder="Login"><br><br>
-                <input class="inputStyle" id = "password" name="password" type="password" placeholder="Password">
-                <br><br>
-                <input type="submit" value="Sign in" style="float: left; margin-left: 40%;">
-                <a href="/addUser"><input type="button" value="Registration" style="float: left; margin-left: 10px;"></a>
-                <p id = "strengthValue"></p>
-            </form:form>
-        </div>
-    </sec:authorize>--%>
 </div>
 
 <div style="text-align: center; overflow: scroll; cursor: default" id="popupWin" class="modalwin">
@@ -216,8 +203,15 @@
     </div>
 </div>
 
+<%--<script>
+    function openRecordAndBanScrolling(type,text,url,name){
+        openRecord(type,text,url,name);
+        //banScroll(true);
+    }
+</script>--%>
 
-<script>
+<!--Зробив щоб попрактикуватись з методом append(), цей метод не викликається ні разу-->
+<script charset="UTF-8">
     function loadRecords(){
         $.ajax({
             url: "/loadAllRecords",
@@ -226,9 +220,10 @@
             }),
             dataType: "json",
             async:false,
+            contentType: "text/html; charset/UTF-8; charset=windows-1251;",
             success: function(data){
                 $.each(data,function(k,v){
-                    var codeGenerator = "<div id = '" + v.id + " div' style='width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;'>" +
+                    var codeGenerator = "<div id = '" + v.id + "_div' style='width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;'>" +
                             "<p style='float:left; margin-left:10px;'>" + v.date + "</p>" +
                             "<p style='clear: left;'/>" +
                             "<div style='width:70px; height:50px;background-image: url(" + v.urlUserImage + ");background-size:cover;float:left; margin-left:10px; margin-top:10px;'></div>" +
@@ -236,26 +231,33 @@
                             "<p style='float:left; margin-left:10px; margin-top:10px;'>" + v.text + "</p>" +
                             "<div style='width: 50%; float: left; height: 50px;'></div>";
 
-                    if (v.hasImage == 'true'){
-                        $("#records").append(codeGenerator+"<img src="+v.urlImage+" style='margin-left: 0px; margin-left: -20px; width: 100%; height: auto;background-size: cover;'>"+
+                    if (v.type == 'IMAGE'){
+                        $("#records").append(codeGenerator+"<img src='"+v.url+"' style='margin-left: 0px; margin-left: -20px; width: 100%; height: auto;background-size: cover;'>"+
                                 "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
-                        } else {
-                        $("#records").append(codeGenerator+"<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>")
+                        }
+                    else if (v.type == 'AUDIO'){
+                        $("#records").append(codeGenerator+"<p style='float:left;'>"+ v.nameRecord+"</p><audio controls  style='width: 160%; height: auto; float: left; margin-top: 50px;'><source src='"+v.url+"' type='audio/mpeg' style='cursor: hand'></audio>"+
+                        "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
                     }
-                    if (${user.id == userAuth.id}){
-                        $("#records").append("<button id = '"+v.id+" button' onclick='deleteRecord(document.getElementById("+ v.id +").innerHTML)'"
-                        +" style='margin-top: 20px; visibility: visible; float: left;'>Delete</button>");
+
+                    else if (v.type == 'TEXT'){
+                        $("#records").append(codeGenerator+
+                                "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
                     }
+
+                    if ($("#userId").html() == $("#userAuthId").html()){
+                        $("#records").append("<button onclick='deleteRecord("+ v.id+")' id = '"+ v.id +"_button' style='float:left;'>Delete</button>");
+                    }
+
                 })
             }
         })
     }
-    loadRecords();
+    //loadRecords();
 </script>
 
 <script>
     function leaveLike(typeOfEntity,idOfEntity){
-        //alert(typeOfEntity+" "+idOfEntity);
         $.ajax({
             url: "/leaveLike",
             async: false,
@@ -310,18 +312,29 @@
 
 <script>
     function openPhotoUser(idPhoto){
-        var element = document.getElementById("comments");
+        var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
+
+        $("#popupWin").append("<div style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='nextImage()'></div>");
+        $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
+        $("#popupWin").append("<button onclick='leaveComment(${user.newestImageId})' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
+        //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
+        $("#popupWin").append("<img  src='/resources/img/icons/like.png' id = 'likeImg' style='float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;'>");
+        $("#popupWin").append("<span id = 'countLikesUnderPhoto' style='float: left; margin-top: 20px; margin-left: 7px;'></span>");
+        $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
+
+        $("#likeImg").click(function(){
+            leaveLike('image',idPhoto);
+        })
+
         header();
-        /*var likeImg = document.createElement("img");
-        likeImg.src = "/resources/img/icons/like.png";
-        likeImg.style = "float:left; width:16px;height:16px;";
-        document.getElementById("popupWin").appendChild(likeImg);*/
-        loadCountLikes('image',idPhoto);
+
         updateCommentsGo(idPhoto);
+        loadCountLikes('image',idPhoto);
     }
 
     function loadCountLikes(typeEntity,idEntity){
+        //alert(idEntity);
         $.ajax({
             url: "/getCountLikesOfEntity/"+idEntity,
             method: "get",
@@ -333,10 +346,10 @@
             success: function (data) {
                 $("#countLikesUnderPhoto").html(data.countLikes);
                 if (!data.liked){
-                    var image = document.getElementById("currentImage");
+                    var image = document.getElementById("likeImg");
                     image.src = "/resources/img/icons/likeClear.png";
                 } else {
-                    var image = document.getElementById("currentImage");
+                    var image = document.getElementById("likeImg");
                     image.src = "/resources/img/icons/like.png";
                 }
             }
@@ -387,7 +400,8 @@
 
 <script>
     function setActionToForm(){
-        var textInput =  $("#newRecord").val();
+        var textInput =  fixString($("#newRecord").val());
+        //var textInput = $("#newRecord").val();
         if (textInput!="")
         $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/'+textInput+'?${_csrf.parameterName}=${_csrf.token}');
         else $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/there is no text here just sent to avoid mistake?${_csrf.parameterName}=${_csrf.token}');
@@ -417,6 +431,7 @@
 
 <script>
     function updateRecords(){
+        //var fixStr = fixString($('#newRecord').val());
         $.ajax({
             url: "/updateRecords",
             data: ({
@@ -427,10 +442,11 @@
             }),
             dataType: "json",
             async:false,
-            success: function(data){
-                $.each(data,function(k,v){
+            success: function(v){
+
                   var elem = document.createElement("div");
                     elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";
+                    elem.setAttribute("id", v.id+"_div");
                     var pDate = document.createElement("p");
                     pDate.innerHTML = v.date;
                     pDate.style = "float:left; margin-left:10px;";
@@ -439,7 +455,6 @@
                     var pClear = document.createElement("p");
                     pClear.style = "clear:left";
                     elem.appendChild(pClear);
-
                     var imag = document.createElement("div");
                     imag.style = "width:70px; height:50px;" +
                             "background-image: url("+ v.userFromImage+");" +
@@ -448,17 +463,29 @@
                     elem.appendChild(imag);
 
                     var elemLeft = document.createElement("div");
-                    elemLeft.style = "width:50%; height:auto; background-color:white; float:left;" +
-                            "margin-top:20px;";
+                    elemLeft.style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;";
                     var pThis = document.createElement("p");
                     pThis.innerHTML = v.text;
                     pThis.style = "float:left; margin-left:10px; margin-top:10px;";
                     elemLeft.appendChild(pThis);
                     elem.appendChild(elemLeft);
+
+                    if ($("#userId").html() == $("#userAuthId").html()) {
+                    var btn = document.createElement("button");
+                    //btn.setAttribute("id",v.id+" button");
+                    btn.setAttribute("id", v.id+"_button");
+                    btn.textContent = "Delete";
+                    }
+
+                    elem.appendChild(btn);
+
+
                     var first=document.getElementById("records").childNodes[0];
                     document.getElementById("records").insertBefore(elem,first);
                     $("#newRecord").val("");
-                });
+                    $("#"+ v.id+"_button").click(function(){
+                        deleteRecord(v.id);
+                    })
             }
 
         });
