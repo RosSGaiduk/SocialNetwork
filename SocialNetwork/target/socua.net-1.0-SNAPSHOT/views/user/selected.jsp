@@ -26,7 +26,7 @@
 <div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
     <sec:authorize access="isAuthenticated()">
         <div class="userPhoto">
-            <div onclick="openPhotoUser(${user.newestImageId})" id = "photoOfUser" style="
+            <div onclick="openPhotoUser('${user.newestImageSrc}',${user.newestImageId})" id = "photoOfUser" style="
                     width: 75%; height: 64%; float: left;
                     margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});
                     background-repeat: no-repeat; background-size: cover;
@@ -270,8 +270,23 @@
             }
         })
     }
-
-    function nextImage(){
+    function previousImage(idPhoto){
+        //alert(idPhoto);
+        $.ajax({
+            url: "/previousAvaOfUser/"+document.getElementById("userId").innerHTML,
+            async: false,
+            method: "get",
+            dataType: "json",
+            data: ({
+                photoId: idPhoto
+            }),
+            success: function(data){
+              var darkLayer = document.getElementById("shadow");
+              darkLayer.parentNode.removeChild(darkLayer); //видаляєм затемнення, тому, що в наступному методі
+                //який ми викликаєм знову встановлюється затемнення
+              openPhotoUser(data.url,data.id);
+            }
+        })
     }
 </script>
 
@@ -311,13 +326,13 @@
 </script>
 
 <script>
-    function openPhotoUser(idPhoto){
+    function openPhotoUser(urlPhoto,idPhoto){
         var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
 
-        $("#popupWin").append("<div style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='nextImage()'></div>");
+        $("#popupWin").append("<div style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
         $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
-        $("#popupWin").append("<button onclick='leaveComment(${user.newestImageId})' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
+        $("#popupWin").append("<button onclick='leaveComment("+idPhoto+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
         $("#popupWin").append("<img  src='/resources/img/icons/like.png' id = 'likeImg' style='float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;'>");
         $("#popupWin").append("<span id = 'countLikesUnderPhoto' style='float: left; margin-top: 20px; margin-left: 7px;'></span>");
@@ -325,7 +340,7 @@
 
         $("#likeImg").click(function(){
             leaveLike('image',idPhoto);
-        })
+        });
 
         header();
 

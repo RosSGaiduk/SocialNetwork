@@ -68,6 +68,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public User_Images getPreviousImageFromMainAlbum(long userId, long id) {
+        return imageDao.getPreviousImageFromMainAlbum(userId,id);
+    }
+
+    @Override
     public User_Images findOneByUserIdAndName(User user, String urlImage) {
         return imageDao.findOneByUserIdAndName(user,urlImage);
     }

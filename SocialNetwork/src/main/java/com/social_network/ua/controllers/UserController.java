@@ -2,6 +2,8 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.*;
+import com.social_network.ua.enums.AlbumName;
+import com.social_network.ua.services.AlbumService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
 import com.social_network.ua.validations.UserValidator;
@@ -30,6 +32,8 @@ public class UserController extends BaseMethods{
     private RecordService recordService;
     @Autowired
     private UserValidator userValidator;
+    @Autowired
+    private AlbumService albumService;
 
     @RequestMapping(value = "/addUser",method = RequestMethod.GET)
     public String addUserPage(Model model){
@@ -67,6 +71,11 @@ public class UserController extends BaseMethods{
         }
         newUser.setNewestImageSrc("/resources/img/icons/image.png");
         userService.add(newUser);
+        Album album = new Album();
+        album.setDate(new Date(System.currentTimeMillis()));
+        album.setName(AlbumName.MY_PAGE_PHOTOS.toString());
+        album.setUser(newUser);
+        albumService.add(album);
         return "redirect:/";
     }
 

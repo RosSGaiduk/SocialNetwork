@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +53,17 @@ public class ImageDaoImpl implements ImageDao {
         List<User_Images> images = entityManager.createQuery("from User_Images where user like ?1 group by id").setParameter(1,user).getResultList();
         Collections.reverse(images);
         return images;
+    }
+
+    @Transactional
+    public User_Images getPreviousImageFromMainAlbum(long userId, long id) {
+        try {
+            Object object = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = ?1 and a.name = 'MY_PAGE_PHOTOS' and u.id < ?3 group by u.id desc").setParameter(1,userId).setParameter(3,id).setMaxResults(1).getSingleResult();
+            BigInteger bigInteger = (BigInteger) object;
+            return findOne(bigInteger.longValue());
+        } catch (Exception ex){
+            return null;
+        }
     }
 
     @Transactional

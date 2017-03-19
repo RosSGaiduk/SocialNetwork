@@ -17,6 +17,7 @@ public interface AlbumService {
     void delete(Album album);
     Album findOne(long id);
     Album findOneByNameAndUserId(String nameAlbum,long userId);
+    Album findMainAlbumOfUser(User user);
     List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

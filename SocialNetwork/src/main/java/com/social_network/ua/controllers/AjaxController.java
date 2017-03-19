@@ -561,4 +561,16 @@ public class AjaxController extends BaseMethods {
         //System.out.println("Size of jsonArray "+jsonArray.length());
         return jsonArray.toString();
     }
+
+    @RequestMapping(value = "/previousAvaOfUser/{userId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadAllRecordsOfUser(@PathVariable("userId") String userId,@RequestParam String photoId){
+        User_Images user_images = imageService.getPreviousImageFromMainAlbum(Long.parseLong(userId),Long.parseLong(photoId));
+        System.out.println("Image found: {id: "+user_images.getId()+"}, url: "+user_images.getUrlOfImage());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("url",user_images.getUrlOfImage());
+        jsonObject.putOnce("id",user_images.getId());
+        return jsonObject.toString();
+    }
+
 }

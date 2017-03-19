@@ -47,6 +47,11 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public Album findMainAlbumOfUser(User user) {
+        return albumDao.findMainAlbumOfUser(user);
+    }
+
+    @Override
     public List<Album> findAllAlbumsByUser(User user) {
         return albumDao.findAllAlbumsByUser(user);
     }

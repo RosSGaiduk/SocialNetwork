@@ -332,8 +332,27 @@ public class Main {
         //entityManager.remove(user_images);
 
 
-        LLike like = entityManager.find(LLike.class,7l);
-        entityManager.remove(entityManager.contains(like)?like: entityManager.merge(like));
+        /*LLike like = entityManager.find(LLike.class,7l);
+        entityManager.remove(entityManager.contains(like)?like: entityManager.merge(like));*/
+
+        //List<Object> objects = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = 1 and a.name = 'MY_PAGE_PHOTOS' group by u.id desc").getResultList();
+        /*List<User_Images> user_images = new ArrayList<>(objects.size());
+
+        for (int i = 0; i < objects.size(); i++){
+            BigInteger bigInteger = (BigInteger) (objects.get(i));
+            System.out.println(bigInteger.longValue());
+            user_images.add(entityManager.find(User_Images.class,bigInteger.longValue()));
+        }
+
+        for (User_Images u: user_images)
+            System.out.println(u.getAlbum());*/
+
+
+
+        Object object = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = 1 and a.name = 'MY_PAGE_PHOTOS' and u.id < ?3 group by u.id desc").setParameter(3,137).setMaxResults(1).getSingleResult();
+        BigInteger bigInteger = (BigInteger) object;
+        System.out.println(bigInteger);
+
 
         entityManager.getTransaction().commit();
         entityManager.close();

@@ -15,6 +15,7 @@ public interface AlbumDao {
     void delete(Album album);
     Album findOne(long id);
     Album findOneByNameAndUserId(String albumName,long userId);
+    Album findMainAlbumOfUser(User user);
     List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

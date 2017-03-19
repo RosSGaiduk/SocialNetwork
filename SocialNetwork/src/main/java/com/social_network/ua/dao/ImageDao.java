@@ -15,6 +15,7 @@ public interface ImageDao {
     User_Images findOne(long id);
     List<User_Images> findAllByAlbum(Album album);
     List<User_Images> findAllByUser(User user);
+    User_Images getPreviousImageFromMainAlbum(long userId,long id);
     User_Images findByPath(String path);
     User_Images findOneByUserIdAndName(User user,String urlImage);
     List<User_Images> fundAll();

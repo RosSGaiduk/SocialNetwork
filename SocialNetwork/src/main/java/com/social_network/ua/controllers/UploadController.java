@@ -1,12 +1,11 @@
 package com.social_network.ua.controllers;
 
+import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.Message;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
-import com.social_network.ua.services.ImageService;
-import com.social_network.ua.services.MessageService;
-import com.social_network.ua.services.RecordService;
-import com.social_network.ua.services.UserService;
+import com.social_network.ua.enums.AlbumName;
+import com.social_network.ua.services.*;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -43,6 +42,8 @@ public class UploadController {
     private MessageService messageService;
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private AlbumService albumService;
 
     @RequestMapping(value = "/process",method = RequestMethod.POST)
     public String save(HttpServletRequest request)
@@ -98,6 +99,23 @@ public class UploadController {
                         imageService.add(user_images);
                         user.setNewestImageSrc("/resources/users/" + nameImage);
                         user.setNewestImageId(user_images.getId());
+
+                        Album album = albumService.findMainAlbumOfUser(user);
+                        if (album!=null) {
+                            user_images.setAlbum(albumService.findMainAlbumOfUser(user));
+                            imageService.edit(user_images);
+                            albumService.edit(album);
+                        }
+                        else {
+                            System.out.println("Album == null");
+                            album = new Album();
+                            album.setDate(new Date(System.currentTimeMillis()));
+                            album.setName(AlbumName.MY_PAGE_PHOTOS.toString());
+                            album.setUser(user);
+                            albumService.add(album);
+                            user_images.setAlbum(album);
+                            imageService.edit(user_images);
+                        }
                         //треба обновити всі повідомлення, userFrom.id яких такий як user.getId() - це ми зробили
                         //але треба ще обновити всі urlUserTo повідомень
                         messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());

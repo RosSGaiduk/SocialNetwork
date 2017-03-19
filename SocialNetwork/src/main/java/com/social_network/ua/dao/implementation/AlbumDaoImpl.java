@@ -3,6 +3,7 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.AlbumDao;
 import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.enums.AlbumName;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,6 +42,16 @@ public class AlbumDaoImpl implements AlbumDao{
     @Transactional
     public Album findOneByNameAndUserId(String albumName, long userId) {
         return (Album) entityManager.createQuery("from Album where name = ?1 and user like ?2").setParameter(1,albumName).setParameter(2,entityManager.find(User.class,userId)).getSingleResult();
+    }
+
+    @Transactional
+    public Album findMainAlbumOfUser(User user) {
+        try {
+            return (Album) entityManager.createQuery("from Album where user like ?1 and name like ?2").setParameter(1,user).setParameter(2, AlbumName.MY_PAGE_PHOTOS.toString()).getSingleResult();
+        } catch (Exception ex){
+            System.out.println("Exception while finding album");
+            return null;
+        }
     }
 
     @Transactional
