@@ -23,7 +23,7 @@
     <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body>
-<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
+<div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
     <sec:authorize access="isAuthenticated()">
         <div class="userPhoto">
             <div onclick="openPhotoUser('${user.newestImageSrc}',${user.newestImageId})" id = "photoOfUser" style="
@@ -186,7 +186,7 @@
     </sec:authorize>
 </div>
 
-<div style="text-align: center; overflow: scroll; cursor: default" id="popupWin" class="modalwin">
+<div style="text-align: center; overflow: scroll; cursor: default; float:left;" id="popupWin" class="modalwin">
     <div style="
             width: 75%; height: 64%; float: left;
             margin-top: 20px; margin-left: 30px;background-image: url(${user.newestImageSrc});

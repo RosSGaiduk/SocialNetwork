@@ -2,6 +2,7 @@ package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.CommentDao;
 import com.social_network.ua.entity.Comment;
+import com.social_network.ua.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -38,6 +39,11 @@ public class CommentDaoImpl implements CommentDao{
     @Transactional
     public Comment findOne(long id) {
         return entityManager.find(Comment.class,id);
+    }
+
+    @Transactional
+    public void updateCommentsNewestImageSrcOfUser(User user) {
+        entityManager.createQuery("update Comment set userFromNewestUrlImage = ?2 where user like ?1").setParameter(1,user).setParameter(2,user.getNewestImageSrc()).executeUpdate();
     }
 
     @Transactional

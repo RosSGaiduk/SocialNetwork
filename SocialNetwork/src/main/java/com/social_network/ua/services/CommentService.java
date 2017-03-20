@@ -1,6 +1,7 @@
 package com.social_network.ua.services;
 
 import com.social_network.ua.entity.Comment;
+import com.social_network.ua.entity.User;
 
 import java.util.List;
 
@@ -13,5 +14,6 @@ public interface CommentService {
     void delete(Comment comment);
     Comment findOne(long id);
     List<Comment> findAllByImageId(long imageId);
+    void updateCommentsNewestImageSrcOfUser(User user);
     List<Comment> findAll();
 }

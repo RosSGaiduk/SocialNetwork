@@ -1,6 +1,7 @@
 package com.social_network.ua.dao;
 
 import com.social_network.ua.entity.Comment;
+import com.social_network.ua.entity.User;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public interface CommentDao {
     void edit(Comment comment);
     void delete(Comment comment);
     Comment findOne(long id);
+    void updateCommentsNewestImageSrcOfUser(User user);
     List<Comment> findAllByImageId(long imageId);
     List<Comment> findAll();
 }

@@ -2,6 +2,7 @@ package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.CommentDao;
 import com.social_network.ua.entity.Comment;
+import com.social_network.ua.entity.User;
 import com.social_network.ua.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,11 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public List<Comment> findAllByImageId(long imageId) {
         return commentDao.findAllByImageId(imageId);
+    }
+
+    @Override
+    public void updateCommentsNewestImageSrcOfUser(User user) {
+        commentDao.updateCommentsNewestImageSrcOfUser(user);
     }
 
     @Override

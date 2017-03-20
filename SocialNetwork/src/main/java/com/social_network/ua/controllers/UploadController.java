@@ -44,6 +44,8 @@ public class UploadController {
     private RecordService recordService;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private CommentService commentService;
 
     @RequestMapping(value = "/process",method = RequestMethod.POST)
     public String save(HttpServletRequest request)
@@ -121,7 +123,7 @@ public class UploadController {
                         messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());
                         recordService.updateUserImageSrcOfRecords(user);
                         userService.edit(user);
-
+                        commentService.updateCommentsNewestImageSrcOfUser(user);
                     }
                 }
             }
