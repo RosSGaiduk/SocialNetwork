@@ -349,10 +349,12 @@ public class Main {
 
 
 
-        Object object = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = 1 and a.name = 'MY_PAGE_PHOTOS' and u.id < ?3 group by u.id desc").setParameter(3,137).setMaxResults(1).getSingleResult();
+        /*Object object = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = 1 and a.name = 'MY_PAGE_PHOTOS' and u.id < ?3 group by u.id desc").setParameter(3,137).setMaxResults(1).getSingleResult();
         BigInteger bigInteger = (BigInteger) object;
-        System.out.println(bigInteger);
+        System.out.println(bigInteger);*/
 
+        List<User> users = entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,entityManager.find(User_Images.class,131l)).getResultList();
+        System.out.println(users.size());
 
         entityManager.getTransaction().commit();
         entityManager.close();

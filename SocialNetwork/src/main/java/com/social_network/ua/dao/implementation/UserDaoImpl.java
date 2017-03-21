@@ -12,6 +12,7 @@ import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -153,6 +154,18 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public User getUserOfImage(User_Images user_images) {
         return (User) entityManager.createQuery("select user from User_Images where id = ?1").setParameter(1,user_images.getId()).getSingleResult();
+    }
+
+    @Transactional
+    public List<User> getAllUsersThatLikedImage(User_Images user_images) {
+       return entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,user_images).getResultList();
+    }
+
+    @Transactional
+    public List<User> getAllUsersThatLikedImageWithLimit(User_Images user_images, int limit) {
+        List<User> users = entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,user_images).setMaxResults(limit).getResultList();
+        Collections.reverse(users);
+        return users;
     }
 
     @Transactional

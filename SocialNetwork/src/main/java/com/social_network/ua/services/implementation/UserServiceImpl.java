@@ -127,6 +127,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<User> getAllUsersThatLikedImage(User_Images user_images) {
+        return userDao.getAllUsersThatLikedImage(user_images);
+    }
+
+    @Override
+    public List<User> getAllUsersThatLikedImageWithLimit(User_Images user_images, int limit) {
+        return userDao.getAllUsersThatLikedImageWithLimit(user_images,limit);
+    }
+
+    @Override
     public boolean findUserByEmail(String email) {
         return userDao.findUserByEmail(email);
     }

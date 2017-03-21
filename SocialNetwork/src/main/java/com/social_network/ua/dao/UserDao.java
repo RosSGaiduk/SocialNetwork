@@ -27,6 +27,8 @@ public interface UserDao {
     List<Music> getAllMusicOfUser(long userId);
     User getUserOfMessage(long messageId);
     User getUserOfImage(User_Images user_images);
+    List<User> getAllUsersThatLikedImage(User_Images user_images);
+    List<User> getAllUsersThatLikedImageWithLimit(User_Images user_images,int limit);
     User getUserToOfMessage(long messageId);
     boolean findUserByEmail(String email);
     List<User> findAll();

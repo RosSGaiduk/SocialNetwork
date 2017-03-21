@@ -573,4 +573,19 @@ public class AjaxController extends BaseMethods {
         return jsonObject.toString();
     }
 
+    @RequestMapping(value = "/getUsersThatLikedImageWithLimit/{imageId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getUsersThatLikedImage(@PathVariable("imageId")String imageId,@RequestParam String limit){
+        User_Images user_images = imageService.findOne(Long.parseLong(imageId));
+        List<User> usersLiked = userService.getAllUsersThatLikedImageWithLimit(user_images,Integer.parseInt(limit));
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < usersLiked.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("urlImage",usersLiked.get(i).getNewestImageSrc());
+            jsonObject.putOnce("id",usersLiked.get(i).getId());
+            jsonObject.putOnce("details",usersLiked.get(i).getFirstName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray.toString();
+    }
 }

@@ -345,8 +345,8 @@ html {
 }
 
 .modalwin {
-    height: 80%;
-    width: 50%;
+    height: 600px;
+    width: 800px;
     border: 3px outset gray;
     background: white;
     top: 10%; /* отступ сверху */
@@ -369,4 +369,21 @@ html {
     opacity: 0.5; /*прозрачность*/
     left: 0;
     top: 0;
+}
+
+.windowsWithLikes{
+    height: 105px;
+    width: 220px;
+    border: 3px outset gray;
+    background: white;
+    top: 50%; /* отступ сверху */
+    right: 0;
+    left: 0;
+    font-size: 14px;
+    margin: 0 auto;
+    z-index:2; /* поверх всех */
+    display: none;  /* сначала невидим */
+    position: fixed; /* фиксированное позиционирование, окно стабильно при прокрутке */
+    padding: 15px;
+    border: 1px solid #383838;
 }

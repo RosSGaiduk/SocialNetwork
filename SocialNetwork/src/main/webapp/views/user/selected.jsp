@@ -199,8 +199,7 @@
     <img id = "currentImage" src="/resources/img/icons/like.png" id = "likeImg" style="float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;" onclick="leaveLike('image','${user.newestImageId}')">
     <span id = "countLikesUnderPhoto" style="float: left; margin-top: 20px; margin-left: 7px;">1</span>
     </c:if>
-    <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;">
-    </div>
+    <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;"></div>
 </div>
 
 <%--<script>
@@ -267,6 +266,7 @@
             },
             success: function (data) {
                 loadCountLikes(typeOfEntity,idOfEntity);
+                loadUsersThatLeftLike(idOfEntity);
             }
         })
     }
@@ -326,27 +326,106 @@
 </script>
 
 <script>
+    var time = 0;
+    var remembered = false;
+    var check = true;
     function openPhotoUser(urlPhoto,idPhoto){
         var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
 
-        $("#popupWin").append("<div style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
+        $("#popupWin").append("<div id = 'idBlock' style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
         $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveComment("+idPhoto+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
         $("#popupWin").append("<img  src='/resources/img/icons/like.png' id = 'likeImg' style='float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;'>");
         $("#popupWin").append("<span id = 'countLikesUnderPhoto' style='float: left; margin-top: 20px; margin-left: 7px;'></span>");
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
+        $("#idBlock").append("<div id = 'windowLikeId' class = 'windowsWithLikes' style='display: none;'></div>")
 
         $("#likeImg").click(function(){
             leaveLike('image',idPhoto);
         });
+
+        loadUsersThatLeftLikeWithLimit(idPhoto);
+
+        $("#likeImg").mouseover(function(){
+            $("#windowLikeId").css("display","block");
+            remembered = false;
+            check = false;
+            //alert(remembered);
+            console.log(check);
+        })
+
+        $("#likeImg").mouseout(function(){
+            if (!remembered) {
+                time = (new Date).getTime();
+                remembered = true;
+            }
+            check = true;
+            //alert(remembered);
+            console.log(check);
+        })
+
+        $("#windowLikeId").mouseover(function(){
+            check = false;
+            $("#windowLikeId").css("display","block");
+        })
+
+        $("#windowLikeId").mouseout(function(){
+            check = true;
+            //$("#windowLikeId").css("display","none");
+        })
+
+        $("#windowLikeId").click(function(){
+
+        })
 
         header();
 
         updateCommentsGo(idPhoto);
         loadCountLikes('image',idPhoto);
     }
+
+    function loadUsersThatLeftLikeWithLimit(imageId){
+        $.ajax({
+            url: "/getUsersThatLikedImageWithLimit/"+imageId,
+            dataType: "json",
+            method: "get",
+            data: ({
+                limit: "6"
+            }),
+            async: false,
+            success: function (data){
+                $.each(data,function(k,v){
+                    //alert(v.id);
+                    $("#windowLikeId").append("" +
+                            "<a href='/user/"+ v.id+"'>" +
+                            "<div style='float:left; height: 60px; width: 50px; margin-left: 20px;'>" +
+                            "<img src = '"+ v.urlImage+"' width = '50' height='50' style='float: left;'>" +
+                            "<font style='float: left; clear:left; font-size: 10px;'>"+ v.details +"</font>" +
+                            "</div></a>");
+                })
+            }
+        })
+    }
+
+    function showBlockTime(){
+        console.log(check);
+        if (check) {
+            var currentTime = (new Date).getTime();
+            var difference = parseInt(currentTime - time);
+            if (difference < 100) {
+                $("#windowLikeId").css("display", "block");
+            } else {
+                $("#windowLikeId").css("display", "none");
+            }
+        } else {
+            $("#windowLikeId").css("display", "block");
+        }
+        /*alert("current time: "+currentTime+" time: "+time+" difference: "+parseInt(currentTime-time));*/
+    }
+
+    var id1 = setInterval("showBlockTime()",100);
 
     function loadCountLikes(typeEntity,idEntity){
         //alert(idEntity);
