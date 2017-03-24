@@ -5,6 +5,7 @@ import com.social_network.ua.entity.*;
 import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -587,5 +588,67 @@ public class AjaxController extends BaseMethods {
             jsonArray.put(jsonObject);
         }
         return jsonArray.toString();
+    }
+
+    @RequestMapping(value = "/loadAllUsersWhoLikedImage/{imageId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadAllUsersWhoLikedImage(@PathVariable("imageId")String imageId){
+        User_Images user_images = imageService.findOne(Long.parseLong(imageId));
+        List<User> usersLiked = userService.getAllUsersThatLikedImage(user_images);
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < usersLiked.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("urlImage",usersLiked.get(i).getNewestImageSrc());
+            jsonObject.putOnce("id",usersLiked.get(i).getId());
+            jsonObject.putOnce("name",usersLiked.get(i).getFirstName());
+            jsonObject.putOnce("lastName",usersLiked.get(i).getLastName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray.toString();
+    }
+
+
+    @RequestMapping(value = "/updateOnlineUser/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String updateLastClickAuthUser(@PathVariable("id")String id,@RequestParam String time,@RequestParam boolean setOnline){
+        User user = userService.findOne(Long.parseLong(id));
+        System.out.println("boolean: "+setOnline);
+        System.out.println("idUser: "+id);
+        if (setOnline){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User authUser = userService.findOne(Long.parseLong(authentication.getName()));
+            System.out.println("Auth user "+authUser.getId());
+            authUser.setOnline(true);
+            Date lastOnline = new Date(System.currentTimeMillis());
+            String timeToDb  = DateFormatUtils.format(lastOnline, "yyyy/MM/dd HH:mm:ss");
+            System.out.println("Time to db: "+timeToDb);
+            authUser.setLastOnline(timeToDb);
+            userService.edit(authUser);
+            if (user.getIsOnline()==true) {
+                System.out.println("User with id "+user.getId()+" is online");
+                return "Online";
+            }
+            else {
+                System.out.println("User with id "+user.getId()+" isn't online");
+                return "Was online: "+user.getLastOnline();
+            }
+        }
+        System.out.println("Time: "+time);
+        long timeLong = new Date(user.getLastOnline()).getTime();
+        Date date = new Date(System.currentTimeMillis());
+        long millis = date.getTime();
+        long difference = Math.abs(millis-timeLong);
+        System.out.println("Current time: "+millis);
+        System.out.println("Difference: "+difference);
+        //if (difference>15*60000){
+        if (difference>15*60000){
+            user.setOnline(false);
+            userService.edit(user);
+            return "Was online: "+user.getLastOnline();
+        } else {
+            user.setOnline(true);
+            userService.edit(user);
+            return "Online";
+        }
     }
 }

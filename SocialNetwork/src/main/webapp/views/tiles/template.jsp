@@ -25,10 +25,21 @@
     <script src="/resources/scripts/main.js"></script>
     <script src="/resources/scripts/headerWindowBelow.js"></script>
 </head>
-<body style="background-color: gainsboro">
+<body style="background-color: gainsboro" onclick="updateLastClick()">
 <div><tiles:insertAttribute name="header"/></div>
 <div><tiles:insertAttribute name="menu"/></div>
 <div><tiles:insertAttribute name = "body"/></div>
 <div><tiles:insertAttribute name = "footer"/></div>
 </body>
+
+<script>
+    var timeUpdated = (new Date).getTime();
+    var currentTime = (new Date).getTime();
+    function updateLastClick(){
+        currentTime = (new Date).getTime();
+        updateTime(true,$('#userId').html());
+    }
+
+    var id = setInterval("updateTime(false,$('#userId').html())",10000);
+</script>
 </html>

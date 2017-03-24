@@ -7,6 +7,7 @@ import com.social_network.ua.entity.*;
 import com.social_network.ua.services.ImageService;
 import com.social_network.ua.services.LikeService;
 import com.social_network.ua.services.implementation.ImageServiceImpl;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,9 @@ import javax.persistence.Persistence;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 /**
@@ -353,8 +357,70 @@ public class Main {
         BigInteger bigInteger = (BigInteger) object;
         System.out.println(bigInteger);*/
 
-        List<User> users = entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,entityManager.find(User_Images.class,131l)).getResultList();
-        System.out.println(users.size());
+        /*List<User> users = entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,entityManager.find(User_Images.class,131l)).getResultList();
+        System.out.println(users.size());*/
+
+
+        /*Date date = new Date("2017/03/23 10:36:17");
+        System.out.println(date);
+        System.out.println(date.getTime());
+        Date date1 = new Date(date.getTime());
+        System.out.println(date1);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String []str = ("2017/03/23 10:36:17").split("[/: ]");
+        for (String string: str)
+            System.out.println(Integer.parseInt(string));
+        System.out.println(str.length);
+        LocalDateTime localDate = LocalDateTime.of(Integer.parseInt(str[0]),Integer.parseInt(str[1]),Integer.parseInt(str[2]),
+                Integer.parseInt(str[3]),Integer.parseInt(str[4]),Integer.parseInt(str[5]));
+        String date2 = dtf.format(localDate);
+        System.out.println(date2);*/
+
+
+        /*//Works
+        Long time = 1490258177000l;
+        Date date = new Date("2017/03/25 19:36:17");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime localDate = LocalDateTime.now();
+        CharSequence charSequence = "2017/03/25 19:36:17";
+        TemporalAccessor dateThis = dtf.parse(charSequence);
+        System.out.println(dateThis);
+        String str = dateThis.toString().substring(19,dateThis.toString().length());
+        str = str.replace('T',' ');
+        str = str.replace('-','/');
+        System.out.println(str);*/
+
+        /*Long time = 1490258177000l;
+        Date date = new Date(time);
+        String str = DateFormatUtils.format(date, "yyyy/MM/dd hh:mm:ss");*/
+
+       //System.out.println(str);
+
+
+        /*Date date1 = new Date(System.currentTimeMillis());
+        System.out.println(date1.getTime());
+        long val = date1.getTime();
+        Date date = new Date(date1.getTime());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("20yy/mm/dd HH:mm:ss");
+        System.out.println(date.getTime());
+        LocalDateTime localDate = LocalDateTime.of(date.getYear(),date.getMonth(),date.getDay(),date.getHours(),date.getMinutes(),date.getSeconds());
+        String myDbDate = dtf.format(localDate);
+        System.out.println(myDbDate);
+        System.out.println(date.getMonth());*/
+
+        Date lastOnline = new Date(System.currentTimeMillis());
+        String timeToDb  = DateFormatUtils.format(lastOnline, "yyyy/MM/dd HH:mm:ss");
+        System.out.println(timeToDb);
+
+
+
+       /* Date date1 = new Date(myDbDate);
+        System.out.println(date1.getTime()+" "+date.getTime());*/
+
+
+
+
 
         entityManager.getTransaction().commit();
         entityManager.close();

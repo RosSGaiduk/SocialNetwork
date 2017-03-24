@@ -35,6 +35,22 @@ function deleteRecord(recId){
     })
 }
 
+function updateTime(val,userId){
+    timeUpdated = (new Date).getTime();
+    $.ajax({
+        url: "/updateOnlineUser/"+userId,
+        method: "get",
+        async: false,
+        data:({
+            time: currentTime,
+            setOnline: val,
+        }),
+        success: function(data){
+            $("#onlineCheck").html(data);
+        }
+    })
+}
+
 function openRecord(recordType,recordText,recordUrl,recordName){
     //alert("clicked");
     header();

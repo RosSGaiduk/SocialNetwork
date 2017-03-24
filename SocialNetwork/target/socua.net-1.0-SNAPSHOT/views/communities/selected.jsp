@@ -133,7 +133,6 @@
 </div>
 
 
-
 <script>
     function setActionToForm(){
         var textInput =  $("#newRecord").val();

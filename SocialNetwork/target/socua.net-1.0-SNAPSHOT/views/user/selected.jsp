@@ -55,10 +55,10 @@
         <div id = "info" class = "userInfo">
             <div style="width: 100%; height: 70%; float: left; float: left;">
                 <c:if test="${user.isOnline}">
-                <h3 style="text-align: center; color: blue;">Online</h3>
+                <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Online</h3>
                 </c:if>
                 <c:if test="${!user.isOnline}">
-                    <h3 style="text-align: center; color: blue;">Was online: ${user.lastOnline}</h3>
+                    <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Was online: ${user.lastOnline}</h3>
                 </c:if>
                 <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
                 <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
@@ -210,6 +210,8 @@
 </script>--%>
 
 <!--Зробив щоб попрактикуватись з методом append(), цей метод не викликається ні разу-->
+
+
 <script charset="UTF-8">
     function loadRecords(){
         $.ajax({
@@ -377,11 +379,55 @@
         })
 
         $("#windowLikeId").click(function(){
+            $("#popupWin").append("<div id = 'usersLikedBigBanner' class = 'bigBannerWithLikes'><button id = 'closeBtn' style='width: 10%; height: 5%; margin-left: 89%;'>Close</button><p style='clear: left'/></div>");
+
+            $("#closeBtn").click(function(){
+                $("#usersLikedBigBanner").remove();
+                $("#idBlock").click(function(){
+                    previousImage(idPhoto);
+                })
+            })
+            $.ajax({
+                url: "/loadAllUsersWhoLikedImage/"+idPhoto,
+                method: "get",
+                async: false,
+                dataType: "json",
+                data: ({
+
+                }),
+                success: function(data){
+                    //alert(data.length);
+                    $.each(data,function(k,v){
+                        var aMain = document.createElement("a");
+                        aMain.href = "/user/"+ v.id;
+
+                        var mainDiv = document.createElement("div");
+                        mainDiv.setAttribute("class","userThatLikedImageDiv");
+
+
+                        var divImage = document.createElement("div");
+                        divImage.setAttribute("class","userThatLikedImageImg");
+                        divImage.style = "background-image: url("+v.urlImage +");";
+
+                        var pInfo= document.createElement("p");
+                        pInfo.innerHTML = v.name+" "+ v.lastName;
+
+
+                        mainDiv.appendChild(divImage);
+                        mainDiv.appendChild(pInfo);
+                        aMain.appendChild(mainDiv);
+                        document.getElementById("usersLikedBigBanner").appendChild(aMain);
+                    })
+                }
+            })
+            $("#idBlock").prop('onclick',null).off('click');
+            /*$("#idBlock").click(function(){
+                previousImage(idPhoto);
+            });*/
+            //$('...').prop('onclick',null).off('click');
 
         })
-
         header();
-
         updateCommentsGo(idPhoto);
         loadCountLikes('image',idPhoto);
     }
@@ -399,14 +445,20 @@
                 $.each(data,function(k,v){
                     //alert(v.id);
                     $("#windowLikeId").append("" +
-                            "<a href='/user/"+ v.id+"'>" +
-                            "<div style='float:left; height: 60px; width: 50px; margin-left: 20px;'>" +
+                            /*"<a id = '"+ v.id+" a' href='/user/"+ v.id+"'>" +*/
+                            "<div style='float:left; height: 60px; width: 50px; margin-left: 20px;' onclick='cancelOpeningBigWindowAndGoToUser("+ v.id+")'>" +
                             "<img src = '"+ v.urlImage+"' width = '50' height='50' style='float: left;'>" +
                             "<font style='float: left; clear:left; font-size: 10px;'>"+ v.details +"</font>" +
-                            "</div></a>");
+                            "</div>");
                 })
             }
         })
+    }
+
+    function cancelOpeningBigWindowAndGoToUser(idUser){
+        $("#windowLikeId").prop('onclick',null).off('click');
+        $("#idBlock").prop('onclick',null).off('click');
+        window.location.href = "/user/"+idUser;
     }
 
     function showBlockTime(){
@@ -581,11 +633,9 @@
                         deleteRecord(v.id);
                     })
             }
-
         });
     }
 </script>
-
 <script>
     function addUserToFriendZone(){
         $.ajax({
@@ -605,6 +655,5 @@
         })
     }
 </script>
-
 </body>
 </html>

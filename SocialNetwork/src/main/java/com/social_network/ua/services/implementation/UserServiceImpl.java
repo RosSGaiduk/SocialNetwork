@@ -7,6 +7,7 @@ import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
 import com.social_network.ua.repository.UserRepo;
 import com.social_network.ua.services.UserService;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -152,6 +153,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         try {
             user = userRepo.findByLogin(login);
             user.setIsOnline(true);
+            Date lastOnline = new Date(System.currentTimeMillis());
+            String timeToDb  = DateFormatUtils.format(lastOnline, "yyyy/MM/dd HH:mm:ss");
+            user.setLastOnline(timeToDb);
             edit(user);
             System.out.println(user.getFirstName());
         } catch (NoResultException e){
