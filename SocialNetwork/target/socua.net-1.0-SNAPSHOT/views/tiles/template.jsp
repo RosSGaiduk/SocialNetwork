@@ -24,6 +24,7 @@
     <script src="/resources/scripts/bootstrap.min.js"></script>
     <script src="/resources/scripts/main.js"></script>
     <script src="/resources/scripts/headerWindowBelow.js"></script>
+    <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body style="background-color: gainsboro" onclick="updateLastClick()">
 <div><tiles:insertAttribute name="header"/></div>

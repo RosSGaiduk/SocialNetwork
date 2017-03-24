@@ -29,7 +29,7 @@
             <a href="/friendsOf/<sec:authentication property="name"/>" style="text-decoration: none"><h4 style="text-align: left;">Друзі</h4></a>
         </div>
             <div class="menuOption">
-                <a href="/photosOf/<sec:authentication property="name"/>/*" style="text-decoration: none"><h4 style="text-align: left">Фотографії</h4></a>
+                <a href="/photosOf/<sec:authentication property="name"/>/MY_PAGE_PHOTOS" style="text-decoration: none"><h4 style="text-align: left">Фотографії</h4></a>
             </div>
 
             <div class="menuOption">

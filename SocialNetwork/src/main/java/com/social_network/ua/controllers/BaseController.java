@@ -154,6 +154,7 @@ public class BaseController extends BaseMethods{
         } else {
             Album selectedAlbum = albumService.findOneByNameAndUserId(album,idLong);
             user_images = imageService.findAllByAlbum(selectedAlbum);
+            model.addAttribute("album",selectedAlbum);
         }
         model.addAttribute("images_all",user_images);
         System.out.println(user_images.size());

@@ -18,6 +18,7 @@ public interface AlbumService {
     Album findOne(long id);
     Album findOneByNameAndUserId(String nameAlbum,long userId);
     Album findMainAlbumOfUser(User user);
+    Album findOneByImageId(long idImage);
     List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

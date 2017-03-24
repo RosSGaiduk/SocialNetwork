@@ -409,9 +409,9 @@ public class Main {
         System.out.println(myDbDate);
         System.out.println(date.getMonth());*/
 
-        Date lastOnline = new Date(System.currentTimeMillis());
+        /*Date lastOnline = new Date(System.currentTimeMillis());
         String timeToDb  = DateFormatUtils.format(lastOnline, "yyyy/MM/dd HH:mm:ss");
-        System.out.println(timeToDb);
+        System.out.println(timeToDb);*/
 
 
 
@@ -419,7 +419,12 @@ public class Main {
         System.out.println(date1.getTime()+" "+date.getTime());*/
 
 
-
+        Album album = entityManager.find(Album.class,1l);
+        System.out.println(album);
+        Object o = entityManager.createNativeQuery("SELECT u.id FROM User_Images u WHERE u.album_id = ?1 and u.id < ?2 GROUP BY u.id DESC").setParameter(1,album.getId()).setParameter(2,163l).setMaxResults(1).getSingleResult();
+        BigInteger bigInteger = (BigInteger) o;
+        User_Images image = entityManager.find(User_Images.class,bigInteger.longValue());
+        System.out.println(image.getId());
 
 
         entityManager.getTransaction().commit();

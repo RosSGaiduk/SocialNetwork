@@ -16,6 +16,7 @@ public interface AlbumDao {
     Album findOne(long id);
     Album findOneByNameAndUserId(String albumName,long userId);
     Album findMainAlbumOfUser(User user);
+    Album findOneByImageId(long imageId);
     List<Album> findAllAlbumsByUser(User user);
     List<Album> findAll();
 }

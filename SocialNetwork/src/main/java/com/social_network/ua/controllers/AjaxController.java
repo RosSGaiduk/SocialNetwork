@@ -640,7 +640,7 @@ public class AjaxController extends BaseMethods {
         long difference = Math.abs(millis-timeLong);
         System.out.println("Current time: "+millis);
         System.out.println("Difference: "+difference);
-        //if (difference>15*60000){
+        //15 minutes
         if (difference>15*60000){
             user.setOnline(false);
             userService.edit(user);
@@ -650,5 +650,17 @@ public class AjaxController extends BaseMethods {
             userService.edit(user);
             return "Online";
         }
+    }
+
+
+    @RequestMapping(value = "/previousImageOfAlbum",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getPreviousImageOfAlbum(@RequestParam String photoId){
+        Album album = albumService.findOneByImageId(Long.parseLong(photoId));
+        User_Images image = imageService.getPreviousImageFromAlbum(album,Long.parseLong(photoId));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("id",image.getId());
+        jsonObject.putOnce("url",image.getUrlOfImage());
+        return jsonObject.toString();
     }
 }

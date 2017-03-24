@@ -50,6 +50,59 @@ function updateTime(val,userId){
         }
     })
 }
+//залишити лайк під будь чим
+function leaveLike(typeOfEntity,idOfEntity){
+    $.ajax({
+        url: "/leaveLike",
+        async: false,
+        data: {
+            type: typeOfEntity,
+            id: idOfEntity
+        },
+        success: function (data) {
+            loadCountLikes(typeOfEntity,idOfEntity);
+            loadUsersThatLeftLike(idOfEntity);
+        }
+    })
+}
+//залишити коментар під фоткою
+function leaveComment(imageId){
+    $.ajax({
+        url: "/leaveComment/"+imageId,
+        async: false,
+        dataType: "json",
+        data: {
+            text: $("#textAr").val()
+        },
+        success: function (data) {
+            var aHref = document.createElement("a");
+            aHref.href = "/user/"+data.id;
+            var mainDiv = document.createElement("div");
+            mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+"); border-radius:50%;";
+            aHref.appendChild(mainDiv);
+            var textP = document.createElement("p");
+            textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+            textP.innerHTML = data.text;
+            var clearP = document.createElement("p");
+            clearP.style = "clear:left;"
+
+            var first=document.getElementById("comments").childNodes[0];
+            document.getElementById("comments").insertBefore(aHref,first);
+
+            var second=document.getElementById("comments").childNodes[1];
+            document.getElementById("comments").insertBefore(textP,second);
+
+            var third=document.getElementById("comments").childNodes[2];
+            document.getElementById("comments").insertBefore(clearP,third);
+
+            //document.getElementById("comments").appendChild(mainDiv);
+            //document.getElementById("comments").appendChild(textP);
+            //document.getElementById("comments").appendChild(clearP);
+
+            $("#textAr").val("");
+        }
+    })
+}
 
 function openRecord(recordType,recordText,recordUrl,recordName){
     //alert("clicked");
@@ -136,4 +189,120 @@ function fixString(text){
     return newStr;
 }
 
+function leaveComment(imageId){
+    $.ajax({
+        url: "/leaveComment/"+imageId,
+        async: false,
+        dataType: "json",
+        data: {
+            text: $("#textAr").val()
+        },
+        success: function (data) {
+            var aHref = document.createElement("a");
+            aHref.href = "/user/"+data.id;
+            var mainDiv = document.createElement("div");
+            mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+"); border-radius:50%;";
+            aHref.appendChild(mainDiv);
+            var textP = document.createElement("p");
+            textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+            textP.innerHTML = data.text;
+            var clearP = document.createElement("p");
+            clearP.style = "clear:left;"
 
+            var first=document.getElementById("comments").childNodes[0];
+            document.getElementById("comments").insertBefore(aHref,first);
+
+            var second=document.getElementById("comments").childNodes[1];
+            document.getElementById("comments").insertBefore(textP,second);
+
+            var third=document.getElementById("comments").childNodes[2];
+            document.getElementById("comments").insertBefore(clearP,third);
+
+            //document.getElementById("comments").appendChild(mainDiv);
+            //document.getElementById("comments").appendChild(textP);
+            //document.getElementById("comments").appendChild(clearP);
+
+            $("#textAr").val("");
+        }
+    })
+}
+
+
+function updateCommentsGo(imageId){
+    $.ajax({
+        url: "/loadCommentsUnderImage",
+        async: false,
+        method: "get",
+        dataType: "json",
+        data: {
+            id: imageId
+        },
+        success: function(data){
+            $.each(data,function(k,v){
+                var aHref = document.createElement("a");
+                aHref.href = "/user/"+v.id;
+                var mainDiv = document.createElement("div");
+                mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ v.userUrlImage+"); border-radius:50%;";
+                aHref.appendChild(mainDiv);
+                var divP = document.createElement("div");
+                divP.style = "float:left; width: 60%;";
+                var textP = document.createElement("p");
+                textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+                textP.innerHTML = v.text;
+                var clearP = document.createElement("p");
+                clearP.style = "clear:left;";
+                divP.appendChild(textP);
+
+                document.getElementById("comments").appendChild(aHref);
+                document.getElementById("comments").appendChild(divP);
+                document.getElementById("comments").appendChild(clearP);
+            })
+        }
+    })
+}
+
+function loadCountLikes(typeEntity,idEntity){
+    //alert(idEntity);
+    $.ajax({
+        url: "/getCountLikesOfEntity/"+idEntity,
+        method: "get",
+        dataType: "json",
+        async: false,
+        data:{
+            type: typeEntity
+        },
+        success: function (data) {
+            $("#countLikesUnderPhoto").html(data.countLikes);
+            if (!data.liked){
+                var image = document.getElementById("likeImg");
+                image.src = "/resources/img/icons/likeClear.png";
+            } else {
+                var image = document.getElementById("likeImg");
+                image.src = "/resources/img/icons/like.png";
+            }
+        }
+    })
+}
+
+function loadUsersThatLeftLikeWithLimit(imageId){
+    $.ajax({
+        url: "/getUsersThatLikedImageWithLimit/"+imageId,
+        dataType: "json",
+        method: "get",
+        data: ({
+            limit: "6"
+        }),
+        async: false,
+        success: function (data){
+            $.each(data,function(k,v){
+                //alert(v.id);
+                $("#windowLikeId").append("" +
+                        /*"<a id = '"+ v.id+" a' href='/user/"+ v.id+"'>" +*/
+                    "<div style='float:left; height: 60px; width: 50px; margin-left: 20px;' onclick='cancelOpeningBigWindowAndGoToUser("+ v.id+")'>" +
+                    "<img src = '"+ v.urlImage+"' width = '50' height='50' style='float: left;'>" +
+                    "<font style='float: left; clear:left; font-size: 10px;'>"+ v.details +"</font>" +
+                    "</div>");
+            })
+        }
+    })
+}

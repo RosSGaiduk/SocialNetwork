@@ -19,8 +19,6 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
-
-    <script src="/resources/scripts/mainFunctions.js"></script>
 </head>
 <body>
 <div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
@@ -73,7 +71,7 @@
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
                 <a href="/friendsOf/${user.id}" style="text-decoration: none">
                     <div class = "logos" style="background-image: url(/resources/img/icons/followers.jpg);"></div></a>
-                <a href="/photosOf/${user.id}/*">
+                <a href="/photosOf/${user.id}/MY_PAGE_PHOTOS">
                     <div class = "logos" style="background-image: url(/resources/img/icons/camera.png);"></div></a>
                 <a href="/messagesWithUser/${user.id}">
                     <div class = "logos"  style="background-image: url(/resources/img/icons/message.png);"></div></a>
@@ -258,20 +256,6 @@
 </script>
 
 <script>
-    function leaveLike(typeOfEntity,idOfEntity){
-        $.ajax({
-            url: "/leaveLike",
-            async: false,
-            data: {
-                type: typeOfEntity,
-                id: idOfEntity
-            },
-            success: function (data) {
-                loadCountLikes(typeOfEntity,idOfEntity);
-                loadUsersThatLeftLike(idOfEntity);
-            }
-        })
-    }
     function previousImage(idPhoto){
         //alert(idPhoto);
         $.ajax({
@@ -292,40 +276,6 @@
     }
 </script>
 
-<script>
-    function updateCommentsGo(imageId){
-        $.ajax({
-            url: "/loadCommentsUnderImage",
-            async: false,
-            method: "get",
-            dataType: "json",
-            data: {
-                id: imageId
-            },
-            success: function(data){
-                $.each(data,function(k,v){
-                    var aHref = document.createElement("a");
-                    aHref.href = "/user/"+v.id;
-                    var mainDiv = document.createElement("div");
-                    mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ v.userUrlImage+"); border-radius:50%;";
-                    aHref.appendChild(mainDiv);
-                    var divP = document.createElement("div");
-                    divP.style = "float:left; width: 60%;";
-                    var textP = document.createElement("p");
-                    textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
-                    textP.innerHTML = v.text;
-                    var clearP = document.createElement("p");
-                    clearP.style = "clear:left;";
-                    divP.appendChild(textP);
-
-                    document.getElementById("comments").appendChild(aHref);
-                    document.getElementById("comments").appendChild(divP);
-                    document.getElementById("comments").appendChild(clearP);
-                })
-            }
-        })
-    }
-</script>
 
 <script>
     var time = 0;
@@ -432,34 +382,6 @@
         loadCountLikes('image',idPhoto);
     }
 
-    function loadUsersThatLeftLikeWithLimit(imageId){
-        $.ajax({
-            url: "/getUsersThatLikedImageWithLimit/"+imageId,
-            dataType: "json",
-            method: "get",
-            data: ({
-                limit: "6"
-            }),
-            async: false,
-            success: function (data){
-                $.each(data,function(k,v){
-                    //alert(v.id);
-                    $("#windowLikeId").append("" +
-                            /*"<a id = '"+ v.id+" a' href='/user/"+ v.id+"'>" +*/
-                            "<div style='float:left; height: 60px; width: 50px; margin-left: 20px;' onclick='cancelOpeningBigWindowAndGoToUser("+ v.id+")'>" +
-                            "<img src = '"+ v.urlImage+"' width = '50' height='50' style='float: left;'>" +
-                            "<font style='float: left; clear:left; font-size: 10px;'>"+ v.details +"</font>" +
-                            "</div>");
-                })
-            }
-        })
-    }
-
-    function cancelOpeningBigWindowAndGoToUser(idUser){
-        $("#windowLikeId").prop('onclick',null).off('click');
-        $("#idBlock").prop('onclick',null).off('click');
-        window.location.href = "/user/"+idUser;
-    }
 
     function showBlockTime(){
         console.log(check);
@@ -478,69 +400,7 @@
     }
 
     var id1 = setInterval("showBlockTime()",100);
-
-    function loadCountLikes(typeEntity,idEntity){
-        //alert(idEntity);
-        $.ajax({
-            url: "/getCountLikesOfEntity/"+idEntity,
-            method: "get",
-            dataType: "json",
-            async: false,
-            data:{
-                type: typeEntity
-            },
-            success: function (data) {
-                $("#countLikesUnderPhoto").html(data.countLikes);
-                if (!data.liked){
-                    var image = document.getElementById("likeImg");
-                    image.src = "/resources/img/icons/likeClear.png";
-                } else {
-                    var image = document.getElementById("likeImg");
-                    image.src = "/resources/img/icons/like.png";
-                }
-            }
-        })
-    }
-
-    function leaveComment(imageId){
-        $.ajax({
-            url: "/leaveComment/"+imageId,
-            async: false,
-            dataType: "json",
-            data: {
-                text: $("#textAr").val()
-            },
-            success: function (data) {
-                var aHref = document.createElement("a");
-                aHref.href = "/user/"+data.id;
-                var mainDiv = document.createElement("div");
-                mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+"); border-radius:50%;";
-                aHref.appendChild(mainDiv);
-                var textP = document.createElement("p");
-                textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
-                textP.innerHTML = data.text;
-                var clearP = document.createElement("p");
-                clearP.style = "clear:left;"
-
-                var first=document.getElementById("comments").childNodes[0];
-                document.getElementById("comments").insertBefore(aHref,first);
-
-                var second=document.getElementById("comments").childNodes[1];
-                document.getElementById("comments").insertBefore(textP,second);
-
-                var third=document.getElementById("comments").childNodes[2];
-                document.getElementById("comments").insertBefore(clearP,third);
-
-                //document.getElementById("comments").appendChild(mainDiv);
-                //document.getElementById("comments").appendChild(textP);
-                //document.getElementById("comments").appendChild(clearP);
-
-                $("#textAr").val("");
-            }
-        })
-    }
 </script>
-
 
 
 

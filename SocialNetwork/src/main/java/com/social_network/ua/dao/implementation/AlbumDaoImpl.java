@@ -55,6 +55,11 @@ public class AlbumDaoImpl implements AlbumDao{
     }
 
     @Transactional
+    public Album findOneByImageId(long imageId) {
+        return (Album) entityManager.createQuery("select image.album from User_Images image where image.id = ?1").setParameter(1,imageId).getSingleResult();
+    }
+
+    @Transactional
     public List<Album> findAllAlbumsByUser(User user) {
         List<Album> albums = entityManager.createQuery("from Album where user like ?1 group by id").setParameter(1,user).getResultList();
         Collections.reverse(albums);

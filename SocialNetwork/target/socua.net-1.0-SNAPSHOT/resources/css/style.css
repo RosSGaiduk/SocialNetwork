@@ -244,13 +244,12 @@ html {
 }
 
 .albumPhotos{
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 190px;
     background-repeat: no-repeat;
     background-size: cover;
     float: left;
     margin-left: 10px;
-    margin-top: 10px;
     cursor: hand;
     margin-top: 20px;
 }
