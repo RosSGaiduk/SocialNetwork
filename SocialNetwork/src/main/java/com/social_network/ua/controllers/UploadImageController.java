@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -102,6 +104,11 @@ public class UploadImageController {
                         albumService.edit(album);
                         System.out.println("Url if image "+image.getUrlOfImage());
                         fileItem.write(new File(path+"/users/"+nameOfImage));
+                        BufferedImage imageDetails = ImageIO.read(new File(path+"/users/"+nameOfImage));
+                        image.setWidth(imageDetails.getWidth());
+                        image.setHeight(imageDetails.getHeight());
+                        image.setRatio();
+                        imageService.edit(image);
                     }
                 }
             }

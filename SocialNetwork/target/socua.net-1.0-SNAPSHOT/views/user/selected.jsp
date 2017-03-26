@@ -32,9 +32,9 @@
             </div>
 
             <a href="/messagesWithUser/${user.id}" id = "messageA" style="text-decoration: none; color: black;">
-                    <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;
+                <button style="float: left; margin-top: 10px; margin-left: 30px; height: 30px; width: 100px;cursor: hand;
                     color: white;background-color: darkslateblue;">
-                Messages</button></a>
+                    Messages</button></a>
             <button onclick="addUserToFriendZone()" id = "addFriend"
                     style="float: left; height: 30px; margin-left: 10px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
             <p style="clear: left"></p>
@@ -53,7 +53,7 @@
         <div id = "info" class = "userInfo">
             <div style="width: 100%; height: 70%; float: left; float: left;">
                 <c:if test="${user.isOnline}">
-                <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Online</h3>
+                    <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Online</h3>
                 </c:if>
                 <c:if test="${!user.isOnline}">
                     <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Was online: ${user.lastOnline}</h3>
@@ -118,11 +118,11 @@
             <a href="/musicOf/${user.id}" style="margin-left: 10px;">Музика</a>
             <p style="clear: left"/>
             <c:forEach items="${musicOfAuth}" var="m">
-            <p style="margin-top: 10px;">${m.nameOfSong}</p>
-            <audio controls style="margin-top: 10px; width: 100%;" >
-                <source src="${m.urlOfSong}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
+                <p style="margin-top: 10px;">${m.nameOfSong}</p>
+                <audio controls style="margin-top: 10px; width: 100%;" >
+                    <source src="${m.urlOfSong}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
             </c:forEach>
         </div>
 
@@ -132,21 +132,21 @@
                     ">
             </div>
 
-           <textarea id = "newRecord" style="height: 50px; width:50%; float: left" placeholder="Введіть повідомлення: "></textarea>
+            <textarea id = "newRecord" style="height: 50px; width:50%; float: left" placeholder="Введіть повідомлення: "></textarea>
 
             <button onclick="updateRecords()" class = "buttonSendRecordStyle">Send</button>
 
-           <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
-                <form:form id = "formForLoadingPicturesToWall" action="upload/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-                           enctype="multipart/form-data" cssStyle="float: left;">
-                <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
-                <input type="submit" value="Upload2" style="float: left; margin-left: 85%; margin-top: -20px;">
-                </form:form>
-            </div>--%>
-            <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
+                <%-- <div style="margin-left: 0%; width: 40%; height: 20px; ">
+                     <form:form id = "formForLoadingPicturesToWall" action="upload/process1.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
+                                enctype="multipart/form-data" cssStyle="float: left;">
+                     <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
+                     <input type="submit" value="Upload2" style="float: left; margin-left: 85%; margin-top: -20px;">
+                     </form:form>
+                 </div>--%>
+                <%--<form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">--%>
             <form:form id =  "newRecordForm" action="/newRecordOf/${user.id}/?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
-            <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
-            <button onclick="setActionToForm()" type="submit" class="buttonFileStyle">Upload</button>
+                <input id = "imageToWall" type="file" name="file2" style="float: left;"/>
+                <button onclick="setActionToForm()" type="submit" class="buttonFileStyle">Upload</button>
             </form:form>
         </div>
 
@@ -156,13 +156,13 @@
                     <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
                     <p style="clear: left;"/>
                     <div style="width:70px; height:50px;
-                           background-image: url(${rec.urlUserImagePattern});background-size:cover;
+                            background-image: url(${rec.urlUserImagePattern});background-size:cover;
                             float:left; margin-left:10px; margin-top:10px;"></div>
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
                         <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
                         <div style="width: 50%; float: left; height: 50px;"></div>
                         <c:if test="${rec.type == 'IMAGE'}">
-                        <img src="${rec.url}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
+                            <img src="${rec.url}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
                         background-size: cover;
                         "></c:if>
                         <c:if test="${rec.type == 'AUDIO'}">
@@ -174,7 +174,7 @@
                         <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
-                    <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)">Delete</button>
+                        <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)">Delete</button>
                     </c:if>
                 </div>
             </c:forEach>
@@ -194,8 +194,8 @@
     <textarea id = "textAr" style="height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;" placeholder="Введіть повідомлення: "></textarea>
     <button onclick="leaveComment(${user.newestImageId})" class="sendButtonStyle" style="float: left; margin-left: 10px; margin-top: 40px;">Send</button>
     <c:if test="${user.newestImageId != 0}">
-    <img id = "currentImage" src="/resources/img/icons/like.png" id = "likeImg" style="float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;" onclick="leaveLike('image','${user.newestImageId}')">
-    <span id = "countLikesUnderPhoto" style="float: left; margin-top: 20px; margin-left: 7px;">1</span>
+        <img id = "currentImage" src="/resources/img/icons/like.png" id = "likeImg" style="float:left; width:16px;height:14px; margin-top: 20px; margin-left: 20px; cursor: hand;" onclick="leaveLike('image','${user.newestImageId}')">
+        <span id = "countLikesUnderPhoto" style="float: left; margin-top: 20px; margin-left: 7px;">1</span>
     </c:if>
     <div id = "comments" style="width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;"></div>
 </div>
@@ -229,25 +229,21 @@
                             "<div style = 'width:50%; height:auto; background-color:white; float:left;margin-top:20px;'>" +
                             "<p style='float:left; margin-left:10px; margin-top:10px;'>" + v.text + "</p>" +
                             "<div style='width: 50%; float: left; height: 50px;'></div>";
-
                     if (v.type == 'IMAGE'){
                         $("#records").append(codeGenerator+"<img src='"+v.url+"' style='margin-left: 0px; margin-left: -20px; width: 100%; height: auto;background-size: cover;'>"+
                                 "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
-                        }
+                    }
                     else if (v.type == 'AUDIO'){
                         $("#records").append(codeGenerator+"<p style='float:left;'>"+ v.nameRecord+"</p><audio controls  style='width: 160%; height: auto; float: left; margin-top: 50px;'><source src='"+v.url+"' type='audio/mpeg' style='cursor: hand'></audio>"+
-                        "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
+                                "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
                     }
-
                     else if (v.type == 'TEXT'){
                         $("#records").append(codeGenerator+
                                 "<p id = '"+v.id+"' style='visibility: hidden'>"+v.id+"</p></div></div>");
                     }
-
                     if ($("#userId").html() == $("#userAuthId").html()){
                         $("#records").append("<button onclick='deleteRecord("+ v.id+")' id = '"+ v.id +"_button' style='float:left;'>Delete</button>");
                     }
-
                 })
             }
         })
@@ -267,10 +263,10 @@
                 photoId: idPhoto
             }),
             success: function(data){
-              var darkLayer = document.getElementById("shadow");
-              darkLayer.parentNode.removeChild(darkLayer); //видаляєм затемнення, тому, що в наступному методі
+                var darkLayer = document.getElementById("shadow");
+                darkLayer.parentNode.removeChild(darkLayer); //видаляєм затемнення, тому, що в наступному методі
                 //який ми викликаєм знову встановлюється затемнення
-              openPhotoUser(data.url,data.id);
+                openPhotoUser(data.url,data.id);
             }
         })
     }
@@ -281,11 +277,18 @@
     var time = 0;
     var remembered = false;
     var check = true;
+
     function openPhotoUser(urlPhoto,idPhoto){
         var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
 
-        $("#popupWin").append("<div id = 'idBlock' style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
+        var imageDetails = getDetailsOfPhoto(idPhoto);
+        var width = 384*imageDetails.ratio;
+        //$("#idBlock").css("width",384*imageDetails.ratio);
+        var marginLeft = ($("#popupWin").width()-width)/2.0;
+        //$("#idBlock").css("margin-left",marginLeft);
+
+        $("#popupWin").append("<div id = 'idBlock' style='width: "+width+"px; height: 384px; float: left;margin-top: 20px; margin-left: "+marginLeft+"px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
         $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveComment("+idPhoto+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
@@ -294,12 +297,11 @@
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
         $("#idBlock").append("<div id = 'windowLikeId' class = 'windowsWithLikes' style='display: none;'></div>")
 
+
         $("#likeImg").click(function(){
             leaveLike('image',idPhoto);
         });
-
         loadUsersThatLeftLikeWithLimit(idPhoto);
-
         $("#likeImg").mouseover(function(){
             $("#windowLikeId").css("display","block");
             remembered = false;
@@ -307,7 +309,6 @@
             //alert(remembered);
             console.log(check);
         })
-
         $("#likeImg").mouseout(function(){
             if (!remembered) {
                 time = (new Date).getTime();
@@ -317,20 +318,16 @@
             //alert(remembered);
             console.log(check);
         })
-
         $("#windowLikeId").mouseover(function(){
             check = false;
             $("#windowLikeId").css("display","block");
         })
-
         $("#windowLikeId").mouseout(function(){
             check = true;
             //$("#windowLikeId").css("display","none");
         })
-
         $("#windowLikeId").click(function(){
             $("#popupWin").append("<div id = 'usersLikedBigBanner' class = 'bigBannerWithLikes'><button id = 'closeBtn' style='width: 10%; height: 5%; margin-left: 89%;'>Close</button><p style='clear: left'/></div>");
-
             $("#closeBtn").click(function(){
                 $("#usersLikedBigBanner").remove();
                 $("#idBlock").click(function(){
@@ -343,26 +340,19 @@
                 async: false,
                 dataType: "json",
                 data: ({
-
                 }),
                 success: function(data){
                     //alert(data.length);
                     $.each(data,function(k,v){
                         var aMain = document.createElement("a");
                         aMain.href = "/user/"+ v.id;
-
                         var mainDiv = document.createElement("div");
                         mainDiv.setAttribute("class","userThatLikedImageDiv");
-
-
                         var divImage = document.createElement("div");
                         divImage.setAttribute("class","userThatLikedImageImg");
                         divImage.style = "background-image: url("+v.urlImage +");";
-
                         var pInfo= document.createElement("p");
                         pInfo.innerHTML = v.name+" "+ v.lastName;
-
-
                         mainDiv.appendChild(divImage);
                         mainDiv.appendChild(pInfo);
                         aMain.appendChild(mainDiv);
@@ -372,17 +362,14 @@
             })
             $("#idBlock").prop('onclick',null).off('click');
             /*$("#idBlock").click(function(){
-                previousImage(idPhoto);
-            });*/
+             previousImage(idPhoto);
+             });*/
             //$('...').prop('onclick',null).off('click');
-
         })
         header();
         updateCommentsGo(idPhoto);
         loadCountLikes('image',idPhoto);
     }
-
-
     function showBlockTime(){
         console.log(check);
         if (check) {
@@ -398,7 +385,6 @@
         }
         /*alert("current time: "+currentTime+" time: "+time+" difference: "+parseInt(currentTime-time));*/
     }
-
     var id1 = setInterval("showBlockTime()",100);
 </script>
 
@@ -409,7 +395,7 @@
         var textInput =  fixString($("#newRecord").val());
         //var textInput = $("#newRecord").val();
         if (textInput!="")
-        $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/'+textInput+'?${_csrf.parameterName}=${_csrf.token}');
+            $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/'+textInput+'?${_csrf.parameterName}=${_csrf.token}');
         else $('#newRecordForm').attr('action', '/newRecordOf/${user.id}/there is no text here just sent to avoid mistake?${_csrf.parameterName}=${_csrf.token}');
     }
 </script>
@@ -417,7 +403,7 @@
 <script>
     function checkIfAuthUserInHomePage(){
         if (document.getElementById("userAuthId").innerHTML == document.getElementById("userId").innerHTML)
-                return "";
+            return "";
     }
     checkIfAuthUserInHomePage();
 </script>
@@ -449,49 +435,42 @@
             dataType: "json",
             async:false,
             success: function(v){
-
-                  var elem = document.createElement("div");
-                    elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";
-                    elem.setAttribute("id", v.id+"_div");
-                    var pDate = document.createElement("p");
-                    pDate.innerHTML = v.date;
-                    pDate.style = "float:left; margin-left:10px;";
-                    elem.appendChild(pDate);
-
-                    var pClear = document.createElement("p");
-                    pClear.style = "clear:left";
-                    elem.appendChild(pClear);
-                    var imag = document.createElement("div");
-                    imag.style = "width:70px; height:50px;" +
-                            "background-image: url("+ v.userFromImage+");" +
-                            "background-size:cover;" +
-                            "float:left; margin-left:10px; margin-top:10px;";
-                    elem.appendChild(imag);
-
-                    var elemLeft = document.createElement("div");
-                    elemLeft.style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;";
-                    var pThis = document.createElement("p");
-                    pThis.innerHTML = v.text;
-                    pThis.style = "float:left; margin-left:10px; margin-top:10px;";
-                    elemLeft.appendChild(pThis);
-                    elem.appendChild(elemLeft);
-
-                    if ($("#userId").html() == $("#userAuthId").html()) {
+                var elem = document.createElement("div");
+                elem.style = "width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;";
+                elem.setAttribute("id", v.id+"_div");
+                var pDate = document.createElement("p");
+                pDate.innerHTML = v.date;
+                pDate.style = "float:left; margin-left:10px;";
+                elem.appendChild(pDate);
+                var pClear = document.createElement("p");
+                pClear.style = "clear:left";
+                elem.appendChild(pClear);
+                var imag = document.createElement("div");
+                imag.style = "width:70px; height:50px;" +
+                        "background-image: url("+ v.userFromImage+");" +
+                        "background-size:cover;" +
+                        "float:left; margin-left:10px; margin-top:10px;";
+                elem.appendChild(imag);
+                var elemLeft = document.createElement("div");
+                elemLeft.style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;";
+                var pThis = document.createElement("p");
+                pThis.innerHTML = v.text;
+                pThis.style = "float:left; margin-left:10px; margin-top:10px;";
+                elemLeft.appendChild(pThis);
+                elem.appendChild(elemLeft);
+                if ($("#userId").html() == $("#userAuthId").html()) {
                     var btn = document.createElement("button");
                     //btn.setAttribute("id",v.id+" button");
                     btn.setAttribute("id", v.id+"_button");
                     btn.textContent = "Delete";
-                    }
-
                     elem.appendChild(btn);
-
-
-                    var first=document.getElementById("records").childNodes[0];
-                    document.getElementById("records").insertBefore(elem,first);
-                    $("#newRecord").val("");
-                    $("#"+ v.id+"_button").click(function(){
-                        deleteRecord(v.id);
-                    })
+                }
+                var first=document.getElementById("records").childNodes[0];
+                document.getElementById("records").insertBefore(elem,first);
+                $("#newRecord").val("");
+                $("#"+ v.id+"_button").click(function(){
+                    deleteRecord(v.id);
+                })
             }
         });
     }

@@ -643,7 +643,6 @@ public class AjaxController extends BaseMethods {
         }
     }
 
-
     @RequestMapping(value = "/previousImageOfAlbum",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String getPreviousImageOfAlbum(@RequestParam String photoId){
@@ -652,6 +651,17 @@ public class AjaxController extends BaseMethods {
         JSONObject jsonObject = new JSONObject();
         jsonObject.putOnce("id",image.getId());
         jsonObject.putOnce("url",image.getUrlOfImage());
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/getWidth_HeightAndRatioOfPhoto/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getDatailsOfPhoto(@PathVariable("id") String id){
+        User_Images image = imageService.findOne(Long.parseLong(id));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("width",image.getWidth());
+        jsonObject.putOnce("height",image.getHeight());
+        jsonObject.putOnce("ratio",image.getRatio());
         return jsonObject.toString();
     }
 }

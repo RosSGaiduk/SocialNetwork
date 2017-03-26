@@ -38,7 +38,7 @@
         <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${rec.id}_div" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
             <p style="margin-bottom: 20px;">${rec.text}</p>
             <c:if test="${rec.type == 'IMAGE'}">
-                <img src="${rec.url}" style="background-size: cover; background-repeat: no-repeat; float: left;" width="300" height="200">
+                <img src="${rec.url}" style="background-size: contain; float: left;" width="300" height="auto">
             </c:if>
             <c:if test="${rec.type == 'AUDIO'}">
                 <p style="margin-top: 10px;">${rec.nameRecord}</p>

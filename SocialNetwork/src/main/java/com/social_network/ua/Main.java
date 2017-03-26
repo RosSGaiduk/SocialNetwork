@@ -10,9 +10,11 @@ import com.social_network.ua.services.implementation.ImageServiceImpl;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
@@ -109,7 +111,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         entityManagerFactory = Persistence.createEntityManagerFactory("Main");
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -435,7 +437,7 @@ public class Main {
         System.out.println(str);*/
 
         //Завдання 3
-        String str = "sad asdas siodijasod ofgofg asdaslk";
+        /*String str = "sad asdas siodijasod ofgofg asdaslk";
         if (str.charAt(str.length()-1)!=' ')
             str+=" ";
 
@@ -498,7 +500,7 @@ public class Main {
         }
 
         for (Double d: linkedList)
-            System.out.print(d+" ");
+            System.out.print(d+" ");*/
 
 
        /* for (int i = 0; i < doubles.length; i++){
@@ -519,8 +521,9 @@ public class Main {
 
 
 
-
-
+        File file = new File("/resources/users");
+        System.out.println(file.listFiles().length);
+        //BufferedImage image = ImageIO.read(new File("path"));
 
 
 

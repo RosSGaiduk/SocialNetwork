@@ -68,6 +68,7 @@ public class UploadCommunityController {
                     String extension = extensions[extensions.length-1];
                     if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("jpeg")
                             ) {
                         fileItem.write(new File(path + "/communities/" + fileItem.getName()));
                         community.setUrlImage("/resources/communities/" + fileItem.getName());
@@ -135,6 +136,7 @@ public class UploadCommunityController {
                     }
                     if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("jpeg")
                             ) {
                         fileItem.write(new File(path + "/communities/" + fileItem.getName()));
                         record.setHasImage(true);

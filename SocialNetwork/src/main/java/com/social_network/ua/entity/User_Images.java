@@ -20,6 +20,12 @@ public class User_Images implements Comparable<User_Images>{
     private Date dateOfImage;
     @Column
     private long albumIdPattern = 0l;
+    @Column
+    private double width;
+    @Column
+    private double height;
+    @Column
+    private double ratio;
 
     @OneToMany(mappedBy = "userImage",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -126,5 +132,33 @@ public class User_Images implements Comparable<User_Images>{
 
     public void setAlbumIdPattern(long albumIdPattern) {
         this.albumIdPattern = albumIdPattern;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
+    public void setRatio(){
+        this.ratio = width/height;
     }
 }

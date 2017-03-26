@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.*;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Files;
@@ -93,12 +95,17 @@ public class UploadController {
                                 exists = false;
                         }
                         fileItem.write(new File(path + "/users/" + nameImage));
+                        BufferedImage image = ImageIO.read(new File(path+"/users/"+nameImage));
+                        System.out.println(image.getWidth()+" "+image.getHeight());
                         User_Images user_images = new User_Images();
                         //System.out.println("File item: "+fileItem.getName());
                         //String pathInDB = "/resources/"+authentication.getName()+"/"+fileItem.getName();
                         user_images.setUrlOfImage("/resources/users/" + nameImage);
                         user_images.setDateOfImage(new Date(System.currentTimeMillis()));
                         user_images.setUser(user);
+                        user_images.setWidth(image.getWidth());
+                        user_images.setHeight(image.getHeight());
+                        user_images.setRatio();
                         imageService.add(user_images);
                         user.setNewestImageSrc("/resources/users/" + nameImage);
                         user.setNewestImageId(user_images.getId());

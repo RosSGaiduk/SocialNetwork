@@ -150,7 +150,7 @@ function openRecord(recordType,recordText,recordUrl,recordName){
             var mainDiv = document.createElement("div");
             mainDiv.style = "width: 75%; height: 64%; float: left; margin-top: 20px; margin-left: 30px;" +
                 "background-image: url("+recordUrl+");"+
-                "background-repeat: no-repeat; background-size: cover; cursor: hand;";
+                "background-repeat: no-repeat; background-size: contain; cursor: hand;";
 
             var elementText = document.createElement("p");
             elementText.style = "float:left; margin-top:10px; margin-left: 30px; text-align: left; clear:left;";
@@ -305,4 +305,21 @@ function loadUsersThatLeftLikeWithLimit(imageId){
             })
         }
     })
+}
+
+function getDetailsOfPhoto(idPhoto){
+    var obj = null;
+    $.ajax({
+        url: "/getWidth_HeightAndRatioOfPhoto/"+idPhoto,
+        method: "get",
+        async: false,
+        data: ({
+
+        }),
+        dataType: "json",
+        success: function(data){
+            obj = data;
+        }
+    })
+    return obj;
 }

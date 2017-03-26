@@ -28,7 +28,7 @@
     <p style="clear: left"/>
     <c:forEach items="${friendsOfUser}" var="f">
     <a href="/user/${f.id}" style="text-decoration: none;" >
-        <img src="${f.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px; border-radius: 0%;">
+        <img src="${f.newestImageSrc}" style="width:120px;height:120px;background-size:contain;float:left;margin-left:10%;margin-top:20px; border-radius: 50%;">
         <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
             <h3 style="margin-left: 10px;">${f.firstName} ${f.lastName}</h3>
             <h3 style="margin-left: 10px;">${f.birthDate}</h3>
@@ -41,7 +41,7 @@
     <p style="clear: left;"/>
     <c:forEach items="${anotherPeople}" var="a">
         <a href="/user/${a.id}" style="text-decoration: none;" >
-            <img src="${a.newestImageSrc}" style="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px; border-radius: 0%;">
+            <img src="${a.newestImageSrc}" style="width:120px;height:120px;background-size:contain;float:left;margin-left:10%;margin-top:20px; border-radius: 50%;">
             <div style="width: 30%; height: 50px; margin-top: 12px;float:left;">
                 <h3 style="margin-left: 10px;">${a.firstName} ${a.lastName}</h3>
                 <h3 style="margin-left: 10px;">${a.birthDate}</h3>
@@ -77,7 +77,7 @@
 
                  var image = document.createElement("img");
 
-                 image.style ="width:200px;height:140px;background-size:cover;float:left;margin-left:10%;margin-top:20px;";
+                 image.style ="width:120px;height:120px;background-size:contain;float:left;margin-left:10%;margin-top:20px;border-radius:50%;";
                  image.src = v.image;
                  document.getElementById("allfriends").appendChild(image);
 

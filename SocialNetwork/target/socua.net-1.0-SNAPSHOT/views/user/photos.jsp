@@ -75,7 +75,12 @@
         var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
 
-        $("#popupWin").append("<div id = 'idBlock' style='width: 75%; height: 64%; float: left;margin-top: 20px; margin-left: 30px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImageOfAlbum("+idPhoto+")'></div>");
+
+        var imageDetails = getDetailsOfPhoto(idPhoto);
+        var width = 384*imageDetails.ratio;
+        var marginLeft = ($("#popupWin").width()-width)/2.0;
+
+        $("#popupWin").append("<div id = 'idBlock' style='width: "+width+"px; height: 384px; float: left;margin-top: 20px; margin-left: "+marginLeft+"px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImageOfAlbum("+idPhoto+")'></div>");
         $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveComment("+idPhoto+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
