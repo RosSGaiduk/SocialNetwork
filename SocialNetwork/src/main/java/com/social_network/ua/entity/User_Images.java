@@ -18,6 +18,8 @@ public class User_Images implements Comparable<User_Images>{
     private String urlOfImage;
     @Column
     private Date dateOfImage;
+    @Column
+    private long albumIdPattern = 0l;
 
     @OneToMany(mappedBy = "userImage",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -91,6 +93,7 @@ public class User_Images implements Comparable<User_Images>{
 
     public void setAlbum(Album album) {
         this.album = album;
+        this.albumIdPattern = album.getId();
     }
 
     public List<Comment> getComments() {
@@ -115,5 +118,13 @@ public class User_Images implements Comparable<User_Images>{
 
     public void setCountLikes(int countLikes) {
         this.countLikes = countLikes;
+    }
+
+    public long getAlbumIdPattern() {
+        return albumIdPattern;
+    }
+
+    public void setAlbumIdPattern(long albumIdPattern) {
+        this.albumIdPattern = albumIdPattern;
     }
 }

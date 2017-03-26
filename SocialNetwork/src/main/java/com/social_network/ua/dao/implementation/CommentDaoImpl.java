@@ -22,7 +22,6 @@ public class CommentDaoImpl implements CommentDao{
 
     @Transactional
     public void add(Comment comment) {
-        System.out.println("adding a comment"+comment==null);
         entityManager.persist(comment);
     }
 

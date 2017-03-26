@@ -71,7 +71,6 @@ public class CommunityController {
             model.addAttribute("belong",true);
         else model.addAttribute("belong",false);
         List<Record> records = recordService.findAllByCommunity(community);
-        System.out.println("Size records: "+records.size());
         model.addAttribute("records",records);
         model.addAttribute("userAuth",userService.findOne(Long.parseLong(authentication.getName())));
         model.addAttribute("subscribed",communitySubscriberService.checkIfUserSubscribed(Long.parseLong(authentication.getName()),Long.parseLong(id)));

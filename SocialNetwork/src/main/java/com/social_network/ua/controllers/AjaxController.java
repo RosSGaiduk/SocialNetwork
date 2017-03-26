@@ -2,6 +2,7 @@ package com.social_network.ua.controllers;
 
 
 import com.social_network.ua.entity.*;
+import com.social_network.ua.enums.AlbumName;
 import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
@@ -231,8 +232,25 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String addPhotoToAlbum(@RequestParam String idPhoto,@RequestParam String nameAlbum){
         User_Images user_images = imageService.findOne(Long.parseLong(idPhoto));
+        Album albumOfImage = albumService.findOneByImageId(user_images.getId());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Album album = albumService.findOneByNameAndUserId(nameAlbum, Long.parseLong(authentication.getName())); //норм
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        //якщо ми переносимо найновішу аву в інший альбом
+        if (user.getNewestImageId()==user_images.getId() && albumOfImage.getName().equals(AlbumName.MY_PAGE_PHOTOS)){
+            User_Images newMainImage = imageService.getPreviousImageFromMainAlbum(user.getId(),user_images.getId());
+            if (newMainImage!=null) {
+                user.setNewestImageId(newMainImage.getId());
+                user.setNewestImageSrc(newMainImage.getUrlOfImage());
+            } else {
+                user.setNewestImageSrc("/resources/img/icons/image.png");
+                user.setNewestImageId(0);
+            }
+            userService.edit(user);
+            messageService.updateMessagesImageOfUser(user,user.getNewestImageSrc());
+            recordService.updateUserImageSrcOfRecords(user);
+            commentService.updateCommentsNewestImageSrcOfUser(user);
+        }
         user_images.setAlbum(album);
         imageService.edit(user_images);
         return "Success!";
@@ -308,11 +326,9 @@ public class AjaxController extends BaseMethods {
         long authId = Long.parseLong(authentication.getName());
         long userToIdLong = Long.parseLong(userToId);
         long minIdLong = Long.parseLong(minId);
-        //System.out.println("Auth: "+authId+", user to: "+userToIdLong+", minIdLong: "+minIdLong);
 
         JSONArray jsonArray = new JSONArray();
         List<Message> messages = messageService.findAllByIdsAndMinId(authId,userToIdLong,minIdLong);
-        //System.out.println("Size of messages: "+messages.size());
         for (int i = 0; i < messages.size(); i++){
             JSONObject jsonObject = new JSONObject();
             jsonObject.putOnce("id", messages.get(i).getId());
@@ -330,7 +346,6 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/angularFindEmail",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String findUserByEmail(@RequestParam String email){
-        //System.out.println(email);
         JSONObject jsonObject = new JSONObject();
         if (userService.findUserByEmail(email)){
             jsonObject.putOnce("color","orangered");
@@ -369,7 +384,6 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/updateLogosSubscribersOfCommuity/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String check(@PathVariable("communityId")String communityId){
-        //System.out.println("HEEEREEEEEE");
         Community community = communityService.findOne(Long.parseLong(communityId));
         List<User> users = userService.findAllUsersOfCommunity(community,6);
         JSONArray jsonArray = new JSONArray();
@@ -400,7 +414,6 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("urlImage",u.getNewestImageSrc());
             jsonArray.put(jsonObject);
         }
-        //System.out.println("Size of JSON array: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -417,7 +430,6 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("urlOfSong",m.getUrlOfSong());
             jsonArray.put(jsonObject);
         }
-        //System.out.println("Size of JSON array: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -425,11 +437,9 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/leaveComment/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String leaveComment(@PathVariable("id")String id,@RequestParam String text){
-        //System.out.println("adding a comment, text: "+text+", id: "+id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         User_Images image = imageService.findOne(Long.parseLong(id));
-        //System.out.println("User image: id: "+image.getId()+",url: "+image.getUrlOfImage());
         Comment comment = new Comment();
         comment.setText(text);
         comment.setUser(user);
@@ -447,11 +457,9 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/loadCommentsUnderImage",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadComments(@RequestParam String id){
-        //System.out.println("Updating comments "+id);
         User_Images image = imageService.findOne(Long.parseLong(id));
         JSONArray jsonArray = new JSONArray();
         List<Comment> comments = commentService.findAllByImageId(image.getId());
-        //System.out.println("Size: "+comments.size());
         for (Comment comment: comments){
             JSONObject jsonObject = new JSONObject();
             jsonObject.putOnce("id",comment.getUserFromIdPattern());
@@ -459,7 +467,6 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
             jsonArray.put(jsonObject);
         }
-        //System.out.println("Json array length: "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -509,9 +516,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/getCountLikesOfEntity/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String getCountLikesOfEntity(@PathVariable("id") String id,@RequestParam String type){
-        //System.out.println("getting likes");
         JSONObject jsonObject = new JSONObject();
-        //String returnValue = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         switch (type) {
@@ -525,12 +530,10 @@ public class AjaxController extends BaseMethods {
             } break;
 
             case "comment":{
-                //System.out.println("Getting count of likes from Comment");
                 //some code here
             } break;
 
             case "record":{
-                //System.out.println("Getting count of likes from Record");
                 //some code here
             } break;
         }
@@ -540,7 +543,6 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/loadAllRecords",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadAllRecordsOfUser(@RequestParam String userId){
-        //System.out.println("Loading all records of user: "+userId);
         JSONArray jsonArray = new JSONArray();
         List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(userId));
         for (int i = records.size()-1; i >=0; i--){
@@ -559,7 +561,6 @@ public class AjaxController extends BaseMethods {
             jsonObject.putOnce("type",records.get(i).getType());
             jsonArray.put(jsonObject);
         }
-        //System.out.println("Size of jsonArray "+jsonArray.length());
         return jsonArray.toString();
     }
 
@@ -567,7 +568,6 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String loadAllRecordsOfUser(@PathVariable("userId") String userId,@RequestParam String photoId){
         User_Images user_images = imageService.getPreviousImageFromMainAlbum(Long.parseLong(userId),Long.parseLong(photoId));
-        System.out.println("Image found: {id: "+user_images.getId()+"}, url: "+user_images.getUrlOfImage());
         JSONObject jsonObject = new JSONObject();
         jsonObject.putOnce("url",user_images.getUrlOfImage());
         jsonObject.putOnce("id",user_images.getId());
@@ -612,34 +612,25 @@ public class AjaxController extends BaseMethods {
     @ResponseBody
     public String updateLastClickAuthUser(@PathVariable("id")String id,@RequestParam String time,@RequestParam boolean setOnline){
         User user = userService.findOne(Long.parseLong(id));
-        System.out.println("boolean: "+setOnline);
-        System.out.println("idUser: "+id);
         if (setOnline){
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User authUser = userService.findOne(Long.parseLong(authentication.getName()));
-            System.out.println("Auth user "+authUser.getId());
             authUser.setOnline(true);
             Date lastOnline = new Date(System.currentTimeMillis());
             String timeToDb  = DateFormatUtils.format(lastOnline, "yyyy/MM/dd HH:mm:ss");
-            System.out.println("Time to db: "+timeToDb);
             authUser.setLastOnline(timeToDb);
             userService.edit(authUser);
             if (user.getIsOnline()==true) {
-                System.out.println("User with id "+user.getId()+" is online");
                 return "Online";
             }
             else {
-                System.out.println("User with id "+user.getId()+" isn't online");
                 return "Was online: "+user.getLastOnline();
             }
         }
-        System.out.println("Time: "+time);
         long timeLong = new Date(user.getLastOnline()).getTime();
         Date date = new Date(System.currentTimeMillis());
         long millis = date.getTime();
         long difference = Math.abs(millis-timeLong);
-        System.out.println("Current time: "+millis);
-        System.out.println("Difference: "+difference);
         //15 minutes
         if (difference>15*60000){
             user.setOnline(false);

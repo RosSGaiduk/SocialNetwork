@@ -40,7 +40,6 @@ public class BaseController extends BaseMethods{
              Model modelForButton,
              Model musicOfAuth
             ){
-        //System.out.println("Hello");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             User user =  userService.findOne(Long.parseLong(authentication.getName()));
@@ -54,8 +53,6 @@ public class BaseController extends BaseMethods{
             } catch (Exception ex) {
                 musicOfAuth.addAttribute("musicOfAuth", null);
             }
-
-            System.out.println(userService.findOne(Long.parseLong(authentication.getName())).getId());
         } catch (Exception e){
             model.addAttribute("user","no user");
         }
@@ -138,7 +135,6 @@ public class BaseController extends BaseMethods{
 
     @RequestMapping(value = "/photosOf/{id}/{album}",method = RequestMethod.GET)
     public String photosOfUser(@PathVariable("id") String id, @PathVariable("album") String album,Model model,Model albumModel,Model userModel,Model userAuthModel){
-        System.out.println("Selected album: "+album);
         long idLong = Long.parseLong(id);
         User user = userService.findOne(idLong);
         /*Set<String> albumSet = new TreeSet<>();
@@ -157,7 +153,6 @@ public class BaseController extends BaseMethods{
             model.addAttribute("album",selectedAlbum);
         }
         model.addAttribute("images_all",user_images);
-        System.out.println(user_images.size());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userModel.addAttribute("userPageId",user.getId());
         userAuthModel.addAttribute("userAuthId",authentication.getName());

@@ -73,7 +73,6 @@ public class MessageDaoImpl implements MessageDao {
             Message m = entityManager.find(Message.class,bigInteger.longValue());
             messages.add(m);
         }
-        System.out.println(messages.size());
         return messages;
     }
 
@@ -85,9 +84,7 @@ public class MessageDaoImpl implements MessageDao {
     @Transactional
     public List<Message> findAllByIdsAndMinId(long id1, long id2, long minId) {
         BigInteger val = (BigInteger) entityManager.createNativeQuery("SELECT min(id) from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1))").setParameter(1,id1).setParameter(2,id2).getSingleResult();
-        System.out.println("min id: "+val);
         if (val.longValue()==minId) {
-            System.out.println("EQUALS");
             return null;
         }
         List<Object[]> objects = entityManager.createNativeQuery("select id from Message m where ((m.userFrom_id = ?1 and m.userTo_id = ?2) or (m.userFrom_id = ?2 and m.userTo_id = ?1)) and m.id<?3 group by id DESC").setParameter(1,id1).setParameter(2,id2).setParameter(3,minId).setMaxResults(50).getResultList();
@@ -98,7 +95,6 @@ public class MessageDaoImpl implements MessageDao {
             Message m = entityManager.find(Message.class,bigInteger.longValue());
             messages.add(m);
         }
-        System.out.println(messages.size());
         return messages;
     }
 

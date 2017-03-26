@@ -43,10 +43,8 @@ public class UploadCommunityController {
 
     @RequestMapping(value = "/uploadCommunityLogo/{id}",method = RequestMethod.POST)
     public String uploadCommunityLogo(HttpServletRequest request, @PathVariable("id") String id){
-        System.out.println(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Community community = communityService.findOne(Long.parseLong(id));
-        System.out.println("Title of community: "+community.getTitle());
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
@@ -63,7 +61,6 @@ public class UploadCommunityController {
 
         try {
             List<FileItem> lst = upload.parseRequest(request);
-            System.out.println("Size: "+lst.size());
             for (FileItem fileItem: lst){
                 if (fileItem.isFormField()==false){
                     String file = fileItem.getName().toString();
@@ -90,8 +87,6 @@ public class UploadCommunityController {
     @RequestMapping(value = "/uploadRecordToCommunity/{idCommunity}/{text}",method = RequestMethod.POST)
     public String uploadRecordToCommunity(HttpServletRequest request, @PathVariable("idCommunity") String id,
                                           @PathVariable("text")String text){
-        //System.out.println(id);
-        //System.out.println("Text "+text);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Community community = communityService.findOne(Long.parseLong(id));
         User user = userService.findOne(Long.parseLong(authentication.getName()));
@@ -111,8 +106,6 @@ public class UploadCommunityController {
             //return "redirect:/community/"+id;
         //}
 
-        System.out.println("Adding record to community");
-        System.out.println(text);
         //getting path to folder which we want
         String path = request.getRealPath("/resources");
 
@@ -134,7 +127,6 @@ public class UploadCommunityController {
                     String file = fileItem.getName().toString();
                     String[] extensions = file.split("\\.");
                     String extension = extensions[extensions.length-1];
-                    System.out.println("Length: "+extensions.length);
                     //якщо файлу немає тому, що якщо файл є, то мінімум має бути length == 2
                     if (extensions.length==1){
                         record.setType(RecordType.TEXT.toString());

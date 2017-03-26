@@ -4,6 +4,9 @@ import com.social_network.ua.dao.ImageDao;
 import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.enums.AlbumName;
+import com.social_network.ua.services.AlbumService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +22,8 @@ import java.util.List;
 public class ImageDaoImpl implements ImageDao {
     @PersistenceContext(name = "Main")
     private EntityManager entityManager;
+    @Autowired
+    private AlbumService albumService;
 
 
     @Transactional
@@ -62,6 +67,13 @@ public class ImageDaoImpl implements ImageDao {
             BigInteger bigInteger = (BigInteger) object;
             return findOne(bigInteger.longValue());
         } catch (Exception ex){
+            /*System.out.println("ex");
+            Album album = albumService.findOneByNameAndUserId(AlbumName.MY_PAGE_PHOTOS.toString(),userId);
+            System.out.println("Album "+album.getName()+" "+album.getUser().getId());
+            Object object = entityManager.createNativeQuery("select max(u.id) from user_images u where u.user_id = ?1 and u.album_id = ?2").setParameter(1,userId).setParameter(2,album.getId()).setMaxResults(1).getSingleResult();
+            BigInteger bigInteger = (BigInteger) object;
+            return findOne(bigInteger.longValue());*/
+            System.out.println("ex");
             return null;
         }
     }

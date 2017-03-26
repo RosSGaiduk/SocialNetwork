@@ -419,13 +419,119 @@ public class Main {
         System.out.println(date1.getTime()+" "+date.getTime());*/
 
 
-        Album album = entityManager.find(Album.class,1l);
+        /*Album album = entityManager.find(Album.class,1l);
         System.out.println(album);
         Object o = entityManager.createNativeQuery("SELECT u.id FROM User_Images u WHERE u.album_id = ?1 and u.id < ?2 GROUP BY u.id DESC").setParameter(1,album.getId()).setParameter(2,163l).setMaxResults(1).getSingleResult();
         BigInteger bigInteger = (BigInteger) o;
         User_Images image = entityManager.find(User_Images.class,bigInteger.longValue());
-        System.out.println(image.getId());
+        System.out.println(image.getId());*/
 
+
+        /*String str = "Hello world";
+        char c1 = str.charAt(0);
+        char c2 = str.charAt(str.length()-1);
+        str = str.substring(1,str.length()-1);
+        str = c2+str+c1;
+        System.out.println(str);*/
+
+        //Завдання 3
+        String str = "sad asdas siodijasod ofgofg asdaslk";
+        if (str.charAt(str.length()-1)!=' ')
+            str+=" ";
+
+        List<String> words = new ArrayList<>();
+        String word = "";
+        //split by ' '
+        for (int i = 0; i < str.length(); i++){
+            if (str.charAt(i)!=' ') {
+                word += str.charAt(i);
+            } else {
+                if (word!="")
+                words.add(word);
+                word = "";
+            }
+        }
+
+        String word1 = words.get(0);
+        String word2 = words.get(words.size()-1);
+
+        String newString = ""+word2+" ";
+        for (int i = 1; i < words.size()-1; i++)
+            newString+=words.get(i)+" ";
+        newString+=word1;
+        System.out.println(newString);
+
+
+
+        //Завдання 1
+        int []arr = {1,2,0,-10,-10,2,3,20,24,5};
+        int element = arr[8];
+
+        int count = 0;
+        for (int i = 0; i < arr.length; i++){
+            if (arr[i]<element)
+                count++;
+        }
+        System.out.println("Index of this element: "+count);
+
+
+        //Завдання 2
+        LinkedList<Double> linkedList = new LinkedList<>();
+        for (int i = 0; i < 10; i++){
+            Random random = new Random();
+            linkedList.add(new Double(random.nextInt(25)));
+        }
+        System.out.print("List: ");
+        for (Double d: linkedList)
+            System.out.print(d+" ");
+        System.out.println();
+        System.out.println("--------------------Sorted linked list");
+
+        for (int i = 0; i < linkedList.size(); i++){
+            for (int j = i; j < linkedList.size(); j++){
+                if (linkedList.get(i)>linkedList.get(j)){
+                    Double val = linkedList.get(i);
+                    linkedList.set(i,linkedList.get(j));
+                    linkedList.set(j,val);
+                }
+            }
+        }
+
+        for (Double d: linkedList)
+            System.out.print(d+" ");
+
+
+       /* for (int i = 0; i < doubles.length; i++){
+            for (int j = i; j < doubles.length; j++){
+                if (doubles[i]>doubles[j]){
+                    Double d = doubles[i];
+                    doubles[i] = doubles[j];
+                    doubles[j] = d;
+                }
+            }
+        }
+        for (int i = 0; i < doubles.length; i++){
+            Double d = linkedList.get(i);
+            d = 111d;
+            System.out.println(linkedList.get(i));
+        }*/
+
+
+
+
+
+
+
+
+
+
+        /*
+        String newStr = ""+c2;
+        for (int i = 1; i < str.length()-1; i++)
+            newStr+=str.charAt(i);
+        newStr+=c1;
+        System.out.println(newStr);
+        str.*/
 
         entityManager.getTransaction().commit();
         entityManager.close();

@@ -39,7 +39,6 @@ public class UploadRecordController {
     @RequestMapping(value = "/newRecordOf/{id}/{text}",method = RequestMethod.POST,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     public String saveToTheWall(HttpServletRequest request, @PathVariable("id")String id,@PathVariable("text")String text)
     {
-        System.out.println("I am here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         //getting path to folder which we want
@@ -84,8 +83,8 @@ public class UploadRecordController {
                     }
                     if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            ||  extension.equalsIgnoreCase("jpeg")
                             ) {
-                        System.out.println("Image");
                         //in this folder, which we created, write our images
                         fileItem.write(new File(path + "/records/" + fileItem.getName()));
                         record.setUrl("/resources/records/" + fileItem.getName());
@@ -118,10 +117,8 @@ public class UploadRecordController {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Exception");
             e.printStackTrace();
         }
-        System.out.println("Lst size: "+lst.size());
         return "redirect:/user/"+id;
     }
 

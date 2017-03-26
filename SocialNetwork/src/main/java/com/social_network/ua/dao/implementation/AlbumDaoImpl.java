@@ -49,7 +49,6 @@ public class AlbumDaoImpl implements AlbumDao{
         try {
             return (Album) entityManager.createQuery("from Album where user like ?1 and name like ?2").setParameter(1,user).setParameter(2, AlbumName.MY_PAGE_PHOTOS.toString()).getSingleResult();
         } catch (Exception ex){
-            System.out.println("Exception while finding album");
             return null;
         }
     }

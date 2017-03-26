@@ -77,6 +77,7 @@ public class UploadController {
                     String extension = extensions[extensions.length-1];
                     if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
                             extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            ||  extension.equalsIgnoreCase("jpeg")
                             ) {
                         //in this folder, which we created, write our images
 

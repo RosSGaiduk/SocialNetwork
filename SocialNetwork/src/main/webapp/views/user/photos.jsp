@@ -16,7 +16,7 @@
 </head>
 <body id="main">
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script><script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
-<div style="width: 60%; height: 100%; margin-left: 20px; max-width: 60%; float: left; overflow: scroll; margin-top: 50px;">
+<div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
     <div style="float: left;width: 40%; margin-left: 30%;">
         <ul id = "selectAlbum"> <%--onchange="checkImagesFromAlbum()">--%>
             <%--<li><a href="/photosOf/${userPageId}/*" style="text-decoration: none;">*</a></li>--%>
@@ -24,8 +24,8 @@
              <li><a href="/photosOf/${userPageId}/${a.name}" style="text-decoration: none;">${a.name}</a></li>
             </c:forEach>
         </ul>
-        <p id = "userAuthId" style="visibility: hidden;">${userAuthId}</p>
-        <p id = "userPageId" style="visibility: hidden;">${userPageId}</p>
+        <%--<p id = "userAuthId" style="visibility: hidden;">${userAuthId}</p>
+        <p id = "userPageId" style="visibility: hidden;">${userPageId}</p>--%>
     </div>
     <c:if test="${userAuthId==userPageId}">
         <a href="/createAlbumPage"><button>Create album</button></a>
@@ -38,22 +38,27 @@
                 <img src="${im.urlOfImage}" style="width: 100%; height: 90%;" onclick="openPhotoUser('${im.urlOfImage}',${im.id})">
             <%--</a>--%>
             <c:if test="${userAuthId==userPageId}">
+            <c:if test="${album.name != 'MY_PAGE_PHOTOS'}">
             <select style="float: left;width:80px;" id="checkAlbum_${im.id}">
                 <c:forEach items="${albums}" var="a">
+                    <c:if test="${im.albumIdPattern != a.id}">
                     <option>${a.name}</option>
+                    </c:if>
                 </c:forEach>
             </select>
-            <button style="float: left;" onclick="addImgToAlbum('checkAlbum_${im.id}')">OK</button>
+                <button style="float: left;" onclick="addImgToAlbum('checkAlbum_${im.id}')">OK</button>
+            </c:if>
             </c:if>
         </div>
     </c:forEach>
+        <c:if test="${userAuthId == userPageId}">
         <div class="albumPhotos">
-            <form:form id = "loadImageToAlbum" action="/loadImageToAlbum/${album.id}?${_csrf.parameterName}=${_csrf.token}" method="post"
-                       enctype="multipart/form-data" cssStyle="float: left;">
+                <form:form action="/loadImageToAlbum/${album.id}/?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
                 <input type="file" name="file1"  style="float: left;"/>
                 <button type="submit" style="float: left;margin-top: 3px;" class="buttonFileStyle">Upload</button>
             </form:form>
         </div>
+        </c:if>
     </div>
 </div>
 
