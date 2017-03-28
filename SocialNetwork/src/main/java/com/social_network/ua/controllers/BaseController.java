@@ -29,6 +29,8 @@ public class BaseController extends BaseMethods{
     private ImageService imageService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private VideoService videoService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String home
@@ -84,6 +86,7 @@ public class BaseController extends BaseMethods{
             modelRecords.addAttribute("records",inverseRecords);
             modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
             modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
+            model.addAttribute("birthDate",user.getBirthDate().getTime());
         } catch (Exception ex){
             modelFriends.addAttribute("friendsOfUser", "");
             modelSubscribers.addAttribute("subscribersOfUser", "");
@@ -170,6 +173,19 @@ public class BaseController extends BaseMethods{
     public String musicAll(Model model){
         model.addAttribute("musicAll",musicService.findAll());
         return "views-base-music";
+    }
+
+    @RequestMapping(value = "/videos",method = RequestMethod.GET)
+    public String vidoeAll(Model model){
+        model.addAttribute("videoAll",videoService.findAll());
+        return "views-base-videos";
+    }
+
+
+    @RequestMapping(value = "/videoProcessLoadingBannerPage/{id}",method = RequestMethod.GET)
+    public String loadBannerToVideo(@PathVariable("id")String id, Model model){
+        model.addAttribute("idVideo",id);
+        return "views-base-loadVideoBanner";
     }
 
     @RequestMapping(value = "/messages",method = RequestMethod.GET)

@@ -86,6 +86,14 @@ public class User implements Comparable<User>{
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private List<LLike> likes = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "User_Video",joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_id"))
+    private List<Video> videos = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    private List<Video> myVideos = new ArrayList<>();
+
     public User(){}
 
     public long getId() {
@@ -301,5 +309,21 @@ public class User implements Comparable<User>{
 
     public void setLikes(List<LLike> likes) {
         this.likes = likes;
+    }
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
+    public List<Video> getMyVideos() {
+        return myVideos;
+    }
+
+    public void setMyVideos(List<Video> myVideos) {
+        this.myVideos = myVideos;
     }
 }

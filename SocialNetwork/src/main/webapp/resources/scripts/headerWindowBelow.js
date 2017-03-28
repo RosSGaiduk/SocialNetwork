@@ -12,6 +12,7 @@ function header(){
     darkLayer.onclick = function () {  // при клике на слой затемнения все исчезнет
         darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
         modalWin.style.display = 'none'; // делаем окно невидимым
+        while (modalWin.firstChild) modalWin.removeChild(modalWin.firstChild);
         return false;
     };
 }

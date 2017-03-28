@@ -37,6 +37,10 @@
             </div>
 
             <div class="menuOption">
+                <a href="/videos" style="text-decoration: none"><h4 style="text-align: left">Відео</h4></a>
+            </div>
+
+            <div class="menuOption">
                 <a href="/communities" style="text-decoration: none"><h4 style="text-align: left">Спільноти</h4></a>
             </div>
 

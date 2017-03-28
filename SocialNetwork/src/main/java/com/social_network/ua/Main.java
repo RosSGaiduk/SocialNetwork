@@ -521,12 +521,19 @@ public class Main {
 
 
 
-        File file = new File("/resources/users");
-        System.out.println(file.listFiles().length);
+        /*File file = new File("/resources/users");
+        System.out.println(file.listFiles().length);*/
         //BufferedImage image = ImageIO.read(new File("path"));
 
+        /*Date date1 = new Date(System.currentTimeMillis());
+        System.out.println(date1.getTime());*/
 
-
+        String str = "sadasd";
+        char firstSymbol = str.charAt(0);
+        firstSymbol = Character.toUpperCase(firstSymbol);
+        str = str.substring(1,str.length());
+        str = firstSymbol+str;
+        System.out.println(str);
 
         /*
         String newStr = ""+c2;

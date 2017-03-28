@@ -103,7 +103,7 @@ b{
     height: auto;
     float: left;
     margin-left: 15px;
-    margin-top: -230px;
+    margin-top: -470px;
     background-color: white;
 }
 
@@ -128,7 +128,7 @@ b{
     float: left;
     margin-left: 15px;
     background-color: white;
-    margin-top: -130px;
+    margin-top: -370px;
 }
 .textAreaRecordClass{
     height: 50px;
@@ -137,11 +137,20 @@ b{
 }
 .userMusic{
     width: 300px;
-    height: auto;
+    height: 220px;
     float: left;
     background-color: white;
     margin-top: 20px;
 }
+
+.userVideo{
+    width: 300px;
+    height: 200px;
+    float: left;
+    background-color: white;
+    margin-top: 42px;
+}
+
 .sendButton{
     height: 27px;
     margin-top: 30px;
@@ -183,6 +192,7 @@ b{
     }
     .userRecords{
         width: 55%;
+        margin-top: -466px;
     }
     .userEdit{
         width: 250px;
@@ -193,9 +203,13 @@ b{
     .userMusic{
         width: 250px;
     }
+    .userVideo{
+        width: 250px;
+        margin-top: 50px;
+    }
     .userRecordsFromDb{
         width: 55%;
-        margin-top: -140px;
+        margin-top: -370px;
     }
     .textAreaRecordClass{
         width: 180px;
@@ -207,7 +221,7 @@ b{
         margin-left: 3%;
     }
     .userRecordsFromDb{
-        margin-top: -85px;
+        margin-top: -370px;
     }
     .sendButton {
         margin-top: 5px;
@@ -218,9 +232,6 @@ b{
     .menuDivClass {
         margin-left: 3%;
     }
-    .userRecordsFromDb{
-        margin-top: -85px;
-    }
     .userInfo {
         width: 50%;
     }
@@ -229,7 +240,7 @@ b{
     }
     .userRecordsFromDb{
         width: 50%;
-        margin-top: -85px;
+        margin-top: -348px;
     }
 }
 
@@ -245,7 +256,7 @@ html {
 
 .albumPhotos{
     width: 250px;
-    height: 190px;
+    height: 250px;
     background-repeat: no-repeat;
     background-size: cover;
     float: left;
@@ -419,4 +430,19 @@ html {
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 50%;
+}
+
+.videoBannerMain{
+    width: 250px;
+    height: 180px;
+    margin-left: 20px;
+    margin-top: 10px;
+    float: left;
+}
+
+.videoBanner{
+    width: 250px;
+    height: 160px;
+    float: left;
+    background-size: contain;
 }

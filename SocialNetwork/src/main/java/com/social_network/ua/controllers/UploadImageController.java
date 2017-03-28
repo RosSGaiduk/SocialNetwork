@@ -3,9 +3,11 @@ package com.social_network.ua.controllers;
 import com.social_network.ua.entity.Album;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.Video;
 import com.social_network.ua.enums.AlbumName;
 import com.social_network.ua.services.*;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,8 @@ public class UploadImageController {
     private AlbumService albumService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private VideoService videoService;
 
     @RequestMapping(value = "/loadImageToAlbum/{id}",method = RequestMethod.POST)
     public String loadImageToAlbum(HttpServletRequest request, @PathVariable("id")String id){
@@ -117,4 +121,58 @@ public class UploadImageController {
         }
         return "redirect:/photosOf/"+authentication.getName()+"/"+album.getName();
     }
+
+    @RequestMapping(value = "/videoLoadBanner/{idVideo}",method = RequestMethod.POST)
+    public String loadVideoBanner(HttpServletRequest request, @PathVariable("idVideo")String id) {
+        Video video = videoService.findOne(Long.parseLong(id));
+        System.out.println("Loading banner for video " + video.getName());
+        String path = request.getRealPath("/resources");
+        Path path1 = Paths.get(path + "\\videoBanners");
+        try {
+            Files.createDirectories(path1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        DiskFileItemFactory d = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(d);
+
+        try {
+            //getting a list of items, from which, we will get our image
+            List<FileItem> lst = upload.parseRequest(request);
+            for (FileItem fileItem : lst) {
+                if (fileItem.isFormField() == false) {
+                    String file = fileItem.getName().toString();
+                    String[] extensions = file.split("\\.");
+                    String extension = extensions[extensions.length - 1];
+                    if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") ||
+                            extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("jpeg")
+                            ) {
+
+                            boolean exists = true;
+                            String url = "";
+                            while (exists){
+                                Random random = new Random();
+                                url = "urlVideoBanner_"+random.nextInt(Integer.MAX_VALUE-1)+"."+extension;
+                                List<Video> videos = videoService.selectAllVideosWithTheSameUrlPhoto("/resources/videoBanners/"+url);
+                                if (videos.size()==0){
+                                    exists = false;
+                                }
+                            }
+
+                            fileItem.write(new File(path+"/videoBanners/"+url));
+                            video.setUrlImageBanner("/resources/videoBanners/"+url);
+                            BufferedImage image = ImageIO.read(new File(path+"/videoBanners/"+url));
+                            video.setWidthPhoto(image.getWidth());
+                            video.setHeightPhoto(image.getHeight());
+                            video.setRatio();
+                            videoService.edit(video);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        return "redirect:/videos";
+    }
+
 }

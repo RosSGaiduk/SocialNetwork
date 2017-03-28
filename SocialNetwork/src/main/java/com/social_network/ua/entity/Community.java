@@ -40,6 +40,12 @@ public class Community {
     )
     private List<Music> musics = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Community_Video",joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_id")
+    )
+    private List<Video> videos = new ArrayList<>();
+
 
 
     public Community(){}
@@ -124,5 +130,13 @@ public class Community {
 
     public void setMusics(List<Music> musics) {
         this.musics = musics;
+    }
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
 }

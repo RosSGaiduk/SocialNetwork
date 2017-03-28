@@ -11,14 +11,18 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html lang = "en" ng-app = "app">
 <head>
     <%--Всі лінки підключені в template.jsp--%>
+    <!--Angular-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <!--Angular-->
     <!--Ajax-->
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
+    <script type="text/javascript" src="/resources/scripts/angularControllers.js"></script>
 </head>
 <body>
 <div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
@@ -50,7 +54,7 @@
         <%--<img src="/upload/1/img1.JPG" style="float: left">--%>
         <%--<img src="/resources/1/1.JPG" style="float: left">--%>
 
-        <div id = "info" class = "userInfo">
+        <div id = "info" class = "userInfo" ng-controller = "myCtrl">
             <div style="width: 100%; height: 70%; float: left; float: left;">
                 <c:if test="${user.isOnline}">
                     <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Online</h3>
@@ -59,7 +63,7 @@
                     <h3 style="text-align: center; color: blue;" id = 'onlineCheck'>Was online: ${user.lastOnline}</h3>
                 </c:if>
                 <h2 style="text-align: center">${user.lastName} ${user.firstName}</h2>
-                <h3 style="text-align: center">День народження: ${user.birthDate}</h3>
+                <h3 style="text-align: center">День народження: {{${birthDate} | date:'dd.MM.yyyy'}}</h3>
                 <h3 style="text-align: center">Ім'я: ${user.firstName}</h3>
                 <h3 style="text-align: center">Прізвище: ${user.lastName}</h3>
                 <h3 id = "userId" style="text-align: center;visibility: hidden;">${user.id}</h3>
@@ -125,6 +129,14 @@
                 </audio>
             </c:forEach>
         </div>
+
+        <p style="clear: left"/>
+        <div class = "userVideo">
+            <a href="/" style="margin-left: 10px;">Відео</a>
+            <p style="clear: left"/>
+        </div>
+
+
 
         <div class="userRecords">
             <div style="width: 70px; height: 50px; float: left; background-image: url(${userAuth.newestImageSrc});

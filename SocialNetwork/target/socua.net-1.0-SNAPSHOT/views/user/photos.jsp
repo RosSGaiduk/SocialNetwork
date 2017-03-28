@@ -35,7 +35,7 @@
      <c:forEach items="${images_all}" var="im">
         <div class="albumPhotos">
             <%--<a rel="simplebox" href="${im.urlOfImage}" class="aUrl" id="imgId">--%>
-                <img src="${im.urlOfImage}" style="width: 100%; height: 90%;" onclick="openPhotoUser('${im.urlOfImage}',${im.id})">
+                <img src="${im.urlOfImage}" style="width: 100%; height: 100%;" onclick="openPhotoUser('${im.urlOfImage}',${im.id})">
             <%--</a>--%>
             <c:if test="${userAuthId==userPageId}">
             <c:if test="${album.name != 'MY_PAGE_PHOTOS'}">

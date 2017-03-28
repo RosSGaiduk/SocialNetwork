@@ -148,7 +148,10 @@ public class UserController extends BaseMethods{
             inverseRecords.add(records.get(i));
 
         modelRecords.addAttribute("records",inverseRecords);
-        modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        modelIdUserAuth.addAttribute("userAuth", user);
+        System.out.println(userSearched.getBirthDate().getTime());
+        model.addAttribute("birthDate",userSearched.getBirthDate().getTime());
         return "views-user-selected";
     }
 
