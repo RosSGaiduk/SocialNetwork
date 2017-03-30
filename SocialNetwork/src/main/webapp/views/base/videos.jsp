@@ -30,13 +30,13 @@
         <%--<a href="/video/${vid.id}" style="text-decoration: none; color: black;">--%>
             <div class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
                     <c:if test="${vid.urlImageBanner != null}">
-                    <div class="videoBanner" style="background-image: url(${vid.urlImageBanner})">
+                    <div class="videoBanner" style="background-image: url(${vid.urlImageBanner})"></div>
                     </c:if>
                     <c:if test="${vid.urlImageBanner == null}">
-                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)">
+                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
                     </c:if>
-            </div>
-                <p style="float: left; clear: left;"><h3>${vid.name}</h3></p>
+                <h3 style="float: left; margin-top: 5px;">${vid.name}</h3>
+                <input type="button" value="Add" style="float: left; position: relative;" onclick="addVideoToUser(${vid.id})">
             </div>
         <%--</a>--%>
         <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>
@@ -46,6 +46,23 @@
         </div>
 </div>
 
+
+        <script>
+
+            function addVideoToUser(idVideo){
+                //alert(idVideo);
+                $.ajax({
+                    url: "/addVideoToUser/"+idVideo,
+                    async: false,
+                    method: "get",
+                    data:{
+                    },
+                    success: function(data){
+                    }
+                })
+            }
+
+        </script>
 
 <script>
     function showVideo(id,url,name){

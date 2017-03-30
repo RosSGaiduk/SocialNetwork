@@ -49,12 +49,14 @@ public class VideoDaoImpl implements VideoDao{
 
     @Transactional
     public List<Video> findAllByUser(User user) {
+        System.out.println("Finding all videos");
         List<Object> videoIds = entityManager.createNativeQuery("SELECT uv.video_id FROM User_Video uv where uv.user_id = ?1 GROUP BY uv.id DESC").setParameter(1,user.getId()).getResultList();
         List<Video> videos = new ArrayList<>(videoIds.size());
         for (int i = 0; i < videoIds.size(); i++){
             BigInteger bigInteger = (BigInteger) videoIds.get(i);
             videos.add(findOne(bigInteger.longValue()));
         }
+        System.out.println("Size: "+videos.size());
         return videos;
     }
 
@@ -77,5 +79,22 @@ public class VideoDaoImpl implements VideoDao{
     @Transactional
     public List<Video> selectAllVideosWithTheSameUrlPhoto(String url) {
         return entityManager.createQuery("from Video where urlImageBanner like ?1").setParameter(1,url).getResultList();
+    }
+
+    @Transactional
+    public void addVideoToUser(Video video, User user) {
+        entityManager.createNativeQuery("INSERT INTO User_Video(video_id,user_id) VALUES (?1,?2)").setParameter(1,video.getId()).setParameter(2,user.getId()).executeUpdate();
+    }
+
+    @Transactional
+    public Video findLastVideoOfUser(User user) {
+        try {
+            Object o = entityManager.createNativeQuery("select video_id from User_Video where id = (select max(id) from User_Video where user_id = ?1);").setParameter(1, user.getId()).getSingleResult();
+            BigInteger bigInteger = (BigInteger)o;
+            System.out.println("Big integer "+bigInteger);
+            return findOne(bigInteger.longValue());
+        } catch (Exception ex){
+        return null;
+        }
     }
 }

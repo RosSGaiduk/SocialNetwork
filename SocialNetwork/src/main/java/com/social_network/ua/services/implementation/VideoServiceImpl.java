@@ -62,4 +62,14 @@ public class VideoServiceImpl implements VideoService{
     public List<Video> selectAllVideosWithTheSameUrlPhoto(String url) {
         return videoDao.selectAllVideosWithTheSameUrlPhoto(url);
     }
+
+    @Override
+    public void addVideoToUser(Video video, User user) {
+        videoDao.addVideoToUser(video,user);
+    }
+
+    @Override
+    public Video findLastVideoOfUser(User user) {
+        return videoDao.findLastVideoOfUser(user);
+    }
 }

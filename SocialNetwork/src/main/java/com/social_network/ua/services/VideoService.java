@@ -19,4 +19,6 @@ public interface VideoService {
     List<Video> findAllByCommunity(Community community);
     List<Video> findAllVideosPublishedByUser(User user);
     List<Video> selectAllVideosWithTheSameUrlPhoto(String url);
+    void addVideoToUser(Video video, User user);
+    Video findLastVideoOfUser(User user);
 }

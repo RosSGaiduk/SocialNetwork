@@ -48,6 +48,9 @@ public class AjaxController extends BaseMethods {
     private CommentService commentService;
     @Autowired
     private LikeService likeService;
+    @Autowired
+    private VideoService videoService;
+
 
     @RequestMapping(value = "/testGo",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
@@ -663,5 +666,16 @@ public class AjaxController extends BaseMethods {
         jsonObject.putOnce("height",image.getHeight());
         jsonObject.putOnce("ratio",image.getRatio());
         return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/addVideoToUser/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String addVideoToUser(@PathVariable("id")String id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        System.out.println("User "+user+", idVideo "+id);
+        Video video = videoService.findOne(Long.parseLong(id));
+        videoService.addVideoToUser(video,user);
+        return "";
     }
 }

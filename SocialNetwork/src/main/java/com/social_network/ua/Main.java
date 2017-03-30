@@ -520,7 +520,6 @@ public class Main {
 
 
 
-
         /*File file = new File("/resources/users");
         System.out.println(file.listFiles().length);*/
         //BufferedImage image = ImageIO.read(new File("path"));
@@ -528,12 +527,15 @@ public class Main {
         /*Date date1 = new Date(System.currentTimeMillis());
         System.out.println(date1.getTime());*/
 
-        String str = "sadasd";
+        /*String str = "sadasd";
         char firstSymbol = str.charAt(0);
         firstSymbol = Character.toUpperCase(firstSymbol);
         str = str.substring(1,str.length());
         str = firstSymbol+str;
-        System.out.println(str);
+        System.out.println(str);*/
+        //entityManager.createNativeQuery("INSERT INTO User_Video(video_id,user_id) VALUES (?1,?2)").setParameter(1,20l).setParameter(2,1l).executeUpdate();
+        User user = entityManager.find(User.class,1l);
+        System.out.println(user.getVideos().size());
 
         /*
         String newStr = ""+c2;

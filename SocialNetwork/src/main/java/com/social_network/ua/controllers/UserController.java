@@ -6,6 +6,7 @@ import com.social_network.ua.enums.AlbumName;
 import com.social_network.ua.services.AlbumService;
 import com.social_network.ua.services.RecordService;
 import com.social_network.ua.services.UserService;
+import com.social_network.ua.services.VideoService;
 import com.social_network.ua.validations.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -34,6 +35,8 @@ public class UserController extends BaseMethods{
     private UserValidator userValidator;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private VideoService videoService;
 
     @RequestMapping(value = "/addUser",method = RequestMethod.GET)
     public String addUserPage(Model model){
@@ -152,6 +155,7 @@ public class UserController extends BaseMethods{
         modelIdUserAuth.addAttribute("userAuth", user);
         System.out.println(userSearched.getBirthDate().getTime());
         model.addAttribute("birthDate",userSearched.getBirthDate().getTime());
+        model.addAttribute("lastVideo",videoService.findLastVideoOfUser(userSearched));
         return "views-user-selected";
     }
 
@@ -171,5 +175,11 @@ public class UserController extends BaseMethods{
         modelIdAuth.addAttribute("idAuth",authentication.getName());
         modeliIdUserSelected.addAttribute("idUserSelected",id);
         return "views-user-music";
+    }
+
+    @RequestMapping(value = "/videosOf/{id}",method = RequestMethod.GET)
+    public String videosOfUser(@PathVariable("id")String id,Model model){
+        model.addAttribute("videosAll",videoService.findAllByUser(userService.findOne(Long.parseLong(id))));
+        return "views-user-videos";
     }
 }

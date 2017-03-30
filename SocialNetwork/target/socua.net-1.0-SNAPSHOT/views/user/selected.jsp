@@ -132,7 +132,18 @@
 
         <p style="clear: left"/>
         <div class = "userVideo">
-            <a href="/" style="margin-left: 10px;">Відео</a>
+            <a href="/videosOf/${user.id}" style="margin-left: 10px;">Відео</a>
+            <c:if test="${lastVideo != null}">
+            <div class="videoBannerMain" onclick="showVideo(${lastVideo.id},'${lastVideo.url}','${lastVideo.name}')">
+                <c:if test="${lastVideo.urlImageBanner != null}">
+                    <div class="videoBanner" style="background-image: url(${lastVideo.urlImageBanner})"></div>
+                </c:if>
+                <c:if test="${lastVideo.urlImageBanner == null}">
+                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
+                </c:if>
+                <h3 style="float: left; margin-top: 5px;">${lastVideo.name}</h3>
+            </div>
+            </c:if>
             <p style="clear: left"/>
         </div>
 
@@ -506,5 +517,25 @@
         })
     }
 </script>
+
+
+<script>
+    function showVideo(id,url,name){
+        var element = document.getElementById("popupWin");
+        while (element.firstChild) element.removeChild(element.firstChild);
+        header();
+        $("#popupWin").append("<video id='my-video' controls preload='auto' width='800' height='464'"+
+                "poster='' style='cursor: hand;'>"+
+                "<source src='"+url+"' type='video/mp4'></video><h1 style='text-align: left;'>"+name+"</h1>");
+        $("#my-video").click(function(){
+            playVideo();
+        })
+    }
+    function playVideo(){
+        if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
+        else $("#my-video").get(0).pause();
+    }
+</script>
+
 </body>
 </html>

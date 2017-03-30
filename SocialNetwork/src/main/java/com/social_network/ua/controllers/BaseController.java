@@ -87,6 +87,7 @@ public class BaseController extends BaseMethods{
             modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
             modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
             model.addAttribute("birthDate",user.getBirthDate().getTime());
+            model.addAttribute("lastVideo",videoService.findLastVideoOfUser(user));
         } catch (Exception ex){
             modelFriends.addAttribute("friendsOfUser", "");
             modelSubscribers.addAttribute("subscribersOfUser", "");
