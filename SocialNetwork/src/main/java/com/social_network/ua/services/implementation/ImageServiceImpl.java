@@ -73,6 +73,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public User_Images getNextImageFromMainAlbum(long userId, long id) {
+        return imageDao.getNextImageFromMainAlbum(userId,id);
+    }
+
+    @Override
     public User_Images getPreviousImageFromAlbum(Album album, long idImage) {
         return imageDao.getPreviousImageFromAlbum(album,idImage);
     }

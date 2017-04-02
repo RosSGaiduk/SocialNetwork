@@ -534,8 +534,8 @@ public class Main {
         str = firstSymbol+str;
         System.out.println(str);*/
         //entityManager.createNativeQuery("INSERT INTO User_Video(video_id,user_id) VALUES (?1,?2)").setParameter(1,20l).setParameter(2,1l).executeUpdate();
-        User user = entityManager.find(User.class,1l);
-        System.out.println(user.getVideos().size());
+        /*User user = entityManager.find(User.class,1l);
+        System.out.println(user.getVideos().size());*/
 
         /*
         String newStr = ""+c2;
@@ -544,7 +544,8 @@ public class Main {
         newStr+=c1;
         System.out.println(newStr);
         str.*/
-
+        User_Images user_images = (User_Images) entityManager.createQuery("from User_Images where user_id = ?1 and id>?2 group by id").setParameter(1,1l).setParameter(2,215l).setMaxResults(1).getSingleResult();
+        System.out.println(user_images.getId());
         entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();

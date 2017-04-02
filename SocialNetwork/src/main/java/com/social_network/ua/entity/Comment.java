@@ -25,6 +25,8 @@ public class Comment {
     private User_Images userImage;
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "comment")
     private List<LLike> likes = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Video video;
 
     public Comment(){}
 
@@ -82,5 +84,13 @@ public class Comment {
 
     public void setLikes(List<LLike> likes) {
         this.likes = likes;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
     }
 }

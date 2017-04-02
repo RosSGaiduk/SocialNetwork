@@ -457,19 +457,40 @@ public class AjaxController extends BaseMethods {
         return jsonObject.toString();
     }
 
+    @RequestMapping(value = "/leaveCommentUnderVideo/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String leaveCommentUnderVideo(@PathVariable("id")String id,@RequestParam String text){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        Video video = videoService.findOne(Long.parseLong(id));
+        Comment comment = new Comment();
+        comment.setText(text);
+        comment.setUser(user);
+        comment.setVideo(video);
+        comment.setUserFromIdPattern(Long.parseLong(authentication.getName()));
+        comment.setUserFromNewestUrlImage(user.getNewestImageSrc());
+        commentService.add(comment);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("id",comment.getUserFromIdPattern());
+        jsonObject.putOnce("text",comment.getText());
+        jsonObject.putOnce("imageSrc",comment.getUserFromNewestUrlImage());
+        return jsonObject.toString();
+    }
+
     @RequestMapping(value = "/loadCommentsUnderImage",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadComments(@RequestParam String id){
         User_Images image = imageService.findOne(Long.parseLong(id));
-        JSONArray jsonArray = new JSONArray();
         List<Comment> comments = commentService.findAllByImageId(image.getId());
-        for (Comment comment: comments){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.putOnce("id",comment.getUserFromIdPattern());
-            jsonObject.putOnce("text",comment.getText());
-            jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
-            jsonArray.put(jsonObject);
-        }
+        JSONArray jsonArray = fillJsonArrayByComments(comments);
+        return jsonArray.toString();
+    }
+
+    @RequestMapping(value = "/loadCommentsUnderVideo",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadCommentsUnderVideo(@RequestParam String id){
+        List<Comment> comments = commentService.findAllByVideoId(Long.parseLong(id));
+        JSONArray jsonArray = fillJsonArrayByComments(comments);
         return jsonArray.toString();
     }
 
@@ -577,6 +598,18 @@ public class AjaxController extends BaseMethods {
         return jsonObject.toString();
     }
 
+
+    @RequestMapping(value = "/nextAvaOfUser/{userId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getNextImageOfAlbum(@PathVariable("userId") String userId,@RequestParam String photoId){
+        User_Images user_images = imageService.getNextImageFromMainAlbum(Long.parseLong(userId),Long.parseLong(photoId));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("url",user_images.getUrlOfImage());
+        jsonObject.putOnce("id",user_images.getId());
+        return jsonObject.toString();
+    }
+
+
     @RequestMapping(value = "/getUsersThatLikedImageWithLimit/{imageId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String getUsersThatLikedImage(@PathVariable("imageId")String imageId,@RequestParam String limit){
@@ -656,6 +689,7 @@ public class AjaxController extends BaseMethods {
         jsonObject.putOnce("url",image.getUrlOfImage());
         return jsonObject.toString();
     }
+
 
     @RequestMapping(value = "/getWidth_HeightAndRatioOfPhoto/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody

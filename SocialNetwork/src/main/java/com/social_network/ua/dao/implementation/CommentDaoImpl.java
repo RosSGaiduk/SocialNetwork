@@ -53,6 +53,13 @@ public class CommentDaoImpl implements CommentDao{
     }
 
     @Transactional
+    public List<Comment> findAllByVideoId(long videoId) {
+        List<Comment> comments = entityManager.createQuery("from Comment where video.id = ?1 group by id").setParameter(1,videoId).getResultList();
+        Collections.reverse(comments);
+        return comments;
+    }
+
+    @Transactional
     public List<Comment> findAll() {
         return entityManager.createQuery("from Comment").getResultList();
     }

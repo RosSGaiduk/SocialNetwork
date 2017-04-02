@@ -134,15 +134,15 @@
         <div class = "userVideo">
             <a href="/videosOf/${user.id}" style="margin-left: 10px;">Відео</a>
             <c:if test="${lastVideo != null}">
-            <div class="videoBannerMain" onclick="showVideo(${lastVideo.id},'${lastVideo.url}','${lastVideo.name}')">
-                <c:if test="${lastVideo.urlImageBanner != null}">
-                    <div class="videoBanner" style="background-image: url(${lastVideo.urlImageBanner})"></div>
-                </c:if>
-                <c:if test="${lastVideo.urlImageBanner == null}">
-                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
-                </c:if>
-                <h3 style="float: left; margin-top: 5px;">${lastVideo.name}</h3>
-            </div>
+                <div class="videoBannerMain" onclick="showVideo(${lastVideo.id},'${lastVideo.url}','${lastVideo.name}')">
+                    <c:if test="${lastVideo.urlImageBanner != null}">
+                        <div class="videoBanner" style="background-image: url(${lastVideo.urlImageBanner})"></div>
+                    </c:if>
+                    <c:if test="${lastVideo.urlImageBanner == null}">
+                        <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
+                    </c:if>
+                    <h3 style="float: left; margin-top: 5px;">${lastVideo.name}</h3>
+                </div>
             </c:if>
             <p style="clear: left"/>
         </div>
@@ -293,6 +293,27 @@
             }
         })
     }
+
+
+    function nextImage(idPhoto){
+        //alert(idPhoto);
+        $.ajax({
+            url: "/nextAvaOfUser/"+document.getElementById("userId").innerHTML,
+            async: false,
+            method: "get",
+            dataType: "json",
+            data: ({
+                photoId: idPhoto
+            }),
+            success: function(data){
+                var darkLayer = document.getElementById("shadow");
+                darkLayer.parentNode.removeChild(darkLayer); //видаляєм затемнення, тому, що в наступному методі
+                //який ми викликаєм знову встановлюється затемнення
+                openPhotoUser(data.url,data.id);
+            }
+        })
+    }
+
 </script>
 
 
@@ -300,18 +321,16 @@
     var time = 0;
     var remembered = false;
     var check = true;
-
     function openPhotoUser(urlPhoto,idPhoto){
         var element = document.getElementById("popupWin");
         while(element.firstChild) element.removeChild(element.firstChild);
-
         var imageDetails = getDetailsOfPhoto(idPhoto);
         var width = 384*imageDetails.ratio;
         //$("#idBlock").css("width",384*imageDetails.ratio);
         var marginLeft = ($("#popupWin").width()-width)/2.0;
         //$("#idBlock").css("margin-left",marginLeft);
-
-        $("#popupWin").append("<div id = 'idBlock' style='width: "+width+"px; height: 384px; float: left;margin-top: 20px; margin-left: "+marginLeft+"px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
+        $("#popupWin").append("<img src = '/resources/img/icons/icon-arrow-back-128.png' width='32' height='32' style = 'float:left; clear:left; cursor:hand;' onclick='nextImage("+idPhoto+")'>");
+        $("#popupWin").append("<div id = 'idBlock' style='width: "+width+"px; height: 384px; float: left; margin-left: "+marginLeft+"px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");
         $("#popupWin").append("<textarea id = 'textAr' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveComment("+idPhoto+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         //наступні 2 append мають виконуватись при умові c:if test="{user.newestImageId != 0">
@@ -319,8 +338,6 @@
         $("#popupWin").append("<span id = 'countLikesUnderPhoto' style='float: left; margin-top: 20px; margin-left: 7px;'></span>");
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
         $("#idBlock").append("<div id = 'windowLikeId' class = 'windowsWithLikes' style='display: none;'></div>")
-
-
         $("#likeImg").click(function(){
             leaveLike('image',idPhoto);
         });
@@ -410,8 +427,6 @@
     }
     var id1 = setInterval("showBlockTime()",100);
 </script>
-
-
 
 <script>
     function setActionToForm(){
@@ -518,7 +533,6 @@
     }
 </script>
 
-
 <script>
     function showVideo(id,url,name){
         var element = document.getElementById("popupWin");
@@ -527,6 +541,10 @@
         $("#popupWin").append("<video id='my-video' controls preload='auto' width='800' height='464'"+
                 "poster='' style='cursor: hand;'>"+
                 "<source src='"+url+"' type='video/mp4'></video><h1 style='text-align: left;'>"+name+"</h1>");
+        $("#popupWin").append("<textarea id = 'videoTextArea' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
+        $("#popupWin").append("<button onclick='leaveCommentUnderVideo("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
+        $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
+        updateCommentsOfVideo(id);
         $("#my-video").click(function(){
             playVideo();
         })
@@ -536,6 +554,5 @@
         else $("#my-video").get(0).pause();
     }
 </script>
-
 </body>
 </html>

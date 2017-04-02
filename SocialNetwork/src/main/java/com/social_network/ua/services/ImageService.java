@@ -20,6 +20,7 @@ public interface ImageService {
     User_Images findByPath(String path);
     List<User_Images> findAllByUser(User user);
     User_Images getPreviousImageFromMainAlbum(long userId, long id);
+    User_Images getNextImageFromMainAlbum(long userId,long id);;
     User_Images getPreviousImageFromAlbum(Album album, long idImage);
     User_Images findOneByUserIdAndName(User user, String urlImage);
     List<User_Images> findAll();

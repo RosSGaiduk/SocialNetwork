@@ -79,6 +79,17 @@ public class ImageDaoImpl implements ImageDao {
     }
 
     @Transactional
+    public User_Images getNextImageFromMainAlbum(long userId, long id) {
+        try{
+            Object object = entityManager.createNativeQuery("select u.id from user_images u join album a where u.album_id = a.id and u.user_id = ?1 and a.name = 'MY_PAGE_PHOTOS' and u.id > ?3 group by u.id").setParameter(1,userId).setParameter(3,id).setMaxResults(1).getSingleResult();
+            BigInteger bigInteger = (BigInteger) object;
+            return findOne(bigInteger.longValue());
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Transactional
     public User_Images getPreviousImageFromAlbum(Album album, long idImage) {
         try {
             Object o = entityManager.createNativeQuery("SELECT u.id FROM User_Images u WHERE u.album_id = ?1 and u.id < ?2 GROUP BY u.id DESC").setParameter(1,album.getId()).setParameter(2,idImage).setMaxResults(1).getSingleResult();

@@ -4,8 +4,13 @@ package com.social_network.ua.controllers;
  * Created by Rostyslav on 21.11.2016.
  */
 
+import com.social_network.ua.entity.Comment;
 import com.social_network.ua.entity.User;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -73,6 +78,18 @@ public abstract class BaseMethods {
             }
         }
         return subscribersWhichArentFriendsOfUser;
+    }
+
+    public JSONArray fillJsonArrayByComments(List<Comment> comments){
+        JSONArray jsonArray = new JSONArray();
+        for (Comment comment: comments){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",comment.getUserFromIdPattern());
+            jsonObject.putOnce("text",comment.getText());
+            jsonObject.putOnce("userUrlImage",comment.getUserFromNewestUrlImage());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray;
     }
 
 }

@@ -8,6 +8,7 @@ function header(){
 
     var modalWin = document.getElementById('popupWin'); // находим наше "окно"
     modalWin.style.display = 'block'; // "включаем" его
+    modalWin.scrollTop = 0;
 
     darkLayer.onclick = function () {  // при клике на слой затемнения все исчезнет
         darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение

@@ -15,5 +15,6 @@ public interface CommentService {
     Comment findOne(long id);
     List<Comment> findAllByImageId(long imageId);
     void updateCommentsNewestImageSrcOfUser(User user);
+    List<Comment> findAllByVideoId(long videoId);
     List<Comment> findAll();
 }

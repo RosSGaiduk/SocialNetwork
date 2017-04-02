@@ -105,15 +105,11 @@ function leaveComment(imageId){
 }
 
 function openRecord(recordType,recordText,recordUrl,recordName){
-    //alert("clicked");
-    header();
-    //alert("TYPE: "+recordType+"\nTEXT: "+recordText+"\nURL: "+recordUrl+"\nNAME: "+recordName);
-
-    var main = document.getElementById("popupWin");
-    while (main.firstChild) (main.removeChild(main.firstChild));
-
     switch (recordType){
         case "TEXT": {
+            header();
+            var main = document.getElementById("popupWin");
+            while (main.firstChild) (main.removeChild(main.firstChild));
             var element = document.createElement("p");
             element.style = "margin-top: 25%; width: 60%; margin-left:20%;";
             element.innerText = recordText;
@@ -121,6 +117,9 @@ function openRecord(recordType,recordText,recordUrl,recordName){
         } break;
 
         case "AUDIO": {
+            header();
+            var main = document.getElementById("popupWin");
+            while (main.firstChild) (main.removeChild(main.firstChild));
             var divMain = document.createElement("div");
             divMain.style = "float:left; margin-left:30px;margin-top:25%;width:80%";
 
@@ -147,6 +146,9 @@ function openRecord(recordType,recordText,recordUrl,recordName){
             main.appendChild(divMain);
         } break;
         case "IMAGE": {
+            header();
+            var main = document.getElementById("popupWin");
+            while (main.firstChild) (main.removeChild(main.firstChild));
             var mainDiv = document.createElement("div");
             mainDiv.style = "width: 75%; height: 64%; float: left; margin-top: 20px; margin-left: 30px;" +
                 "background-image: url("+recordUrl+");"+
@@ -158,6 +160,9 @@ function openRecord(recordType,recordText,recordUrl,recordName){
 
             main.appendChild(mainDiv);
             main.appendChild(elementText);
+        } break;
+
+        case "VIDEO":{
         } break;
     }
 }
@@ -228,6 +233,42 @@ function leaveComment(imageId){
 }
 
 
+function leaveCommentUnderVideo(videoId){
+    $.ajax({
+        url: "/leaveCommentUnderVideo/"+videoId,
+        async: false,
+        dataType: "json",
+        data: {
+            text: $("#videoTextArea").val()
+        },
+        success: function (data) {
+            var aHref = document.createElement("a");
+            aHref.href = "/user/"+data.id;
+            var mainDiv = document.createElement("div");
+            mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ data.imageSrc+"); border-radius:50%;";
+            aHref.appendChild(mainDiv);
+            var textP = document.createElement("p");
+            textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+            textP.innerHTML = data.text;
+            var clearP = document.createElement("p");
+            clearP.style = "clear:left;"
+
+            var first=document.getElementById("comments").childNodes[0];
+            document.getElementById("comments").insertBefore(aHref,first);
+
+            var second=document.getElementById("comments").childNodes[1];
+            document.getElementById("comments").insertBefore(textP,second);
+
+            var third=document.getElementById("comments").childNodes[2];
+            document.getElementById("comments").insertBefore(clearP,third);
+
+
+            $("#videoTextArea").val("");
+        }
+    })
+}
+
+
 function updateCommentsGo(imageId){
     $.ajax({
         url: "/loadCommentsUnderImage",
@@ -283,6 +324,41 @@ function loadCountLikes(typeEntity,idEntity){
         }
     })
 }
+
+
+function updateCommentsOfVideo(videoId){
+    $.ajax({
+        url: "/loadCommentsUnderVideo",
+        async: false,
+        method: "get",
+        dataType: "json",
+        data: {
+            id: videoId
+        },
+        success: function(data){
+            $.each(data,function(k,v){
+                var aHref = document.createElement("a");
+                aHref.href = "/user/"+v.id;
+                var mainDiv = document.createElement("div");
+                mainDiv.style = "float:left; margin-left:0px; margin-top:20px; width:50px; height: 50px; background-size: cover; background-image: url("+ v.userUrlImage+"); border-radius:50%;";
+                aHref.appendChild(mainDiv);
+                var divP = document.createElement("div");
+                divP.style = "float:left; width: 60%;";
+                var textP = document.createElement("p");
+                textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
+                textP.innerHTML = v.text;
+                var clearP = document.createElement("p");
+                clearP.style = "clear:left;";
+                divP.appendChild(textP);
+
+                document.getElementById("comments").appendChild(aHref);
+                document.getElementById("comments").appendChild(divP);
+                document.getElementById("comments").appendChild(clearP);
+            })
+        }
+    })
+}
+
 
 function loadUsersThatLeftLikeWithLimit(imageId){
     $.ajax({

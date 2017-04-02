@@ -15,5 +15,6 @@ public interface CommentDao {
     Comment findOne(long id);
     void updateCommentsNewestImageSrcOfUser(User user);
     List<Comment> findAllByImageId(long imageId);
+    List<Comment> findAllByVideoId(long videoId);
     List<Comment> findAll();
 }

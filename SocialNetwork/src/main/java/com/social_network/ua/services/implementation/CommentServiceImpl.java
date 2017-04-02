@@ -48,6 +48,11 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    public List<Comment> findAllByVideoId(long videoId) {
+        return commentDao.findAllByVideoId(videoId);
+    }
+
+    @Override
     public List<Comment> findAll() {
         return commentDao.findAll();
     }

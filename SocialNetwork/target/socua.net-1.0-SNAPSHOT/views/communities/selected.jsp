@@ -47,6 +47,15 @@
                     Your browser does not support the audio element.
                 </audio>
             </c:if>
+            <c:if test="${rec.type == 'VIDEO'}">
+                <%--<p style="margin-top: 10px;">${rec.nameRecord}</p>
+                <div class="videoBannerMain">
+                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
+                    <h3 style="float: left; margin-top: 5px;">${rec.nameRecord}</h3>
+                </div>--%>
+                <video id='my-video-${rec.id}' controls preload='auto' poster='' style='cursor: hand; float: left; width: 90%;' onclick="playVideo(this.id)" autoplay muted>
+                    <source src='${rec.url}' type='video/mp4'></video><h1 style='text-align: left;'>${rec.nameRecord}</h1>
+            </c:if>
             <p style="clear: left"/>
             <c:if test="${belong}">
             <button onclick="deleteRecord(${rec.id})" style="margin-top: 10px;">Delete</button>
@@ -131,6 +140,13 @@
 
 
 </div>
+
+<script>
+    function playVideo(id){
+            if ($("#"+id).get(0).paused) $("#"+id).get(0).play();
+            else $("#"+id).get(0).pause();
+    }
+</script>
 
 
 <script>

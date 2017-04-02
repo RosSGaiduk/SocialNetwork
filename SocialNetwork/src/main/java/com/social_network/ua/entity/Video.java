@@ -39,6 +39,8 @@ public class Video {
             inverseJoinColumns = @JoinColumn(name = "community_id")
     )
     private List<Community> communities = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "video")
+    private List<Comment> comments = new ArrayList<>();
 
     public Video(){}
 
@@ -132,5 +134,13 @@ public class Video {
 
     public void setRatio(){
         this.ratio = widthPhoto/heightPhoto;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
