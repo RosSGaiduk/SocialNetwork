@@ -46,49 +46,6 @@
         </div>
 </div>
 
-        <script>
-            function addVideoToUser(idVideo){
-                //alert(idVideo);
-                $.ajax({
-                    url: "/addVideoToUser/"+idVideo,
-                    async: false,
-                    method: "get",
-                    data:{
-                    },
-                    success: function(data){
-                        $("#addingVideoButton").css("background-color", "orangered");
-                        $("#addingVideoButton").css("border-color", "orangered");
-                        $("#addingVideoButton").html("Delete");
-                        $("#addingVideoButton").attr("id","removingVideoButton");
-                        $("#removingVideoButton").prop('onclick',null).off('click');
-                        $("#removingVideoButton").click(function(){
-                            deleteVideoFromUserPage(idVideo);
-                        })
-                    }
-                })
-            }
-
-            function deleteVideoFromUserPage(idVideo){
-                //$("#video_"+idVideo).prop('onclick',null).off('click');
-                $.ajax({
-                    url: "/deleteVideoFromUserPage/"+idVideo,
-                    method: "get",
-                    async: false,
-                    success: function(data){
-                        $("#removingVideoButton").css("background-color", "#6ea0ff");
-                        $("#removingVideoButton").css("border-color", "#6ea0ff");
-                        $("#removingVideoButton").html("Add");
-                        $("#removingVideoButton").attr("id","addingVideoButton");
-                        $("#addingVideoButton").prop('onclick',null).off('click');
-                        $("#addingVideoButton").click(function(){
-                            addVideoToUser(idVideo);
-                        })
-                    }
-                })
-            }
-
-        </script>
-
 <script>
     function showVideo(id,url,name){
         var element = document.getElementById("popupWin");
