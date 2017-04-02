@@ -34,6 +34,16 @@ public class VideoServiceImpl implements VideoService{
     }
 
     @Override
+    public void deleteVideoFromUser(long video_id, long user_id) {
+        videoDao.deleteVideoFromUser(video_id,user_id);
+    }
+
+    @Override
+    public boolean videoBelongsToUser(long video_id, long user_id) {
+        return videoDao.videoBelongsToUser(video_id,user_id);
+    }
+
+    @Override
     public Video findOne(long id) {
         return videoDao.findOne(id);
     }

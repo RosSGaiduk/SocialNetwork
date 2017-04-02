@@ -13,12 +13,14 @@ public interface VideoDao {
     void add(Video video);
     void edit(Video video);
     void delete(Video video);
+    void deleteVideoFromUser(long video_id, long user_id);
     Video findOne(long id);
     List<Video> findAll();
     List<Video> findAllByUser(User user);
     List<Video> findAllByCommunity(Community community);
     List<Video> findAllVideosPublishedByUser(User user);
     List<Video> selectAllVideosWithTheSameUrlPhoto(String url);
+    boolean videoBelongsToUser(long video_id,long user_id);
     void addVideoToUser(Video video,User user);
     Video findLastVideoOfUser(User user);
 }

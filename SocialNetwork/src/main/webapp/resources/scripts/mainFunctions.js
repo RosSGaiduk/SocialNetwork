@@ -399,3 +399,21 @@ function getDetailsOfPhoto(idPhoto){
     })
     return obj;
 }
+
+
+function checkIfVideoBelongsToAuthUser(idVideo){
+    var result = false;
+    $.ajax({
+        url: "/checkingIfVideoBelongsToAuthUser/"+idVideo,
+        method: "get",
+        async: false,
+        success: function(data){
+            if (data=="true"){
+                result = true;
+            } else {
+                result = false;
+            }
+        }
+    })
+    return result;
+}

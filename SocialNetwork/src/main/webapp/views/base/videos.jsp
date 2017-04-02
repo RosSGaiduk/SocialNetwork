@@ -28,7 +28,7 @@
     <p style="clear: left"/>
     <c:forEach items="${videoAll}" var="vid">
         <%--<a href="/video/${vid.id}" style="text-decoration: none; color: black;">--%>
-            <div class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
+            <div id = "video_${vid.id}"class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
                     <c:if test="${vid.urlImageBanner != null}">
                     <div class="videoBanner" style="background-image: url(${vid.urlImageBanner})"></div>
                     </c:if>
@@ -36,7 +36,7 @@
                     <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
                     </c:if>
                 <h3 style="float: left; margin-top: 5px;">${vid.name}</h3>
-                <input type="button" value="Add" style="float: left; position: relative;" onclick="addVideoToUser(${vid.id})">
+                <%--<input type="button" value="Add" style="float: left; position: relative;" onclick="addVideoToUser(${vid.id})">--%>
             </div>
         <%--</a>--%>
         <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>
@@ -46,9 +46,7 @@
         </div>
 </div>
 
-
-        <script>
-
+    <script>
             function addVideoToUser(idVideo){
                 //alert(idVideo);
                 $.ajax({
@@ -58,10 +56,35 @@
                     data:{
                     },
                     success: function(data){
+                        $("#addingVideoButton").css("background-color", "orangered");
+                        $("#addingVideoButton").css("border-color", "orangered");
+                        $("#addingVideoButton").html("Delete");
+                        $("#addingVideoButton").attr("id","removingVideoButton");
+                        $("#removingVideoButton").prop('onclick',null).off('click');
+                        $("#removingVideoButton").click(function(){
+                            deleteVideoFromUserPage(idVideo);
+                        })
                     }
                 })
             }
 
+            function deleteVideoFromUserPage(idVideo){
+                $.ajax({
+                    url: "/deleteVideoFromUserPage/"+idVideo,
+                    method: "get",
+                    async: false,
+                    success: function(data){
+                        $("#removingVideoButton").css("background-color", "#6ea0ff");
+                        $("#removingVideoButton").css("border-color", "#6ea0ff");
+                        $("#removingVideoButton").html("Add");
+                        $("#removingVideoButton").attr("id","addingVideoButton");
+                        $("#addingVideoButton").prop('onclick',null).off('click');
+                        $("#addingVideoButton").click(function(){
+                            addVideoToUser(idVideo);
+                        })
+                    }
+                })
+            }
         </script>
 
 <script>
@@ -72,6 +95,9 @@
         $("#popupWin").append("<video id='my-video' controls preload='auto' width='800' height='464'"+
         "poster='' style='cursor: hand;'>"+
                 "<source src='"+url+"' type='video/mp4'></video><h1 style='text-align: left;'>"+name+"</h1>");
+        if (!checkIfVideoBelongsToAuthUser(id))
+        $("#popupWin").append("<button id = 'addingVideoButton' onclick='addVideoToUser("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px;'>Add</button><p style='clear: left;'/>");
+        else $("#popupWin").append("<button id = 'removingVideoButton' onclick='deleteVideoFromUserPage("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; background-color: orangered; border-color: orangered;'>Delete</button><p style='clear: left;'/>");
         $("#popupWin").append("<textarea id = 'videoTextArea' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveCommentUnderVideo("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");

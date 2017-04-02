@@ -13,6 +13,8 @@ public interface VideoService {
     void add(Video video);
     void edit(Video video);
     void delete(Video video);
+    void deleteVideoFromUser(long video_id, long user_id);
+    boolean videoBelongsToUser(long video_id, long user_id);
     Video findOne(long id);
     List<Video> findAll();
     List<Video> findAllByUser(User user);

@@ -544,8 +544,15 @@ public class Main {
         newStr+=c1;
         System.out.println(newStr);
         str.*/
-        User_Images user_images = (User_Images) entityManager.createQuery("from User_Images where user_id = ?1 and id>?2 group by id").setParameter(1,1l).setParameter(2,215l).setMaxResults(1).getSingleResult();
-        System.out.println(user_images.getId());
+        /*User_Images user_images = (User_Images) entityManager.createQuery("from User_Images where user_id = ?1 and id>?2 group by id").setParameter(1,1l).setParameter(2,215l).setMaxResults(1).getSingleResult();
+        System.out.println(user_images.getId());*/
+
+        /*Object o = entityManager.createNativeQuery("select id from User_Video where video_id = ?1 and user_id = ?2").setParameter(1,21l).setParameter(2,1l).setMaxResults(1).getSingleResult();
+        System.out.println(o);*/
+
+
+        Boolean b = true;
+        System.out.println(b.toString().equals("true"));
         entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();

@@ -39,7 +39,7 @@ public class Video {
             inverseJoinColumns = @JoinColumn(name = "community_id")
     )
     private List<Community> communities = new ArrayList<>();
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "video")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "video",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public Video(){}

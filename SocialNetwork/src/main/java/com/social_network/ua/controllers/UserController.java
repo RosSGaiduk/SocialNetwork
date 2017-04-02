@@ -180,6 +180,8 @@ public class UserController extends BaseMethods{
     @RequestMapping(value = "/videosOf/{id}",method = RequestMethod.GET)
     public String videosOfUser(@PathVariable("id")String id,Model model){
         model.addAttribute("videosAll",videoService.findAllByUser(userService.findOne(Long.parseLong(id))));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("myPage",authentication.getName().equals(""+id));
         return "views-user-videos";
     }
 }

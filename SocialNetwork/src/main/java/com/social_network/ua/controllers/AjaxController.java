@@ -10,6 +10,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -711,5 +712,21 @@ public class AjaxController extends BaseMethods {
         Video video = videoService.findOne(Long.parseLong(id));
         videoService.addVideoToUser(video,user);
         return "";
+    }
+
+    @RequestMapping(value = "/deleteVideoFromUserPage/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String deleteVideoFromMyPage(@PathVariable("id")String idVideo){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        videoService.deleteVideoFromUser(Long.parseLong(idVideo),Long.parseLong(authentication.getName()));
+        return "Success";
+    }
+
+    @RequestMapping(value = "/checkingIfVideoBelongsToAuthUser/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String checkingIfVideoBelongsToAuthUser(@PathVariable("id")String idVideo){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Boolean belongs = videoService.videoBelongsToUser(Long.parseLong(idVideo),Long.parseLong(authentication.getName()));
+        return belongs.toString();
     }
 }

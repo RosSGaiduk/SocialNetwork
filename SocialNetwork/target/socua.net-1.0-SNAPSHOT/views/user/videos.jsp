@@ -29,7 +29,7 @@
     <p style="clear: left"/>
     <c:forEach items="${videosAll}" var="vid">
         <%--<a href="/video/${vid.id}" style="text-decoration: none; color: black;">--%>
-        <div class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
+        <div id = "video_${vid.id}" class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
             <c:if test="${vid.urlImageBanner != null}">
                 <div class="videoBanner" style="background-image: url(${vid.urlImageBanner})"></div>
             </c:if>
@@ -37,6 +37,9 @@
                 <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
             </c:if>
             <h3 style="float: left; margin-top: 5px;">${vid.name}</h3>
+            <c:if test="${myPage}">
+            <button onclick="deleteVideoFromUserPage(${vid.id})">Delete</button>
+            </c:if>
         </div>
         <%--</a>--%>
         <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>

@@ -3,10 +3,12 @@ package com.social_network.ua.dao.implementation;
 import com.social_network.ua.dao.VideoDao;
 import com.social_network.ua.entity.Community;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.User_Video;
 import com.social_network.ua.entity.Video;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
@@ -35,6 +37,11 @@ public class VideoDaoImpl implements VideoDao{
     @Transactional
     public void delete(Video video) {
         entityManager.remove(entityManager.contains(video)? video: entityManager.merge(video));
+    }
+
+    @Transactional
+    public void deleteVideoFromUser(long video_id, long user_id) {
+        entityManager.createNativeQuery("DELETE FROM User_Video where video_id = ?1 and user_id = ?2").setParameter(1,video_id).setParameter(2,user_id).executeUpdate();
     }
 
     @Transactional
@@ -79,6 +86,16 @@ public class VideoDaoImpl implements VideoDao{
     @Transactional
     public List<Video> selectAllVideosWithTheSameUrlPhoto(String url) {
         return entityManager.createQuery("from Video where urlImageBanner like ?1").setParameter(1,url).getResultList();
+    }
+
+    @Transactional
+    public boolean videoBelongsToUser(long video_id, long user_id) {
+        try {
+           Object o = entityManager.createNativeQuery("select id from User_Video where video_id = ?1 and user_id = ?2").setParameter(1,video_id).setParameter(2,user_id).setMaxResults(1).getSingleResult();
+           return true;
+        } catch (NoResultException ex){
+            return false;
+        }
     }
 
     @Transactional
