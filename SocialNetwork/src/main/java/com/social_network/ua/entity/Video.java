@@ -41,6 +41,10 @@ public class Video {
     private List<Community> communities = new ArrayList<>();
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "video",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "video",cascade = CascadeType.ALL)
+    private List<LLike> likes = new ArrayList<>();
+    @Column
+    private int countLikes = 0;
 
     public Video(){}
 
@@ -142,5 +146,21 @@ public class Video {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<LLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LLike> likes) {
+        this.likes = likes;
+    }
+
+    public int getCountLikes() {
+        return countLikes;
+    }
+
+    public void setCountLikes(int countLikes) {
+        this.countLikes = countLikes;
     }
 }

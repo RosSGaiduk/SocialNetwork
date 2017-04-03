@@ -1,10 +1,7 @@
 package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.VideoDao;
-import com.social_network.ua.entity.Community;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Video;
-import com.social_network.ua.entity.Video;
+import com.social_network.ua.entity.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

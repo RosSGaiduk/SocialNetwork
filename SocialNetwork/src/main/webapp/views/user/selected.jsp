@@ -328,6 +328,7 @@
         var width = 384*imageDetails.ratio;
         //$("#idBlock").css("width",384*imageDetails.ratio);
         var marginLeft = ($("#popupWin").width()-width)/2.0;
+        marginLeft-=32;
         //$("#idBlock").css("margin-left",marginLeft);
         $("#popupWin").append("<img src = '/resources/img/icons/icon-arrow-back-128.png' width='32' height='32' style = 'float:left; clear:left; cursor:hand;' onclick='nextImage("+idPhoto+")'>");
         $("#popupWin").append("<div id = 'idBlock' style='width: "+width+"px; height: 384px; float: left; margin-left: "+marginLeft+"px;background-image: url("+urlPhoto+");background-repeat: no-repeat; background-size: cover; cursor: hand;' class='magnify' onclick='previousImage("+idPhoto+")'></div>");

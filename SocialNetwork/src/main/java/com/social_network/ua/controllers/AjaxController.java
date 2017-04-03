@@ -729,4 +729,50 @@ public class AjaxController extends BaseMethods {
         Boolean belongs = videoService.videoBelongsToUser(Long.parseLong(idVideo),Long.parseLong(authentication.getName()));
         return belongs.toString();
     }
+
+    @RequestMapping(value = "/loadCountLikesUnderVideo/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadCountLikesUnderVideo(@PathVariable("id")String idVideo){
+        Video video = videoService.findOne(Long.parseLong(idVideo));
+        return video.getCountLikes()+"";
+    }
+
+
+    @RequestMapping(value = "/leaveLikeUnderVideo/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String leaveLikeUnderVideo(@PathVariable("id")String idVideo){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Video video = videoService.findOne(Long.parseLong(idVideo));
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        LLike lLike = likeService.findOneByVideoAndUser(video,user);
+        JSONObject jsonObject = new JSONObject();
+        if (lLike == null){
+            jsonObject.putOnce("liked",true);
+            video.setCountLikes(video.getCountLikes()+1);
+            lLike = new LLike();
+            lLike.setUser(user);
+            lLike.setVideo(video);
+            likeService.add(lLike);
+        } else {
+            jsonObject.putOnce("liked",false);
+            video.setCountLikes(video.getCountLikes()-1);
+            likeService.delete(lLike);
+        }
+        videoService.edit(video);
+        System.out.println("Count likes "+video.getCountLikes());
+        jsonObject.putOnce("countLikes",video.getCountLikes());
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/checkIfUserLikedVideo/{id}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String checkIfUserLikedVideo(@PathVariable("id")String idVideo){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Video video = videoService.findOne(Long.parseLong(idVideo));
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        LLike lLike = likeService.findOneByVideoAndUser(video,user);
+        if (lLike == null){
+            return "false";
+        } else return "true";
+    }
 }

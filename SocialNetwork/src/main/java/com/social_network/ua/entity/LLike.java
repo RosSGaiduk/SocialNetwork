@@ -19,6 +19,8 @@ public class LLike {
     private Comment comment;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Video video;
 
     public LLike() {}
 
@@ -60,5 +62,13 @@ public class LLike {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
     }
 }

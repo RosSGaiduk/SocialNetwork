@@ -51,4 +51,14 @@ public class LikeDaoImpl implements LikeDao{
     public List<LLike> findAll() {
         return entityManager.createQuery("from LLike").getResultList();
     }
+
+    @Transactional
+    public LLike findOneByVideoAndUser(Video video, User user) {
+        try{
+            LLike lLike = (LLike)entityManager.createQuery("from LLike where user = ?1 and video = ?2").setParameter(1,user).setParameter(2,video).getSingleResult();
+            return lLike;
+        } catch (Exception ex){
+            return null;
+        }
+    }
 }

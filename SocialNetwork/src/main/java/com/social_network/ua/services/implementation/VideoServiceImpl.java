@@ -2,6 +2,7 @@ package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.VideoDao;
 import com.social_network.ua.entity.Community;
+import com.social_network.ua.entity.LLike;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.Video;
 import com.social_network.ua.services.VideoService;

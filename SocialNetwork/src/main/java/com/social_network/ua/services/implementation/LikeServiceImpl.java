@@ -4,6 +4,7 @@ import com.social_network.ua.dao.LikeDao;
 import com.social_network.ua.entity.LLike;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.Video;
 import com.social_network.ua.services.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,4 +48,10 @@ public class LikeServiceImpl implements LikeService{
     public List<LLike> findAll() {
         return likeDao.findAll();
     }
+
+    @Override
+    public LLike findOneByVideoAndUser(Video video, User user) {
+        return likeDao.findOneByVideoAndUser(video,user);
+    }
+
 }

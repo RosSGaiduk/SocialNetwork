@@ -1,6 +1,7 @@
 package com.social_network.ua.services;
 
 import com.social_network.ua.entity.Community;
+import com.social_network.ua.entity.LLike;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.Video;
 
