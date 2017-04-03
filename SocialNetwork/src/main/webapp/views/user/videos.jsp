@@ -57,17 +57,61 @@
         if (!checkIfVideoBelongsToAuthUser(id))
             $("#popupWin").append("<button id = 'addingVideoButton' onclick='addVideoToUser("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px;'>Add</button><p style='clear: left;'/>");
         else $("#popupWin").append("<button id = 'removingVideoButton' onclick='deleteVideoFromUserPage("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; background-color: orangered; border-color: orangered;'>Delete</button><p style='clear: left;'/>");
+        $("#popupWin").append("<div style='float: left; margin-left: 70%; margin-top: -20px;'><img id = 'likeImgId' src='/resources/img/icons/like.png' onclick='leaveLikeUnderVideo("+id+")' style='float: left; cursor: hand;'><p id = 'countLikesUnderVideo' style='float: left; margin-left: 10px;'></p></div>");
         $("#popupWin").append("<textarea id = 'videoTextArea' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveCommentUnderVideo("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
         $("#my-video").click(function(){
             playVideo();
         })
+        checkIfUserLikedVideo(id);
+        loadCountLikesUnderVideo(id);
         updateCommentsOfVideo(id);
     }
     function playVideo(){
         if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
         else $("#my-video").get(0).pause();
+    }
+
+    function loadCountLikesUnderVideo(idVideo){
+        $.ajax({
+            url: "/loadCountLikesUnderVideo/"+idVideo,
+            async: false,
+            method: "get",
+            success: function (data) {
+                $("#countLikesUnderVideo").html(data);
+            }
+        })
+    }
+    function checkIfUserLikedVideo(idVideo){
+        $.ajax({
+            url: "/checkIfUserLikedVideo/" + idVideo,
+            async: false,
+            method: "get",
+            success: function (data) {
+                if (data=="true"){
+                    $("#likeImgId").attr("src","/resources/img/icons/like.png");
+                } else {
+                    $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
+                }
+            }
+        })
+    }
+    function leaveLikeUnderVideo(idVideo){
+        $.ajax({
+            url: "/leaveLikeUnderVideo/" + idVideo,
+            async: false,
+            method: "get",
+            dataType: "json",
+            success: function (data) {
+                if (data.liked){
+                    $("#likeImgId").attr("src","/resources/img/icons/like.png");
+                } else {
+                    $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
+                }
+                $("#countLikesUnderVideo").html(data.countLikes);
+            }
+        })
     }
 </script>
 </body>

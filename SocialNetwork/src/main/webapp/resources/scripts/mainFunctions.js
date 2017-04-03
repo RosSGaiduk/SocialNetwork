@@ -455,3 +455,44 @@ function checkIfVideoBelongsToAuthUser(idVideo){
     })
     return result;
 }
+
+function loadCountLikesUnderVideo(idVideo){
+    $.ajax({
+        url: "/loadCountLikesUnderVideo/"+idVideo,
+        async: false,
+        method: "get",
+        success: function (data) {
+            $("#countLikesUnderVideo").html(data);
+        }
+    })
+}
+function checkIfUserLikedVideo(idVideo){
+    $.ajax({
+        url: "/checkIfUserLikedVideo/" + idVideo,
+        async: false,
+        method: "get",
+        success: function (data) {
+            if (data=="true"){
+                $("#likeImgId").attr("src","/resources/img/icons/like.png");
+            } else {
+                $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
+            }
+        }
+    })
+}
+function leaveLikeUnderVideo(idVideo){
+    $.ajax({
+        url: "/leaveLikeUnderVideo/" + idVideo,
+        async: false,
+        method: "get",
+        dataType: "json",
+        success: function (data) {
+            if (data.liked){
+                $("#likeImgId").attr("src","/resources/img/icons/like.png");
+            } else {
+                $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
+            }
+            $("#countLikesUnderVideo").html(data.countLikes);
+        }
+    })
+}

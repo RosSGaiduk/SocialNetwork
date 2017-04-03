@@ -83,7 +83,6 @@
             }
         })
     }
-
     function checkIfUserLikedVideo(idVideo){
         $.ajax({
             url: "/checkIfUserLikedVideo/" + idVideo,
@@ -98,7 +97,6 @@
             }
         })
     }
-
     function leaveLikeUnderVideo(idVideo){
         $.ajax({
             url: "/leaveLikeUnderVideo/" + idVideo,
