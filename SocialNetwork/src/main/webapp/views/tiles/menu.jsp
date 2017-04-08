@@ -48,6 +48,10 @@
                 <a href="/news" style="text-decoration: none"><h4 style="text-align: left">Новини</h4></a>
             </div>
 
+            <div class="menuOption">
+                <a href="/sessionPage" style="text-decoration: none"><h4 style="text-align: left">Сесія</h4></a>
+            </div>
+
             <div style="width: 100%; height: 10px; float: left; margin-top: 40px;">
             <form:form method="post" action="/logout">
                 <p style="text-align: left"><button type="submit" style="

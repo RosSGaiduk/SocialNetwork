@@ -24,4 +24,5 @@ public interface VideoService {
     List<Video> selectAllVideosWithTheSameUrlPhoto(String url);
     void addVideoToUser(Video video, User user);
     Video findLastVideoOfUser(User user);
+    List<Video> findAllByInput(String text);
 }

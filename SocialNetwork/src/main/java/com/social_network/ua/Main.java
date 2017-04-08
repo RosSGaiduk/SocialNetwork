@@ -551,9 +551,71 @@ public class Main {
         System.out.println(o);*/
 
 
-        Boolean b = true;
-        System.out.println(b.toString().equals("true"));
-        entityManager.getTransaction().commit();
+        /*Boolean b = true;
+        System.out.println(b.toString().equals("true"));*/
+
+        /*List<Integer> myList1 = new ArrayList<>();
+        myList1.add(1);
+        myList1.add(2);
+
+        List<Integer> myList2 = new ArrayList<>();
+        Collections.copy(myList1,myList2);
+
+
+        for (int i = 0; i < myList2.size(); i++)
+            System.out.println(myList2.get(i));
+
+        for (int i = 0; i < myList1.size(); i++)
+            System.out.println(myList1.get(i));
+
+        entityManager.getTransaction().commit();*/
+
+       /* List<Integer> myIntList = new ArrayList<>();
+        myIntList.add(1);
+        myIntList.add(1);
+        myIntList.add(2);
+        myIntList.add(5);
+        myIntList.add(4);
+        myIntList.add(3);
+        myIntList.add(12);
+        myIntList.add(10);
+        myIntList.add(10);
+
+        Iterator<Integer> integerIterator = myIntList.iterator();
+        while (integerIterator.hasNext()){
+            System.out.println(integerIterator.next());
+        }
+        System.out.println(myIntList.size());
+
+        System.out.println("***********************************");
+
+        Set<Integer> myIntSet = new HashSet<>(myIntList);
+        Iterator<Integer> integerSetIterator = myIntSet.iterator();
+        while (integerSetIterator.hasNext()){
+            System.out.println(integerSetIterator.next());
+        }
+        System.out.println(myIntSet.size());*/
+
+
+        List<Video> videos = entityManager.createQuery("from Video").getResultList();
+        Collections.swap(videos,0,1);
+        for (int i = 0; i < videos.size(); i++)
+            System.out.println(videos.get(i).getId());
+        System.out.println(videos.size());
+
+
+       /* videos.set(1,video);
+
+        for (Video v: videos)
+            System.out.println(v.getId());*/
+
+        /*System.out.println(videos.get(0));
+        Set<Video> videoSet = new HashSet<>(videos);
+        videos = null;
+        videos = new ArrayList<>();
+        System.out.println(videos.size());
+        System.out.println(videoSet.size());*/
+
         entityManager.close();
         entityManagerFactory.close();
     }

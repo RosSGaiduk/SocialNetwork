@@ -128,7 +128,10 @@
         <!--Між блоками завжди така дів-->
         <div style="float: left; width: 100%; height: 20px; background-color: gainsboro; margin-top: 50px;"></div>
         <!--Відеозаписи-->
-        <div style="float: left; width: 100%; height: 120px; margin-top: 50px;"></div>
+        <div style="float: left; width: 100%; height: 200px;">
+            <span onclick="showModalWinWithVideos()" style="margin: 20px 0px 0px 20px; color: blue;"><strong>Відеозаписи</strong></span>
+
+        </div>
 </div>
 
 <div style="text-align: center; overflow: scroll;" id="popupWin" class="modalwin">

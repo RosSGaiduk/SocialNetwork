@@ -362,6 +362,28 @@ public class AjaxController extends BaseMethods {
         return jsonObject.toString();
     }
 
+    @RequestMapping(value = "/findVideos",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String findVideosByInput(@RequestParam String text){
+        System.out.println("Text of video: "+text);
+        JSONArray jsonArray = new JSONArray();
+        List<Video> sameVideo = videoService.findAllByInput(text);
+        for (int i = 0; i < sameVideo.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("idVideo",sameVideo.get(i).getId());
+            jsonObject.putOnce("nameVideo",sameVideo.get(i).getName());
+            jsonObject.putOnce("urlVideo",sameVideo.get(i).getUrl());
+            /*for background image url in jsp*/
+            if (sameVideo.get(i).getUrlImageBanner()!=null)
+            jsonObject.putOnce("urlImage",sameVideo.get(i).getUrlImageBanner());
+            else jsonObject.putOnce("urlImage","/resources/img/icons/videoBannerStandard.png");
+            /**/
+            jsonArray.put(jsonObject);
+        }
+
+        return jsonArray.toString();
+    }
+
     @RequestMapping(value = "/subscribe/{communityId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String subscribe(@RequestParam String userId,@PathVariable("communityId")String communityId){

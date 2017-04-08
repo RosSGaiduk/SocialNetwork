@@ -26,5 +26,4 @@
     <!--<mvc:resources mapping="/upload/**" location="/1/"/>-->
     <mvc:annotation-driven/>
     <import resource="beans.xml"/>
-
 </beans>

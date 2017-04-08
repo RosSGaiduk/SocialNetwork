@@ -9,24 +9,34 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html lang = "en">
 <head><%--Всі лінки підключені в template.jsp--%>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <!--Angular-->
     <!--Ajax-->
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.14/jquery.jscrollpane.min.js'></script>
     <!--/Ajax-->
+    <script type="text/javascript" src="/resources/scripts/angularControllers.js"></script>
 </head>
 <body>
 
 <div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 80px; background-color: white">
     <form:form action="/videoProcess.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-               enctype="multipart/form-data" cssStyle="float: left;">
-        <input type="file" name="file1"  style="float: left;"/>
-        <input type="submit" value="Upload" style="float: left;">
+    enctype="multipart/form-data" cssStyle="float: left;">
+    <input type="file" name="file1"  style="float: left;"/>
+    <input type="submit" value="Upload" style="float: left;">
     </form:form>
+    <p style="clear: left;"/>
     <p style="clear: left"/>
-    <c:forEach items="${videoAll}" var="vid">
+    <div id = "allVideos">
+       <div style="float: left; margin-top: 20px;">
+            <input id = "searchVideo" type="text" class="inputStyle" onkeyup="findVideo()">
+       </div>
+        <p style="clear: left;"/>
+        <div id = "videosForEachFromServer">
+         <c:forEach items="${videoAll}" var="vid">
         <%--<a href="/video/${vid.id}" style="text-decoration: none; color: black;">--%>
             <div id = "video_${vid.id}"class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
                     <c:if test="${vid.urlImageBanner != null}">
@@ -41,7 +51,7 @@
         <%--</a>--%>
         <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>
     </c:forEach>
-
+    </div>
         <div style="text-align: center; overflow: scroll; cursor: default; float:left;" id="popupWin" class="modalwin">
         </div>
 </div>
@@ -73,43 +83,23 @@
         else $("#my-video").get(0).pause();
     }
 
-    function loadCountLikesUnderVideo(idVideo){
+
+    function findVideo() {
         $.ajax({
-            url: "/loadCountLikesUnderVideo/"+idVideo,
+            url: "/findVideos",
             async: false,
-            method: "get",
-            success: function (data) {
-                $("#countLikesUnderVideo").html(data);
-            }
-        })
-    }
-    function checkIfUserLikedVideo(idVideo){
-        $.ajax({
-            url: "/checkIfUserLikedVideo/" + idVideo,
-            async: false,
-            method: "get",
-            success: function (data) {
-                if (data=="true"){
-                    $("#likeImgId").attr("src","/resources/img/icons/like.png");
-                } else {
-                    $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
-                }
-            }
-        })
-    }
-    function leaveLikeUnderVideo(idVideo){
-        $.ajax({
-            url: "/leaveLikeUnderVideo/" + idVideo,
-            async: false,
-            method: "get",
+            data: {
+                text: $("#searchVideo").val()
+            },
             dataType: "json",
             success: function (data) {
-                if (data.liked){
-                    $("#likeImgId").attr("src","/resources/img/icons/like.png");
-                } else {
-                    $("#likeImgId").attr("src","/resources/img/icons/likeClear.png");
-                }
-                $("#countLikesUnderVideo").html(data.countLikes);
+                $("#videosForEachFromServer").html("");
+                $.each(data, function (k, v) {
+                    $("#videosForEachFromServer").append("<div id = '"+v.idVideo+"' class='videoBannerMain'><div class='videoBanner' style='background-image: url(" + v.urlImage + ")'></div><h3 style='float: left; margin-top: 5px;'>" + v.nameVideo + "</h3></div>");
+                    $("#"+v.idVideo).click(function(){
+                        showVideo(v.idVideo, v.urlVideo, v.nameVideo);
+                    })
+                })
             }
         })
     }

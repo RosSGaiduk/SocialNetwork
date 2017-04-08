@@ -25,7 +25,8 @@
     <script type="text/javascript" src="/resources/scripts/angularControllers.js"></script>
 </head>
 <body>
-<div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px; cursor: hand;">
+<div style="width: 60%; height: auto; margin-left: 20px; max-width: 60%; float: left; margin-top: 50px;">
+    <h1>Title of session: <font color="#ff1493">${mySession.title}</font>  and changed <font color="#ff1493">${mySession.countChanged}</font> times</h1>
     <sec:authorize access="isAuthenticated()">
         <div class="userPhoto">
             <div onclick="openPhotoUser('${user.newestImageSrc}',${user.newestImageId})" id = "photoOfUser" style="

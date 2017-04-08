@@ -40,4 +40,4 @@ app.controller('emailCheck',['$scope', '$http', function($scope, $http){
 
 app.controller('myCtrl',function($scope){
     $scope.go = "Go";
-})
+});

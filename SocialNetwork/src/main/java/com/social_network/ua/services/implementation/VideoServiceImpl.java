@@ -83,4 +83,9 @@ public class VideoServiceImpl implements VideoService{
     public Video findLastVideoOfUser(User user) {
         return videoDao.findLastVideoOfUser(user);
     }
+
+    @Override
+    public List<Video> findAllByInput(String text) {
+        return videoDao.findAllByInput(text);
+    }
 }

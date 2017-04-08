@@ -24,4 +24,5 @@ public interface VideoDao {
     boolean videoBelongsToUser(long video_id,long user_id);
     void addVideoToUser(Video video,User user);
     Video findLastVideoOfUser(User user);
+    List<Video> findAllByInput(String text);
 }
