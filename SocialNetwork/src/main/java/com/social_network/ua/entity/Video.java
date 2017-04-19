@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Rostyslav on 28.03.2017.
  */
 @Entity
-public class Video {
+public class Video implements Comparable<Video>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -162,5 +162,10 @@ public class Video {
 
     public void setCountLikes(int countLikes) {
         this.countLikes = countLikes;
+    }
+
+    @Override
+    public int compareTo(Video o) {
+        return this.date.compareTo(o.date);
     }
 }

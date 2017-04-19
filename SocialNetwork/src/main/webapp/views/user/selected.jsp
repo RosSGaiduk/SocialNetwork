@@ -92,7 +92,7 @@
 
         <div class="userEdit">
             <button style="width: 80%; height: 80%; margin-left: 10%; margin-top:5px;background-color: gainsboro;
-            ">Edit</button>
+            " onclick="edit()">Edit</button>
         </div>
         <p style="clear: left"></p>
 
@@ -175,34 +175,44 @@
         </div>
 
         <div id = "records" class="userRecordsFromDb">
-            <c:forEach var="rec" items="${records}">
-                <div id = "${rec.id}_div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
-                    <p style="float:left; margin-left:10px;">${rec.dateOfRecord}</p>
+            <c:if test="${records.length()>0}">
+            <c:forEach begin="0" end="${records.length()-1}" var="index">
+                <%--${records.getJSONObject(index).getLong("id")}--%>                                                                                                                      <%--openRecord('${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("nameRecord")}')"--%>
+                <div id = "${records.getJSONObject(index).getLong('id')}_div" style="width:80%; height:auto; background-color:white; float:left; margin-top:20px; border-bottom:1px solid grey;" onclick="openRecord('${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("name")}')">
+                    <p style="float:left; margin-left:10px;">${records.getJSONObject(index).getString("date")}</p>
                     <p style="clear: left;"/>
                     <div style="width:70px; height:50px;
-                            background-image: url(${rec.urlUserImagePattern});background-size:cover;
+                            background-image: url(${records.getJSONObject(index).getString('urlUserImagePattern')});background-size:cover;
                             float:left; margin-left:10px; margin-top:10px;"></div>
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
-                        <p style="float:left; margin-left:10px; margin-top:10px;">${rec.text}</p>
+                        <p style="float:left; margin-left:10px; margin-top:10px;">${records.getJSONObject(index).getString('text')}</p>
                         <div style="width: 50%; float: left; height: 50px;"></div>
-                        <c:if test="${rec.type == 'IMAGE'}">
-                            <img src="${rec.url}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
-                        background-size: cover;
-                        "></c:if>
-                        <c:if test="${rec.type == 'AUDIO'}">
-                            <p style='float:left;'>${rec.nameRecord}</p>
+                        <c:if test="${records.getJSONObject(index).getString('type')== 'IMAGE'}">
+                        <img src="${records.getJSONObject(index).getString('url')}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
+                        background-size: cover;"></c:if>
+                        <c:if test="${records.getJSONObject(index).getString('type')=='AUDIO'}">
+                            <p style='float:left;'>${records.getJSONObject(index).getString('name')}</p>
                             <audio controls  style='width: 160%; height: auto; float: left; margin-top: 50px;'>
-                                <source src="${rec.url}" type="audio/mpeg" style="cursor: hand">
+                                <source src="${records.getJSONObject(index).getString('url')}" type="audio/mpeg" style="cursor: hand">
                             </audio>
                         </c:if>
-                        <p id = "${rec.id}" style="visibility: hidden">${rec.id}</p>
+                        <p id = "${records.getJSONObject(index).getLong('id')}" style="visibility: hidden">${records.getJSONObject(index).getLong('id')}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
-                        <button onclick="deleteRecord(document.getElementById('${rec.id}').innerHTML)">Delete</button>
+                        <button onclick="deleteRecord(${records.getJSONObject(index).getLong("id")})">Delete</button>
                     </c:if>
-                </div>
+                    <p style="clear: left"/>
+                    <c:if test="${records.getJSONObject(index).getBoolean('liked')}">
+                    <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                    </c:if>
+                    <c:if test="${records.getJSONObject(index).getBoolean('liked')==false}">
+                        <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                    </c:if>
+                    <font id = "countLikesUnderRecord_${records.getJSONObject(index).getLong('id')}" style="float: left; margin-top: 20px; margin-left: 5px;">${records.getJSONObject(index).getLong('countLikes')}</font>
+                    </div>
             </c:forEach>
             <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
+            </c:if>
         </div>
         <!--<button onclick="" style="float: left; width: 100px; height: 30px; margin-top: 250px; margin-left: -100px" >Add photo</button>-->
     </sec:authorize>
@@ -446,6 +456,10 @@
             return "";
     }
     checkIfAuthUserInHomePage();
+
+    function edit(){
+        alert("Edit");
+    }
 </script>
 
 <script>
@@ -558,9 +572,37 @@
         updateCommentsOfVideo(id);
     }
     function playVideo(){
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        if (isFirefox) return;
         if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
         else $("#my-video").get(0).pause();
     }
+
+    function defineBrowser(){
+        // Opera 8.0+
+        var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+        // Firefox 1.0+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+
+        // Safari 3.0+ "[object HTMLElementConstructor]"
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
+
+        // Internet Explorer 6-11
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+        // Edge 20+
+        var isEdge = !isIE && !!window.StyleMedia;
+
+        // Chrome 1+
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+        // Blink engine detection
+        var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+        alert("Mozilla: "+isFirefox+", opera: "+isOpera+", explorer: "+isIE+", chrome: "+isChrome+", safari: "+isSafari+", edge: "+isEdge);
+    }
+    //defineBrowser();
 </script>
 
 </body>

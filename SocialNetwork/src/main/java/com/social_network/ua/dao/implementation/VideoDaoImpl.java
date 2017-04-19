@@ -113,18 +113,22 @@ public class VideoDaoImpl implements VideoDao{
 
     public double pointsNameOfVideo(String text,Video video){
         String[]wordsFromInput = text.split("[-_ ,:!?.()''|#%*&;@~$=+^]");
-        String[]wordsFromWideoName = video.getName().split("[-_ ,:!?.()''|#%*&;@~$=+^]");
+        String[]wordsFromVideoName = video.getName().split("[-_ ,:!?.()''|#%*&;@~$=+^]");
         double count = 0.0;
         for (int i = 0; i < wordsFromInput.length; i++){
-            for (int j = 0; j < wordsFromWideoName.length; j++){
-                if (wordsFromInput[i].equalsIgnoreCase(wordsFromWideoName[j])){
-                    count+=1.0d;
+            for (int j = 0; j < wordsFromVideoName.length; j++){
+                if (wordsFromInput[i].equalsIgnoreCase(wordsFromVideoName[j])){
+                    if (i==j) count+=2.0d;
+                    else count+=1.0d;
                 } else {
-                    int min = wordsFromInput[i].length()>wordsFromWideoName[j].length()?wordsFromWideoName[j].length():wordsFromInput[i].length();
+                    int min = wordsFromInput[i].length()>wordsFromVideoName[j].length()?wordsFromVideoName[j].length():wordsFromInput[i].length();
                     for (int k = 0; k < min; k++){
                         for (int l = 0; l < min; l++){
-                            if (Character.toLowerCase(wordsFromInput[i].charAt(k))==Character.toLowerCase(wordsFromWideoName[j].charAt(l))){
-                                count+=1.0d/(2/0d*Math.pow(min,2));
+                            if (Character.toLowerCase(wordsFromInput[i].charAt(k))==Character.toLowerCase(wordsFromVideoName[j].charAt(l))){
+                                //System.out.println((double)(1.0d/(2.0d*Math.pow(min,2.0d))));
+                                count+=1.0d/(2.0d*Math.pow(min,2));
+                                //count+=1.0d/min;
+                                //System.out.println(wordsFromInput[i].charAt(k)+"=="+Character.toLowerCase(wordsFromVideoName[j].charAt(l)));
                             }
                         }
                     }
@@ -138,7 +142,6 @@ public class VideoDaoImpl implements VideoDao{
     public List<Video> findAllByInput(String text) {
         //передавши List в конструктор об'єкту класу HashSet, ми отримаємо з даного List об'єктів HashSet унікальних об'єктів
         //Set<Video> videosThatContainsText = new HashSet<>(entityManager.createQuery("from Video where name like ?1 order by countLikes desc").setParameter(1,"%"+text+"%").getResultList());
-
         String[]wordsFromInput = text.split("[-_ ,:!?.()''|#%*&;@~$=+^]");
         String query = "from Video where name like ";
         for (int i = 0; i < wordsFromInput.length-1; i++){
@@ -146,12 +149,11 @@ public class VideoDaoImpl implements VideoDao{
         }
         query+="'%"+wordsFromInput[wordsFromInput.length-1]+"%'";
         List<Video> allVideos = entityManager.createQuery(query).getResultList();
+
         for (int i = 0; i < allVideos.size(); i++){
-            double points1 = pointsNameOfVideo(text,allVideos.get(i));
             for (int j = i; j < allVideos.size(); j++){
-                double points2 = pointsNameOfVideo(text,allVideos.get(j));
-                if (points1<points2){
-                   Collections.swap(allVideos,i,j);
+                if (pointsNameOfVideo(text,allVideos.get(j))>pointsNameOfVideo(text,allVideos.get(i))){
+                    Collections.swap(allVideos,i,j);
                 }
             }
         }

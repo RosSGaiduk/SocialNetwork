@@ -217,6 +217,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/deleteRecord", method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String deleteRecord(@RequestParam String idRecord){
+        System.out.println("delete "+idRecord);
         long idRec = Long.parseLong(idRecord);
         recordService.delete(idRec);
         return idRecord;
@@ -368,19 +369,29 @@ public class AjaxController extends BaseMethods {
         System.out.println("Text of video: "+text);
         JSONArray jsonArray = new JSONArray();
         List<Video> sameVideo = videoService.findAllByInput(text);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         for (int i = 0; i < sameVideo.size(); i++){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.putOnce("idVideo",sameVideo.get(i).getId());
-            jsonObject.putOnce("nameVideo",sameVideo.get(i).getName());
-            jsonObject.putOnce("urlVideo",sameVideo.get(i).getUrl());
-            /*for background image url in jsp*/
-            if (sameVideo.get(i).getUrlImageBanner()!=null)
-            jsonObject.putOnce("urlImage",sameVideo.get(i).getUrlImageBanner());
-            else jsonObject.putOnce("urlImage","/resources/img/icons/videoBannerStandard.png");
-            /**/
+            JSONObject jsonObject = createVideoJsonObject(sameVideo.get(i),Long.parseLong(authentication.getName()));
+            jsonObject.putOnce("myVideo", videoService.videoBelongsToUser(sameVideo.get(i).getId(), Long.parseLong(authentication.getName())));
             jsonArray.put(jsonObject);
         }
+        return jsonArray.toString();
+    }
 
+    @RequestMapping(value = "/findVideosLikeOpened",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String findVideosLikeOpened(@RequestParam String text,@RequestParam String videoId){
+        System.out.println("Text of video: "+text);
+        JSONArray jsonArray = new JSONArray();
+        List<Video> sameVideo = videoService.findAllByInput(text);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for (int i = 0; i < sameVideo.size(); i++){
+            if (sameVideo.get(i).getId()!=Long.parseLong(videoId)) {
+                JSONObject jsonObject = createVideoJsonObject(sameVideo.get(i),Long.parseLong(authentication.getName()));
+                jsonObject.putOnce("myVideo", videoService.videoBelongsToUser(sameVideo.get(i).getId(), Long.parseLong(authentication.getName())));
+                jsonArray.put(jsonObject);
+            }
+        }
         return jsonArray.toString();
     }
 
@@ -796,5 +807,34 @@ public class AjaxController extends BaseMethods {
         if (lLike == null){
             return "false";
         } else return "true";
+    }
+
+    @RequestMapping(value = "/leaveLikeUnderRecord/{idRecord}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String leaveLikeUnderRecord(@PathVariable("idRecord")String idRecord){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        Record record = recordService.findOne(Long.parseLong(idRecord));
+        LLike like = likeService.userLikedRecord(user,record);
+        //System.out.println("Like == null: "+(like==null));
+        boolean liked = false;
+        if (like == null){
+            liked = true;
+            like = new LLike();
+            like.setUser(user);
+            like.setRecord(record);
+            record.setCountLikes(record.getCountLikes()+1);
+            recordService.edit(record);
+            likeService.add(like);
+        } else {
+            liked = false;
+            record.setCountLikes(record.getCountLikes()-1);
+            recordService.edit(record);
+            likeService.delete(like);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("countLikes",record.getCountLikes());
+        jsonObject.putOnce("liked",liked);
+        return jsonObject.toString();
     }
 }

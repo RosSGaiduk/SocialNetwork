@@ -1,9 +1,6 @@
 package com.social_network.ua.services;
 
-import com.social_network.ua.entity.LLike;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
-import com.social_network.ua.entity.Video;
+import com.social_network.ua.entity.*;
 
 import java.util.List;
 
@@ -21,4 +18,5 @@ public interface LikeService {
     LLike findOneByUserAndImage(User userFrom, User_Images image);
     List<LLike> findAll();
     LLike findOneByVideoAndUser(Video video, User user);
+    LLike userLikedRecord(User user, Record record);
 }

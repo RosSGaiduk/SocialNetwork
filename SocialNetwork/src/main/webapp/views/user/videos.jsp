@@ -69,8 +69,10 @@
         updateCommentsOfVideo(id);
     }
     function playVideo(){
-        if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
-        else $("#my-video").get(0).pause();
+            var isFirefox = typeof InstallTrigger !== 'undefined';
+            if (isFirefox) return;
+            if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
+            else $("#my-video").get(0).pause();
     }
 
     function loadCountLikesUnderVideo(idVideo){

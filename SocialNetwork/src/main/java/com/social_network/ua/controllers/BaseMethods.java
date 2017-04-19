@@ -6,6 +6,7 @@ package com.social_network.ua.controllers;
 
 import com.social_network.ua.entity.Comment;
 import com.social_network.ua.entity.User;
+import com.social_network.ua.entity.Video;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -92,5 +93,17 @@ public abstract class BaseMethods {
         return jsonArray;
     }
 
+    public JSONObject createVideoJsonObject(Video video, long authId){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("idVideo", video.getId());
+        jsonObject.putOnce("nameVideo",video.getName());
+        jsonObject.putOnce("urlVideo", video.getUrl());
+        /*for background image url in jsp*/
+        if (video.getUrlImageBanner() != null)
+            jsonObject.putOnce("urlImage", video.getUrlImageBanner());
+        else jsonObject.putOnce("urlImage", "/resources/img/icons/videoBannerStandard.png");
+            /**/
+        return jsonObject;
+    }
 }
 

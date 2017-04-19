@@ -34,73 +34,14 @@ public class BaseController extends BaseMethods{
     private VideoService videoService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home
-            (Model model,
-             Model modelFriends,
-             Model modelSubscribers,
-             Model modelRecords,
-             Model modelIdUserAuth,
-             Model modelForButton,
-             Model musicOfAuth,
-             HttpSession session
-            ){
+    public String home(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            User user =  userService.findOne(Long.parseLong(authentication.getName()));
-            model.addAttribute("user",user);
-            /*if (user.getMusics().size()>0)
-                musicOfAuth.addAttribute("musicOfAuth",user.getMusics().get(0));
-            else musicOfAuth.addAttribute("musicOfAuth",new Music());*/
-
-            try {
-                musicOfAuth.addAttribute("musicOfAuth", userService.get3LastMusicOfUser(user.getId()));
-            } catch (Exception ex) {
-                musicOfAuth.addAttribute("musicOfAuth", null);
-            }
-        } catch (Exception e){
-            model.addAttribute("user","no user");
-        }
-
-        try {
             User user = userService.findOne(Long.parseLong(authentication.getName()));
-            //шукаємо друзів даного юзера
-            Set<User> friendsWhichAcceptedUserApplication = friendsOfAuthentication(user);
-            //шукаємо підписників даного юзера(авторизованого)
-            Set<User> subscribersWhichArentFriendsOfUser = subscribersOfAuthentication(user, friendsWhichAcceptedUserApplication);
-            //передаєм на сторінку справжніх друзів
-            Set<User> friendsOnly3OfThem = new TreeSet<>();
-            int i = 0;
-            for (User u : friendsWhichAcceptedUserApplication) {
-                if (i == 3) break;
-                friendsOnly3OfThem.add(u);
-                i++;
-            }
-
-            //Set<Record> records = user.getRecordsToUser();
-
-            List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(authentication.getName()));
-            List<Record> inverseRecords = new ArrayList<>();
-
-            for (int j = records.size()-1; j >=0; j--)
-                inverseRecords.add(records.get(j));
-
-            modelForButton.addAttribute("friendOrNo","hidden");
-            modelRecords.addAttribute("records",inverseRecords);
-            modelFriends.addAttribute("friendsOfUser", friendsOnly3OfThem);
-            modelSubscribers.addAttribute("subscribersOfUser", subscribersWhichArentFriendsOfUser);
-            model.addAttribute("birthDate",user.getBirthDate().getTime());
-            model.addAttribute("lastVideo",videoService.findLastVideoOfUser(user));
+            return "redirect:/user/"+user.getId();
         } catch (Exception ex){
-            modelFriends.addAttribute("friendsOfUser", "");
-            modelSubscribers.addAttribute("subscribersOfUser", "");
             return "views-user-login";
         }
-        try {
-            modelIdUserAuth.addAttribute("userAuth", userService.findOne(Long.parseLong(authentication.getName())));
-        } catch (Exception ex){
-            modelIdUserAuth.addAttribute("userAuth", "no user auth");
-        }
-        return "views-user-selected";
     }
 
     @RequestMapping(value = "/messagePage",method = RequestMethod.GET)

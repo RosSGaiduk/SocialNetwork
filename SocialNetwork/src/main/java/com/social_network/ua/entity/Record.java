@@ -29,7 +29,8 @@ public class Record implements Comparable<Record>{
     @Column
     private String nameRecord; //бо коли в нас музика або відео, потрібно вказати його назву і вивести її на сторінці,
     //якщо це зображення, тоді nameRecord = ""
-
+    @Column
+    private int countLikes = 0;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
@@ -39,7 +40,7 @@ public class Record implements Comparable<Record>{
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "record")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "record",cascade = CascadeType.REMOVE)
     private List<LLike> likes = new ArrayList<>();
 
     public Record(){}
@@ -149,5 +150,13 @@ public class Record implements Comparable<Record>{
 
     public void setLikes(List<LLike> likes) {
         this.likes = likes;
+    }
+
+    public int getCountLikes() {
+        return countLikes;
+    }
+
+    public void setCountLikes(int countLikes) {
+        this.countLikes = countLikes;
     }
 }

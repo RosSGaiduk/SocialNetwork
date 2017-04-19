@@ -98,7 +98,33 @@ public class Main {
     }
 
 
-
+    public static double pointsNameOfVideo(String text,Video video){
+        String[]wordsFromInput = text.split("[-_ ,:!?.()''|#%*&;@~$=+^]");
+        String[]wordsFromVideoName = video.getName().split("[-_ ,:!?.()''|#%*&;@~$=+^]");
+        double count = 0.0;
+        for (int i = 0; i < wordsFromInput.length; i++){
+            for (int j = 0; j < wordsFromVideoName.length; j++){
+                if (wordsFromInput[i].equalsIgnoreCase(wordsFromVideoName[j])){
+                    if (i==j) count+=2.0d;
+                    else
+                        count+=1.0d;
+                } else {
+                    int min = wordsFromInput[i].length()>wordsFromVideoName[j].length()?wordsFromVideoName[j].length():wordsFromInput[i].length();
+                    for (int k = 0; k < min; k++){
+                        for (int l = 0; l < min; l++){
+                            if (Character.toLowerCase(wordsFromInput[i].charAt(k))==Character.toLowerCase(wordsFromVideoName[j].charAt(l))){
+                                System.out.println((double)(1.0d/(2.0d*Math.pow(min,2.0d))));
+                                count+=1.0d/(2.0d*Math.pow(min,2));
+                                //count+=1.0d/min;
+                                System.out.println(wordsFromInput[i].charAt(k)+"=="+Character.toLowerCase(wordsFromVideoName[j].charAt(l)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
 
 
 
@@ -597,13 +623,34 @@ public class Main {
         System.out.println(myIntSet.size());*/
 
 
-        List<Video> videos = entityManager.createQuery("from Video").getResultList();
+        /*List<Video> videos = entityManager.createQuery("from Video").getResultList();
         Collections.swap(videos,0,1);
         for (int i = 0; i < videos.size(); i++)
             System.out.println(videos.get(i).getId());
-        System.out.println(videos.size());
+        System.out.println(videos.size());*/
+
+        /*String sentence = "Kentucky Fried Chicken - Mascot.mp4";
+        String[]words = sentence.split("[-_ ,:!?.()''|#%*&;@~$=+^]");
+        for (int i = 0; i < words.length; i++)
+            System.out.println(words[i]);
+        List<Video> videos = entityManager.createQuery("from Video").getResultList();
+
+        Video video = (Video) entityManager.createQuery("from Video where name like ?1 group by name").setParameter(1,"Nike- Unlimited Courage.mp4").getSingleResult();
+
+        for (int i = 0; i < videos.size(); i++){
+            double points = pointsNameOfVideo(sentence,videos.get(i));
+            for (int j = i; j < videos.size(); j++){
+                if (pointsNameOfVideo(sentence,videos.get(j))>pointsNameOfVideo(sentence,videos.get(i))){
+                    Collections.swap(videos,i,j);
+                }
+            }
+        }
+
+        for (int i = 0; i < videos.size(); i++)
+            System.out.println(videos.get(i).getName());*/
 
 
+        //System.out.println(pointsNameOfVideo(sentence,video));
        /* videos.set(1,video);
 
         for (Video v: videos)
@@ -615,6 +662,16 @@ public class Main {
         videos = new ArrayList<>();
         System.out.println(videos.size());
         System.out.println(videoSet.size());*/
+
+        //boolean b;
+        try {
+            User user = entityManager.find(User.class,1l);
+            Record record = entityManager.find(Record.class,660l);
+            entityManager.createQuery("from LLike where user = ?1 and record =?2").setParameter(1, user).setParameter(2, record).getSingleResult();
+            System.out.println("true");
+        } catch (Exception ex){
+            System.out.println("false");
+        }
 
         entityManager.close();
         entityManagerFactory.close();

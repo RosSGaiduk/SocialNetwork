@@ -1,13 +1,13 @@
 package com.social_network.ua.controllers;
 
 
+import com.social_network.ua.dao.LikeDao;
 import com.social_network.ua.entity.*;
 import com.social_network.ua.enums.AlbumName;
-import com.social_network.ua.services.AlbumService;
-import com.social_network.ua.services.RecordService;
-import com.social_network.ua.services.UserService;
-import com.social_network.ua.services.VideoService;
+import com.social_network.ua.services.*;
 import com.social_network.ua.validations.UserValidator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
@@ -37,6 +37,8 @@ public class UserController extends BaseMethods{
     private AlbumService albumService;
     @Autowired
     private VideoService videoService;
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(value = "/addUser",method = RequestMethod.GET)
     public String addUserPage(Model model){
@@ -146,12 +148,27 @@ public class UserController extends BaseMethods{
 
         //Set<Record> records = userService.findOne(Long.parseLong(id)).getRecordsToUser();
         List<Record> records = recordService.findAllInTheWallOf(Long.parseLong(id));
-        List<Record> inverseRecords = new ArrayList<>();
-        for (int i = records.size()-1; i >=0; i--)
-            inverseRecords.add(records.get(i));
-
-        modelRecords.addAttribute("records",inverseRecords);
+        //List<Record> inverseRecords = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
+        for (int i = records.size()-1; i >=0; i--) {
+            //inverseRecords.add(records.get(i));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",records.get(i).getId());
+            jsonObject.putOnce("url",records.get(i).getUrl()!=null?records.get(i).getUrl():"");
+            jsonObject.putOnce("date",records.get(i).getDateOfRecord().toString());
+            jsonObject.putOnce("type",records.get(i).getType());
+            jsonObject.putOnce("text",records.get(i).getText()!=null?records.get(i).getText():"");
+            jsonObject.putOnce("countLikes",records.get(i).getCountLikes());
+            jsonObject.putOnce("name",records.get(i).getNameRecord()!=null?records.get(i).getNameRecord():"");
+            jsonObject.putOnce("urlUserImagePattern",records.get(i).getUrlUserImagePattern());
+            jsonObject.putOnce("liked",likeService.userLikedRecord(user,records.get(i))!=null);
+            jsonArray.put(jsonObject);
+        }
+
+        //modelRecords.addAttribute("records",inverseRecords);
+        modelRecords.addAttribute("records",jsonArray);
+
         modelIdUserAuth.addAttribute("userAuth", user);
         System.out.println(userSearched.getBirthDate().getTime());
         model.addAttribute("birthDate",userSearched.getBirthDate().getTime());

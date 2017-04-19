@@ -496,3 +496,27 @@ function leaveLikeUnderVideo(idVideo){
         }
     })
 }
+
+function leaveLikeUnderRecord(idRecord){
+    $("#"+idRecord+"_div").prop('onclick',null).off('click');
+    $.ajax({
+        url: "/leaveLikeUnderRecord/"+idRecord,
+        method: "get",
+        async: false,
+        dataType: "json",
+        success: function(data){
+            if (data.liked){
+                $("#likeIconUnderRecordImg_"+idRecord).attr("src","/resources/img/icons/like.png");
+            } else {
+                $("#likeIconUnderRecordImg_"+idRecord).attr("src","/resources/img/icons/likeClear.png");
+            }
+            $("#countLikesUnderRecord_"+idRecord).html(data.countLikes);
+        }
+    })
+}
+
+function backOpenRecordFunction(idRecord,type,text,url){
+    $("#"+idRecord+"_div").click(function(){
+        openRecord(type,text,url);
+    })
+}

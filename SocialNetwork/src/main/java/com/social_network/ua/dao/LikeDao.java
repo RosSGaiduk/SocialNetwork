@@ -18,4 +18,5 @@ public interface LikeDao {
     List<LLike> findAllByComment(Comment comment);*/
     List<LLike> findAll();
     LLike findOneByVideoAndUser(Video video,User user);
+    LLike userLikedRecord(User user,Record record);
 }

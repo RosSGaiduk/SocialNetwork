@@ -24,7 +24,17 @@ public class LikeDaoImpl implements LikeDao{
 
     @Transactional
     public void delete(LLike like) {
-        entityManager.remove(entityManager.contains(like) ? like: entityManager.merge(like));
+        //System.out.println("delete "+like);
+        entityManager.createNativeQuery("delete from Llike where id = ?1").setParameter(1,like.getId()).executeUpdate();
+        /*try {
+            entityManager.remove(entityManager.contains(like) ? like : entityManager.merge(like));
+        } catch (Exception ex){
+            System.out.println("Exception occurred while deleting like");
+        }
+        if (entityManager.contains(like)){
+            System.out.println("Contains");
+            entityManager.createNativeQuery("delete from Llike where id = ?1").setParameter(1,like.getId()).executeUpdate();
+        }*/
     }
 
     @Transactional
@@ -57,6 +67,16 @@ public class LikeDaoImpl implements LikeDao{
         try{
             LLike lLike = (LLike)entityManager.createQuery("from LLike where user = ?1 and video = ?2").setParameter(1,user).setParameter(2,video).getSingleResult();
             return lLike;
+        } catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Transactional
+    public LLike userLikedRecord(User user, Record record) {
+        try{
+            LLike like = (LLike)entityManager.createQuery("from LLike where user = ?1 and record =?2").setParameter(1, user).setParameter(2, record).getSingleResult();
+            return like;
         } catch (Exception ex){
             return null;
         }

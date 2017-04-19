@@ -42,8 +42,13 @@ public class UploadVideoController {
     @RequestMapping(value = "/videoProcess",method = RequestMethod.POST)
     public String loadVideo(HttpServletRequest request){
         System.out.println("VideoProcess!!!");
+        Video video = writeVideo(request,"videos");
+        return "redirect:/videoProcessLoadingBannerPage/"+video.getId();
+    }
+
+    public Video writeVideo(HttpServletRequest request,String pathAfterResources){
         String path = request.getRealPath("/resources");
-        Path path1 = Paths.get(path+"\\videos");
+        Path path1 = Paths.get(path+"\\"+pathAfterResources);
 
         try {
             Files.createDirectories(path1);
@@ -53,7 +58,7 @@ public class UploadVideoController {
 
         DiskFileItemFactory d = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(d);
-        Video video = null;
+        Video video = new Video();
         List<FileItem> lst = null;
         try {
             lst = upload.parseRequest(request);
@@ -63,19 +68,23 @@ public class UploadVideoController {
                     String[] extensions = file.split("\\.");
                     String extension = extensions[extensions.length - 1];
                     if (extension.equalsIgnoreCase("mp4")){
-                        fileItem.write(new File(path + "/videos/" + fileItem.getName()));
-                        video = new Video();
+                        System.out.println("true, mp4");
+                        fileItem.write(new File(path + "/"+pathAfterResources+"/"+fileItem.getName()));
+                        System.out.println("written");
+                        //video = new Video();
                         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                         video.setUser(userService.findOne(Long.parseLong(authentication.getName())));
                         video.setName(fileItem.getName());
                         video.setDate(new Date(System.currentTimeMillis()));
-                        video.setUrl("/resources/videos/"+fileItem.getName());
+                        video.setUrl("/resources/"+pathAfterResources+"/"+fileItem.getName());
                         videoService.add(video);
                     }
                 }
             }
+            return video;
         } catch (Exception e) {
+            System.out.println("Exception");
+            return null;
         }
-        return "redirect:/videoProcessLoadingBannerPage/"+video.getId();
     }
 }

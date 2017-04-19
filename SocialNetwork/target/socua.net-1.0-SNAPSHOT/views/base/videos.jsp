@@ -26,18 +26,20 @@
     <form:form action="/videoProcess.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
     enctype="multipart/form-data" cssStyle="float: left;">
     <input type="file" name="file1"  style="float: left;"/>
-    <input type="submit" value="Upload" style="float: left;">
+   <%-- <input type="submit" value="Upload" style="float: left;">--%>
+        <button type="submit" style="float: left;margin-top: 3px;" class="buttonFileStyle">Upload</button>
     </form:form>
     <p style="clear: left;"/>
-    <p style="clear: left"/>
     <div id = "allVideos">
        <div style="float: left; margin-top: 20px;">
             <input id = "searchVideo" type="text" class="inputStyle" onkeyup="findVideo()">
        </div>
         <p style="clear: left;"/>
+        <h3 style="clear: left;margin-left: 20px; margin-top: 20px; border-top: 1px solid black;">Мої відео</h3>
+        <div id = "myVideosFound"></div>
+        <h3 style="clear: left; margin-left: 20px; margin-top: 20px; border-top: 1px solid black;">Інші відео</h3>
         <div id = "videosForEachFromServer">
-         <c:forEach items="${videoAll}" var="vid">
-        <%--<a href="/video/${vid.id}" style="text-decoration: none; color: black;">--%>
+         <%--<c:forEach items="${videoAll}" var="vid">
             <div id = "video_${vid.id}"class="videoBannerMain" onclick="showVideo(${vid.id},'${vid.url}','${vid.name}')">
                     <c:if test="${vid.urlImageBanner != null}">
                     <div class="videoBanner" style="background-image: url(${vid.urlImageBanner})"></div>
@@ -46,11 +48,8 @@
                     <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
                     </c:if>
                 <h3 style="float: left; margin-top: 5px;">${vid.name}</h3>
-                <%--<input type="button" value="Add" style="float: left; position: relative;" onclick="addVideoToUser(${vid.id})">--%>
             </div>
-        <%--</a>--%>
-        <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>
-    </c:forEach>
+         </c:forEach>--%>
     </div>
         <div style="text-align: center; overflow: scroll; cursor: default; float:left;" id="popupWin" class="modalwin">
         </div>
@@ -71,14 +70,18 @@
         $("#popupWin").append("<textarea id = 'videoTextArea' style='height: 50px; width:50%; float: left; margin-top: 20px; margin-left: 30px;' placeholder='Введіть повідомлення: '></textarea>");
         $("#popupWin").append("<button onclick='leaveCommentUnderVideo("+id+")' class='sendButtonStyle' style='float: left; margin-left: 10px; margin-top: 40px;'>Send</button>");
         $("#popupWin").append("<div id = 'comments' style='width: 75%; height: auto; float:left; margin-left: 30px; margin-top: 20px;'>");
+        $("#popupWin").append("<div id = 'similarVideos' style='float: left; width: 20%; height: 100%;'></div>");
         $("#my-video").click(function(){
             playVideo();
         })
         checkIfUserLikedVideo(id);
         loadCountLikesUnderVideo(id);
         updateCommentsOfVideo(id);
+        findVideosLikeTheVideoWeOpened(id,name);
     }
     function playVideo(){
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        if (isFirefox) return;
         if ($("#my-video").get(0).paused) $("#my-video").get(0).play();
         else $("#my-video").get(0).pause();
     }
@@ -94,15 +97,46 @@
             dataType: "json",
             success: function (data) {
                 $("#videosForEachFromServer").html("");
+                $("#myVideosFound").html("");
                 $.each(data, function (k, v) {
-                    $("#videosForEachFromServer").append("<div id = '"+v.idVideo+"' class='videoBannerMain'><div class='videoBanner' style='background-image: url(" + v.urlImage + ")'></div><h3 style='float: left; margin-top: 5px;'>" + v.nameVideo + "</h3></div>");
-                    $("#"+v.idVideo).click(function(){
+                    if (v.myVideo)
+                        $("#myVideosFound").append("<div id = '" + v.idVideo + "' class='videoBannerMain'><div class='videoBanner' style='background-image: url(" + v.urlImage + ")'></div><h3 style='float: left; margin-top: 5px;'>" + v.nameVideo + "</h3></div>");
+                    else $("#videosForEachFromServer").append("<div id = '" + v.idVideo + "' class='videoBannerMain'><div class='videoBanner' style='background-image: url(" + v.urlImage + ")'></div><h3 style='float: left; margin-top: 5px;'>" + v.nameVideo + "</h3></div>");
+                    $("#" + v.idVideo).click(function () {
+                        var element = document.getElementById("popupWin");
+                        while (element.firstChild) element.removeChild(element.firstChild);
                         showVideo(v.idVideo, v.urlVideo, v.nameVideo);
                     })
                 })
             }
         })
     }
+        function findVideosLikeTheVideoWeOpened(id,value) {
+            $.ajax({
+                url: "/findVideosLikeOpened",
+                async: false,
+                data: {
+                    text: value,
+                    videoId: id
+                },
+                dataType: "json",
+                success: function (data) {
+                    //$("#videosForEachFromServer").html("");
+                    //$("#myVideosFound").html("");
+                    $.each(data, function (k, v) {
+                        $("#similarVideos").append("<div id = 'subVideo_" + v.idVideo + "' style='width: 100%; height: 100px; margin-top: 30px;'>" +
+                                "<div style='width: 100%; height: 80px; border: 1px solid black; background-size: cover; background-image: url(" + v.urlImage + ")'></div><span style='float: left; margin-top: 5px;'>" + v.nameVideo + "</h3></div>");
+                        $("#subVideo_" + v.idVideo).click(function () {
+                            //alert("asda");
+                            var darkLayer = document.getElementById('shadow');
+                            darkLayer.parentNode.removeChild(darkLayer);
+                            showVideo(v.idVideo, v.urlVideo, v.nameVideo);
+                        })
+                    })
+                }
+            })
+        }
+    findVideo();
 </script>
 </body>
 </html>
