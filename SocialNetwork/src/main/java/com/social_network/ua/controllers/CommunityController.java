@@ -5,6 +5,7 @@ import com.social_network.ua.entity.Music;
 import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.services.*;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by Rostyslav on 06.03.2017.
  */
 @Controller
-public class CommunityController {
+public class CommunityController extends BaseMethods{
 
     @Autowired
     private CommunityService communityService;
@@ -34,6 +35,8 @@ public class CommunityController {
     private CommunitySubscriberService communitySubscriberService;
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(value = "/communities",method = RequestMethod.GET)
     public String communitiesPage(Model model){
@@ -70,8 +73,12 @@ public class CommunityController {
         if (communityService.findUserOfCommunity(Long.parseLong(id)).getId()==Long.parseLong(authentication.getName()))
             model.addAttribute("belong",true);
         else model.addAttribute("belong",false);
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
         List<Record> records = recordService.findAllByCommunity(community);
-        model.addAttribute("records",records);
+        JSONArray jsonArray = new JSONArray();
+        for (Record record: records)
+            jsonArray.put(createRecordJsonObject(record,user,likeService.userLikedRecord(user,record)!=null));
+        model.addAttribute("records",jsonArray);
         model.addAttribute("userAuth",userService.findOne(Long.parseLong(authentication.getName())));
         model.addAttribute("subscribed",communitySubscriberService.checkIfUserSubscribed(Long.parseLong(authentication.getName()),Long.parseLong(id)));
         model.addAttribute("subscribers",userService.findAllUsersOfCommunity(community,6));

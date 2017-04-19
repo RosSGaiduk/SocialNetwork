@@ -34,35 +34,40 @@
     </form:form>
     </c:if>
     <div id = "records">
-    <c:forEach items="${records}" var="rec">
-        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${rec.id}_div" onclick="openRecord('${rec.type}','${rec.text}','${rec.url}','${rec.nameRecord}')">
-            <p style="margin-bottom: 20px;">${rec.text}</p>
-            <c:if test="${rec.type == 'IMAGE'}">
-                <img src="${rec.url}" style="background-size: contain; float: left;" width="300" height="auto">
+    <c:if test="${records.length()>0}">
+    <c:forEach begin="0" end="${records.length()-1}" var="index">
+    <%--<c:forEach items="${records}" var="rec">--%>
+        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${records.getJSONObject(index).getLong('id')}_div" onclick="openRecord('${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("name")}')">
+            <p style="margin-bottom: 20px;">${records.getJSONObject(index).getString('text')}</p>
+            <c:if test="${records.getJSONObject(index).getString('type')=='IMAGE'}">
+                <img src="${records.getJSONObject(index).getString('url')}" style="background-size: contain; float: left;" width="300" height="auto">
             </c:if>
-            <c:if test="${rec.type == 'AUDIO'}">
-                <p style="margin-top: 10px;">${rec.nameRecord}</p>
+            <c:if test="${records.getJSONObject(index).getString('type')=='AUDIO'}">
+                <p style="margin-top: 10px;">${records.getJSONObject(index).getString('name')}</p>
                 <audio controls style="margin-top: 10px;">
-                    <source src="${rec.url}" type="audio/mpeg" style="cursor: hand">
+                    <source src="${records.getJSONObject(index).getString('url')}" type="audio/mpeg" style="cursor: hand">
                     Your browser does not support the audio element.
                 </audio>
             </c:if>
-            <c:if test="${rec.type == 'VIDEO'}">
-                <%--<p style="margin-top: 10px;">${rec.nameRecord}</p>
-                <div class="videoBannerMain">
-                    <div class="videoBanner" style="background-image: url(/resources/img/icons/videoBannerStandard.png)"></div>
-                    <h3 style="float: left; margin-top: 5px;">${rec.nameRecord}</h3>
-                </div>--%>
-                <video id='my-video-${rec.id}' controls preload='auto' poster='' style='cursor: hand; float: left; width: 90%;' onclick="playVideo(this.id)" autoplay muted>
-                    <source src='${rec.url}' type='video/mp4'></video><h1 style='text-align: left;'>${rec.nameRecord}</h1>
+            <c:if test="${records.getJSONObject(index).getString('type')=='VIDEO'}">
+                <video id='my-video-${records.getJSONObject(index).getLong('id')}' controls preload='auto' poster='' style='cursor: hand; float: left; width: 90%;' onclick="playVideo(this.id)" autoplay muted>
+                    <source src="${records.getJSONObject(index).getString('url')}" type='video/mp4'></video><h1 style='text-align: left;'>${records.getJSONObject(index).getString('name')}</h1>
             </c:if>
             <p style="clear: left"/>
             <c:if test="${belong}">
-            <button onclick="deleteRecord(${rec.id})" style="margin-top: 10px;">Delete</button>
+            <button onclick="deleteRecord(${records.getJSONObject(index).getLong('id')})" style="margin-top: 10px; float:left;">Delete</button>
             </c:if>
+            <c:if test="${records.getJSONObject(index).getBoolean('liked')}">
+                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+            </c:if>
+            <c:if test="${records.getJSONObject(index).getBoolean('liked')==false}">
+                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+            </c:if>
+            <font id = "countLikesUnderRecord_${records.getJSONObject(index).getLong('id')}" style="float: left; margin-top: 20px; margin-left: 5px;">${records.getJSONObject(index).getLong('countLikes')}</font>
             <div style="width: 100%; height: 1px; background-color: gainsboro; float: left; margin-top: 10px;"></div>
         </div>
     </c:forEach>
+    </c:if>
     </div>
 </div>
 

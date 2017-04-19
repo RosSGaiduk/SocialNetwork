@@ -5,10 +5,13 @@ package com.social_network.ua.controllers;
  */
 
 import com.social_network.ua.entity.Comment;
+import com.social_network.ua.entity.Record;
 import com.social_network.ua.entity.User;
 import com.social_network.ua.entity.Video;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -103,6 +106,21 @@ public abstract class BaseMethods {
             jsonObject.putOnce("urlImage", video.getUrlImageBanner());
         else jsonObject.putOnce("urlImage", "/resources/img/icons/videoBannerStandard.png");
             /**/
+        return jsonObject;
+    }
+
+    public JSONObject createRecordJsonObject(Record record,User user,boolean liked){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce("id",record.getId());
+        jsonObject.putOnce("url",record.getUrl()!=null?record.getUrl():"");
+        jsonObject.putOnce("date",record.getDateOfRecord().toString());
+        jsonObject.putOnce("type",record.getType());
+        jsonObject.putOnce("text",record.getText()!=null?record.getText():"");
+        jsonObject.putOnce("countLikes",record.getCountLikes());
+        jsonObject.putOnce("name",record.getNameRecord()!=null?record.getNameRecord():"");
+        jsonObject.putOnce("urlUserImagePattern",record.getUrlUserImagePattern());
+        //jsonObject.putOnce("liked",likeService.userLikedRecord(user,record)!=null);
+        jsonObject.putOnce("liked",liked);
         return jsonObject;
     }
 }

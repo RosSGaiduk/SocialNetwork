@@ -511,7 +511,6 @@ function leaveLikeUnderRecord(idRecord){
                 $("#likeIconUnderRecordImg_"+idRecord).attr("src","/resources/img/icons/likeClear.png");
             }
             $("#countLikesUnderRecord_"+idRecord).html(data.countLikes);
-
         }
     })
 }
