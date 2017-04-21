@@ -201,7 +201,7 @@
                     <p style="clear: left"/>
 
 
-                    <div class="littleWindowsWithLikesRealm" onmouseover="mouseOverBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutBlock(${records.getJSONObject(index).getLong('id')})">
+                    <div id = "littleWindowWithLikesRealmId_${records.getJSONObject(index).getLong('id')}" class="littleWindowsWithLikesRealm" onmouseover="mouseOverBlock(${records.getJSONObject(index).getLong('id')})" onmouseleave="mouseOutBlock(${records.getJSONObject(index).getLong('id')})">
                     <div class="littleWindowsWithLikes" id="littleWindowWithLikesId_${records.getJSONObject(index).getLong('id')}"></div>
                     </div>
 
@@ -282,6 +282,7 @@
                             $("#" + idRecord + "_div").prop('onclick', null).off('click');
                             window.location.href = "/user/" + v.id;
                         })
+                        $("#blockUser_" + v.id).fadeIn();
                     })
                 }
             })
@@ -320,6 +321,20 @@
         }
     }
     var id = setInterval("checkIfCollisionWithLittleWindowIn1Second()",10);
+
+    /*function updateMouseEnterEvent(){
+        var allDivs = $( "div[id^='littleWindowWithLikesRealmId_']");
+        for (var i = 0; i < allDivs.length; i++) {
+            $("#"+allDivs[i].id).mouseenter(function(){
+                mouseOverBlock(this.id.split("_")[1]);
+            })
+            $("#"+allDivs[i].id).mouseleave(function(){
+                mouseOutBlock(this.id.split("_")[1]);
+            })
+        }
+    }
+    updateMouseEnterEvent();*/
+
 </script>
 
 <script charset="UTF-8">
