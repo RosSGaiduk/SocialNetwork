@@ -1,10 +1,7 @@
 package com.social_network.ua.dao.implementation;
 
 import com.social_network.ua.dao.UserDao;
-import com.social_network.ua.entity.Community;
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -159,6 +156,24 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public List<User> getAllUsersThatLikedImage(User_Images user_images) {
        return entityManager.createQuery("select user from LLike l where l.userImage like ?1").setParameter(1,user_images).getResultList();
+    }
+
+    @Transactional
+    public List<User> selectAllUsersWhoLikedRecord(Record record) {
+        List<User> users = entityManager.createQuery("select l.user from LLike l where l.record = ?1 group by l.id").setParameter(1,record).getResultList();
+        Collections.reverse(users);
+        return users;
+    }
+
+    @Transactional
+    public List<User> selectAllUsersWhoLikedRecordWithLimit(Record record, int limit) {
+        List<Object> objects = entityManager.createNativeQuery("select l.user_id from LLike l where l.record_id = ?1 group by l.id DESC").setParameter(1,record.getId()).setMaxResults(limit).getResultList();
+        List<User> users = new ArrayList<>(objects.size());
+        for (Object o: objects){
+            BigInteger b = (BigInteger) o;
+            users.add(entityManager.find(User.class,b.longValue()));
+        }
+        return users;
     }
 
     @Transactional

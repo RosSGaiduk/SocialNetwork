@@ -381,6 +381,28 @@ html {
     top: 0;
 }
 
+.littleWindowsWithLikesRealm{
+    height: 70px;
+    width: 230px;
+    background: white;
+    margin-left: 30%;
+    display: block;
+    cursor: hand;
+    float: left;
+}
+
+.littleWindowsWithLikes{
+    height: 100%;
+    width: 100%;
+    background: white;
+    font-size: 14px;
+    display: none;
+    cursor: hand;
+    border: 1px solid #383838;
+    float: left;
+}
+
+
 .windowsWithLikes{
     height: 105px;
     width: 220px;

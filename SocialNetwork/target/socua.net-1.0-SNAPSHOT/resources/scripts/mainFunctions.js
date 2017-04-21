@@ -84,7 +84,7 @@ function leaveComment(imageId){
             textP.style = "float:left; text-align: left; margin-left:10px; margin-top:20px;"
             textP.innerHTML = data.text;
             var clearP = document.createElement("p");
-            clearP.style = "clear:left;"
+            clearP.style = "clear:left;";
 
             var first=document.getElementById("comments").childNodes[0];
             document.getElementById("comments").insertBefore(aHref,first);

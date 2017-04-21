@@ -1,10 +1,7 @@
 package com.social_network.ua.services.implementation;
 
 import com.social_network.ua.dao.UserDao;
-import com.social_network.ua.entity.Community;
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 import com.social_network.ua.repository.UserRepo;
 import com.social_network.ua.services.UserService;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -125,6 +122,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserOfImage(User_Images user_images) {
         return userDao.getUserOfImage(user_images);
+    }
+
+    @Override
+    public List<User> selectAllUsersWhoLikedRecord(Record record) {
+        return userDao.selectAllUsersWhoLikedRecord(record);
+    }
+
+    @Override
+    public List<User> selectAllUsersWhoLikedRecordWithLimit(Record record, int limit) {
+        return userDao.selectAllUsersWhoLikedRecordWithLimit(record,limit);
     }
 
     @Override

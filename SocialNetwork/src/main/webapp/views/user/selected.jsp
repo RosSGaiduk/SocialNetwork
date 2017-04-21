@@ -44,8 +44,7 @@
                     style="float: left; height: 30px; margin-left: 10px; width: 100px; visibility: ${friendOrNo}">Add to friends</button>
             <p style="clear: left"></p>
             <div style="float: left; height: 30px; margin-top:10px; margin-left: 30px; width: 100px;">
-                <form:form id = "formForLoadingPictures" action="upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post"
-                           enctype="multipart/form-data" cssStyle="float: left;">
+                <form:form id = "formForLoadingPictures" action="/upload/process.htm?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
                     <input type="file" name="file1"  style="float: left;"/>
                     <button type="submit" style="float: left;margin-top: 3px;" class="buttonFileStyle">Upload</button>
                 </form:form>
@@ -70,8 +69,6 @@
                 <h3 id = "userId" style="text-align: center;visibility: hidden;">${user.id}</h3>
                 <h3 id = "userAuthId" style="text-align: center;visibility: hidden;">${userAuth.id}</h3>
             </div>
-
-
             <div style="width: 90%; height: 30%; float: left; border-top: 1px solid gainsboro; float: left; margin-left: 5%;">
                 <div style="width: 20%; height: 90%; float: left; margin-left: 10px; margin-top: 1%; border-right: 1px solid gainsboro; cursor: hand;"></div>
                 <a href="/friendsOf/${user.id}" style="text-decoration: none">
@@ -202,14 +199,20 @@
                         <button onclick="deleteRecord(${records.getJSONObject(index).getLong("id")})">Delete</button>
                     </c:if>
                     <p style="clear: left"/>
+
+
+                    <div class="littleWindowsWithLikesRealm" onmouseover="mouseOverBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutBlock(${records.getJSONObject(index).getLong('id')})">
+                    <div class="littleWindowsWithLikes" id="littleWindowWithLikesId_${records.getJSONObject(index).getLong('id')}"></div>
+                    </div>
+
                     <c:if test="${records.getJSONObject(index).getBoolean('liked')}">
-                    <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                    <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: -10px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})"  onmouseover="showLittleBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutOfHeart()">
                     </c:if>
                     <c:if test="${records.getJSONObject(index).getBoolean('liked')==false}">
-                        <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                        <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 85%; margin-top: -10px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})"  onmouseover="showLittleBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutOfHeart()">
                     </c:if>
-                    <font id = "countLikesUnderRecord_${records.getJSONObject(index).getLong('id')}" style="float: left; margin-top: 20px; margin-left: 5px;">${records.getJSONObject(index).getLong('countLikes')}</font>
-                    </div>
+                    <font id = "countLikesUnderRecord_${records.getJSONObject(index).getLong('id')}" style="float: left; margin-top: -10px; margin-left: 5px;">${records.getJSONObject(index).getLong('countLikes')}</font>
+                </div>
             </c:forEach>
             <div style="width:80%; height:auto; background-color:white; float:left; margin-top:20px;"></div>
             </c:if>
@@ -243,6 +246,81 @@
 
 <!--Зробив щоб попрактикуватись з методом append(), цей метод не викликається ні разу-->
 
+
+<script>
+    var time;
+    var idRecordChecked;
+    var hoverLikeImg = false;
+    var displayBlock = false;
+
+    function showLittleBlock(idRecord) {
+        hoverLikeImg = true;
+        idRecordChecked = idRecord;
+        displayBlock = true;
+        $( "div[id^='littleWindowWithLikesId_']").css("display","none");
+        $("#littleWindowWithLikesId_" + idRecord).css("display", "block");
+        if (document.getElementById("littleWindowWithLikesId_" + idRecord).childElementCount == 0) {
+            $.ajax({
+                url: "/showUsersWhoLikedCurrentRecordWithLimit",
+                async: false,
+                method: "get",
+                dataType: "json",
+                data: ({
+                    recordId: idRecord
+                }),
+                success: function (data) {
+                    $.each(data, function (k, v) {
+                        //alert(v.id);
+                        //'cancelOpenRecordAndOpenUserPage("+idRecord"+","+ v.id)'
+                        $("#littleWindowWithLikesId_" + idRecord).append(
+                                "<div id = 'blockUser_" + v.id + "' style='float:left; height: 60px; width: 50px; margin-left: 20px;'>" +
+                                "<img src = '" + v.newestImageSrc + "' width = '50' height='50' style='float: left;'>" +
+                                "<font style='float: left; clear:left; font-size: 10px;'>" + v.lastName + "</font>" +
+                                "</div>");
+
+                        $("#blockUser_" + v.id).click(function () {
+                            $("#" + idRecord + "_div").prop('onclick', null).off('click');
+                            window.location.href = "/user/" + v.id;
+                        })
+                    })
+                }
+            })
+        }
+    }
+    function mouseOverBlock(idRecord){
+        if (idRecordChecked!=null && idRecordChecked==idRecord) {
+            displayBlock = true;
+            $("#littleWindowWithLikesId_" + idRecord).css("display", "block");
+        }
+    }
+
+    function mouseOutBlock(idRecord){
+        displayBlock = false;
+        $("#littleWindowWithLikesId_"+idRecordChecked).css("display","none");
+        $("#littleWindowWithLikesId_"+idRecordChecked).html("");
+        idRecordChecked = null;
+    }
+
+
+    function mouseOutOfHeart(){
+        time = (new Date).getTime();
+        hoverLikeImg = false;
+        displayBlock = false;
+    }
+    function checkIfCollisionWithLittleWindowIn1Second(){
+        if (!hoverLikeImg) {
+            var updateTime = (new Date).getTime();
+            if (parseInt(updateTime - time) > 200) {
+                if (!displayBlock) {
+                    $("#littleWindowWithLikesId_" + idRecordChecked).css("display", "none");
+                    $("#littleWindowWithLikesId_" + idRecordChecked).html("");
+                    idRecordChecked = null;
+                }
+            }
+        }
+    }
+    var id = setInterval("checkIfCollisionWithLittleWindowIn1Second()",10);
+</script>
 
 <script charset="UTF-8">
     function loadRecords(){
@@ -359,7 +437,7 @@
             remembered = false;
             check = false;
             //alert(remembered);
-            console.log(check);
+            //console.log(check);
         })
         $("#likeImg").mouseout(function(){
             if (!remembered) {
@@ -368,7 +446,7 @@
             }
             check = true;
             //alert(remembered);
-            console.log(check);
+            //console.log(check);
         })
         $("#windowLikeId").mouseover(function(){
             check = false;
@@ -423,7 +501,7 @@
         loadCountLikes('image',idPhoto);
     }
     function showBlockTime(){
-        console.log(check);
+        //console.log(check);
         if (check) {
             var currentTime = (new Date).getTime();
             var difference = parseInt(currentTime - time);

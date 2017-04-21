@@ -52,6 +52,7 @@ public class UploadController {
     @RequestMapping(value = "/process",method = RequestMethod.POST)
     public String save(HttpServletRequest request)
     {
+        System.out.println("Here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         //getting path to folder which we want
@@ -141,5 +142,4 @@ public class UploadController {
         }
         return "redirect:/";
     }
-
 }

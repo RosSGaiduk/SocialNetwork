@@ -664,15 +664,25 @@ public class Main {
         System.out.println(videoSet.size());*/
 
         //boolean b;
-        try {
+        /*try {
             User user = entityManager.find(User.class,1l);
             Record record = entityManager.find(Record.class,660l);
             entityManager.createQuery("from LLike where user = ?1 and record =?2").setParameter(1, user).setParameter(2, record).getSingleResult();
             System.out.println("true");
         } catch (Exception ex){
             System.out.println("false");
-        }
+        }*/
 
+        User user = entityManager.find(User.class,1l);
+        Record record = entityManager.find(Record.class,847l);
+        //List<User> users = entityManager.createQuery("select l.user from LLike l where l.record = ?1 group by l.id").setParameter(1,record).getResultList();
+        List<Object> objects = entityManager.createNativeQuery("select l.user_id from LLike l where l.record_id = ?1 group by l.id DESC").setParameter(1,record.getId()).setMaxResults(3).getResultList();
+        List<User> users = new ArrayList<>(objects.size());
+        for (Object o: objects){
+            BigInteger b = (BigInteger) o;
+            users.add(entityManager.find(User.class,b.longValue()));
+            System.out.println(users.get(users.size()-1).getLastName());
+        }
         entityManager.close();
         entityManagerFactory.close();
     }

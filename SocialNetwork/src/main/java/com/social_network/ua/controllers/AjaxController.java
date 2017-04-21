@@ -837,4 +837,21 @@ public class AjaxController extends BaseMethods {
         jsonObject.putOnce("liked",liked);
         return jsonObject.toString();
     }
+
+    @RequestMapping(value = "/showUsersWhoLikedCurrentRecordWithLimit", method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String getUsersWhoLikedRecord(@RequestParam String recordId){
+        System.out.println("RecordId: "+recordId);
+        List<User> users = userService.selectAllUsersWhoLikedRecordWithLimit(recordService.findOne(Long.parseLong(recordId)),3);
+        JSONArray jsonArray = new JSONArray();
+        for (User user: users) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("id",user.getId());
+            jsonObject.putOnce("newestImageSrc",user.getNewestImageSrc());
+            jsonObject.putOnce("firstName",user.getFirstName());
+            jsonObject.putOnce("lastName",user.getLastName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray.toString();
+    }
 }

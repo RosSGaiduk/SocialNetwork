@@ -1,9 +1,6 @@
 package com.social_network.ua.dao;
 
-import com.social_network.ua.entity.Community;
-import com.social_network.ua.entity.Music;
-import com.social_network.ua.entity.User;
-import com.social_network.ua.entity.User_Images;
+import com.social_network.ua.entity.*;
 
 import java.util.List;
 
@@ -28,6 +25,8 @@ public interface UserDao {
     User getUserOfMessage(long messageId);
     User getUserOfImage(User_Images user_images);
     List<User> getAllUsersThatLikedImage(User_Images user_images);
+    List<User> selectAllUsersWhoLikedRecord(Record record);
+    List<User> selectAllUsersWhoLikedRecordWithLimit(Record record,int limit);
     List<User> getAllUsersThatLikedImageWithLimit(User_Images user_images,int limit);
     User getUserToOfMessage(long messageId);
     boolean findUserByEmail(String email);
