@@ -111,7 +111,7 @@ public class UploadRecordController {
                     } else if (extension.equalsIgnoreCase("mp4")){
                         fileItem.write(new File(path + "/records/" + fileItem.getName()));
                         record.setType(RecordType.VIDEO.toString());
-                        record.setUrl("/resources/communities/" + fileItem.getName());
+                        record.setUrl("/resources/records/" + fileItem.getName());
                         recordService.edit(record);
                     }
                 }
@@ -121,5 +121,4 @@ public class UploadRecordController {
         }
         return "redirect:/user/"+id;
     }
-
 }

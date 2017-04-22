@@ -836,6 +836,10 @@ public class AjaxController extends BaseMethods {
         JSONObject jsonObject = new JSONObject();
         jsonObject.putOnce("countLikes",record.getCountLikes());
         jsonObject.putOnce("liked",liked);
+        jsonObject.putOnce("type",record.getType());
+        jsonObject.putOnce("text",record.getText()!=null?record.getText():"");
+        jsonObject.putOnce("url",record.getUrl()!=null?record.getUrl():"");
+        jsonObject.putOnce("name",record.getNameRecord()!=null?record.getNameRecord():"");
         return jsonObject.toString();
     }
 

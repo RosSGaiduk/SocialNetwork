@@ -499,6 +499,7 @@ function leaveLikeUnderVideo(idVideo){
 
 function leaveLikeUnderRecord(idRecord){
     $("#"+idRecord+"_div").prop('onclick',null).off('click');
+    var type,text,url,name;
     $.ajax({
         url: "/leaveLikeUnderRecord/"+idRecord,
         method: "get",
@@ -511,12 +512,14 @@ function leaveLikeUnderRecord(idRecord){
                 $("#likeIconUnderRecordImg_"+idRecord).attr("src","/resources/img/icons/likeClear.png");
             }
             $("#countLikesUnderRecord_"+idRecord).html(data.countLikes);
+            type = data.type; text = data.text; url = data.url; name = data.name;
         }
     })
+    //backOpenRecordFunction(idRecord,type,text,url,name);
 }
 
-function backOpenRecordFunction(idRecord,type,text,url){
+function backOpenRecordFunction(idRecord,type,text,url,name){
     $("#"+idRecord+"_div").click(function(){
-        openRecord(type,text,url);
+        openRecord(type,text,url,name);
     })
 }

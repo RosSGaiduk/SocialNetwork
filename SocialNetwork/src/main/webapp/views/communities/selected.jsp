@@ -37,7 +37,7 @@
     <c:if test="${records.length()>0}">
     <c:forEach begin="0" end="${records.length()-1}" var="index">
     <%--<c:forEach items="${records}" var="rec">--%>
-        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${records.getJSONObject(index).getLong('id')}_div" onclick="openRecord('${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("name")}')">
+        <div style="width: 95%; height: auto; float: left; cursor: hand; margin-left: 20px; margin-top: 20px;" id = "${records.getJSONObject(index).getLong('id')}_div" onclick="openRecord('${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("name")}')" onmouseover="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}','${records.getJSONObject(index).getString("name")}')">
             <p style="margin-bottom: 20px;">${records.getJSONObject(index).getString('text')}</p>
             <c:if test="${records.getJSONObject(index).getString('type')=='IMAGE'}">
                 <img src="${records.getJSONObject(index).getString('url')}" style="background-size: contain; float: left;" width="300" height="auto">
@@ -57,11 +57,15 @@
             <c:if test="${belong}">
             <button onclick="deleteRecord(${records.getJSONObject(index).getLong('id')})" style="margin-top: 10px; float:left;">Delete</button>
             </c:if>
+
+            <div id = "littleWindowWithLikesRealmId_${records.getJSONObject(index).getLong('id')}" class="littleWindowsWithLikesRealm" onmouseover="mouseOverBlock(${records.getJSONObject(index).getLong('id')})" onmouseleave="mouseOutBlock(${records.getJSONObject(index).getLong('id')})">
+                <div class="littleWindowsWithLikes" id="littleWindowWithLikesId_${records.getJSONObject(index).getLong('id')}"></div>
+            </div>
             <c:if test="${records.getJSONObject(index).getBoolean('liked')}">
-                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/like.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})"  onmouseover="showLittleBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutOfHeart()">
             </c:if>
             <c:if test="${records.getJSONObject(index).getBoolean('liked')==false}">
-                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseout="backOpenRecordFunction(${records.getJSONObject(index).getLong('id')},'${records.getJSONObject(index).getString("type")}','${records.getJSONObject(index).getString("text")}','${records.getJSONObject(index).getString("url")}')">
+                <img id = "likeIconUnderRecordImg_${records.getJSONObject(index).getLong('id')}" src="/resources/img/icons/likeClear.png" style="float:left; width:16px;height:14px; margin-left: 77%; margin-top: 20px; cursor: hand;" onclick="leaveLikeUnderRecord(${records.getJSONObject(index).getLong('id')})" onmouseover="showLittleBlock(${records.getJSONObject(index).getLong('id')})" onmouseout="mouseOutOfHeart()">
             </c:if>
             <font id = "countLikesUnderRecord_${records.getJSONObject(index).getLong('id')}" style="float: left; margin-top: 20px; margin-left: 5px;">${records.getJSONObject(index).getLong('countLikes')}</font>
             <div style="width: 100%; height: 1px; background-color: gainsboro; float: left; margin-top: 10px;"></div>
@@ -149,8 +153,134 @@
 
 </div>
 
+
+
+<script>
+    var time;
+    var idRecordChecked;
+    var hoverLikeImg = false;
+    var displayBlock = false;
+
+    function showLittleBlock(idRecord) {
+        hoverLikeImg = true;
+        idRecordChecked = idRecord;
+        displayBlock = true;
+        $( "div[id^='littleWindowWithLikesId_']").css("display","none");
+        $("#littleWindowWithLikesId_" + idRecord).css("display", "block");
+        if (document.getElementById("littleWindowWithLikesId_" + idRecord).childElementCount == 0) {
+            $.ajax({
+                url: "/showUsersWhoLikedCurrentRecordWithLimit",
+                async: false,
+                method: "get",
+                dataType: "json",
+                data: ({
+                    recordId: idRecord
+                }),
+                success: function (data) {
+                    $.each(data, function (k, v) {
+                        //alert(v.id);
+                        //'cancelOpenRecordAndOpenUserPage("+idRecord"+","+ v.id)'
+                        $("#littleWindowWithLikesId_" + idRecord).append(
+                                "<div id = 'blockUser_" + v.id + "' style='float:left; height: 60px; width: 50px; margin-left: 20px;'>" +
+                                "<img src = '" + v.newestImageSrc + "' width = '50' height='50' style='float: left;'>" +
+                                "<font style='float: left; clear:left; font-size: 10px;'>" + v.lastName + "</font>" +
+                                "</div>");
+
+                        $("#blockUser_" + v.id).click(function () {
+                            $("#" + idRecord + "_div").prop('onclick', null).off('click');
+                            window.location.href = "/user/" + v.id;
+                        })
+                        $("#blockUser_" + v.id).fadeIn();
+                    })
+                    $("#littleWindowWithLikesId_" + idRecord).append("<p style='clear: left'/><font id = 'openUsersLikedRecord' style='float: left; margin-left: 20px; color: blue;font-size: 10px;'>Ще</font>");
+
+
+                    $("#openUsersLikedRecord").click(function(){
+                        //alert(this);
+                        $("#"+idRecord+"_div").prop('onclick',null).off('click');
+                        header();
+                        $("#popupWin").append("<div id = 'usersLikedBigBanner' class = 'bigBannerWithLikes'><button id = 'closeBtn' style='width: 10%; height: 5%; margin-left: 89%;'>Close</button><p style='clear: left'/></div>");
+
+                        $("#closeBtn").click(function(){
+                            $("#usersLikedBigBanner").remove();
+                            var darkLayer = document.getElementById("shadow");
+                            darkLayer.parentNode.removeChild(darkLayer);
+                            var modalWin = document.getElementById('popupWin');
+                            modalWin.style.display = 'none';
+                            while (modalWin.firstChild) modalWin.removeChild(modalWin.firstChild);
+                        })
+
+                        $.ajax({
+                            url: "/loadAllUsersWhoLikedRecord/"+idRecord,
+                            method: "get",
+                            async: false,
+                            dataType: "json",
+                            data: ({
+                            }),
+                            success: function(data){
+                                //alert(data.length);
+                                $.each(data,function(k,v){
+                                    var aMain = document.createElement("a");
+                                    aMain.href = "/user/"+ v.id;
+                                    var mainDiv = document.createElement("div");
+                                    mainDiv.setAttribute("class","userThatLikedImageDiv");
+                                    var divImage = document.createElement("div");
+                                    divImage.setAttribute("class","userThatLikedImageImg");
+                                    divImage.style = "background-image: url("+v.urlImage +");";
+                                    var pInfo= document.createElement("p");
+                                    pInfo.innerHTML = v.name+" "+ v.lastName;
+                                    mainDiv.appendChild(divImage);
+                                    mainDiv.appendChild(pInfo);
+                                    aMain.appendChild(mainDiv);
+                                    document.getElementById("usersLikedBigBanner").appendChild(aMain);
+                                })
+                            }
+                        })
+                    })
+
+                }
+            })
+        }
+    }
+    function mouseOverBlock(idRecord){
+        if (idRecordChecked!=null && idRecordChecked==idRecord) {
+            displayBlock = true;
+            $("#littleWindowWithLikesId_" + idRecord).css("display", "block");
+        }
+    }
+
+    function mouseOutBlock(idRecord){
+        displayBlock = false;
+        $("#littleWindowWithLikesId_"+idRecordChecked).css("display","none");
+        $("#littleWindowWithLikesId_"+idRecordChecked).html("");
+        idRecordChecked = null;
+    }
+
+
+    function mouseOutOfHeart(){
+        time = (new Date).getTime();
+        hoverLikeImg = false;
+        displayBlock = false;
+    }
+    function checkIfCollisionWithLittleWindowIn1Second(){
+        if (!hoverLikeImg) {
+            var updateTime = (new Date).getTime();
+            if (parseInt(updateTime - time) > 200) {
+                if (!displayBlock) {
+                    $("#littleWindowWithLikesId_" + idRecordChecked).css("display", "none");
+                    $("#littleWindowWithLikesId_" + idRecordChecked).html("");
+                    idRecordChecked = null;
+                }
+            }
+        }
+    }
+    var id = setInterval("checkIfCollisionWithLittleWindowIn1Second()",10);
+</script>
+
 <script>
     function playVideo(id){
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        if (isFirefox) return;
             if ($("#"+id).get(0).paused) $("#"+id).get(0).play();
             else $("#"+id).get(0).pause();
     }

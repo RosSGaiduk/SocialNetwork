@@ -184,15 +184,23 @@
                     <div style = "width:50%; height:auto; background-color:white; float:left;margin-top:20px;">
                         <p style="float:left; margin-left:10px; margin-top:10px;">${records.getJSONObject(index).getString('text')}</p>
                         <div style="width: 50%; float: left; height: 50px;"></div>
+
                         <c:if test="${records.getJSONObject(index).getString('type')== 'IMAGE'}">
                         <img src="${records.getJSONObject(index).getString('url')}" style=" margin-left: 0px; margin-left: -20px; width: 100%; height: auto;
                         background-size: cover;"></c:if>
+
                         <c:if test="${records.getJSONObject(index).getString('type')=='AUDIO'}">
                             <p style='float:left;'>${records.getJSONObject(index).getString('name')}</p>
                             <audio controls  style='width: 160%; height: auto; float: left; margin-top: 50px;'>
                                 <source src="${records.getJSONObject(index).getString('url')}" type="audio/mpeg" style="cursor: hand">
                             </audio>
                         </c:if>
+
+                        <c:if test="${records.getJSONObject(index).getString('type')=='VIDEO'}">
+                            <video id='my-video-${records.getJSONObject(index).getLong('id')}' controls preload='auto' poster='' style='margin-left: -50px; cursor: hand; float: left; width: 400px; margin-top: 10px;'  onclick="playVideoFromRecord(this.id)" autoplay muted>
+                                <source src="${records.getJSONObject(index).getString('url')}" type='video/mp4'></video><h1 style='text-align: left;'>${records.getJSONObject(index).getString('name')}</h1>
+                        </c:if>
+
                         <p id = "${records.getJSONObject(index).getLong('id')}" style="visibility: hidden">${records.getJSONObject(index).getLong('id')}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
@@ -245,7 +253,14 @@
 </script>--%>
 
 <!--Зробив щоб попрактикуватись з методом append(), цей метод не викликається ні разу-->
-
+<script>
+    function playVideoFromRecord(id){
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        if (isFirefox) return;
+        if ($("#"+id).get(0).paused) $("#"+id).get(0).play();
+        else $("#"+id).get(0).pause();
+    }
+</script>
 
 <script>
     var time;
@@ -285,11 +300,22 @@
                         $("#blockUser_" + v.id).fadeIn();
                     })
                     $("#littleWindowWithLikesId_" + idRecord).append("<p style='clear: left'/><font id = 'openUsersLikedRecord' style='float: left; margin-left: 20px; color: blue;font-size: 10px;'>Ще</font>");
+
+
                     $("#openUsersLikedRecord").click(function(){
                         //alert(this);
                         $("#"+idRecord+"_div").prop('onclick',null).off('click');
                         header();
                         $("#popupWin").append("<div id = 'usersLikedBigBanner' class = 'bigBannerWithLikes'><button id = 'closeBtn' style='width: 10%; height: 5%; margin-left: 89%;'>Close</button><p style='clear: left'/></div>");
+
+                        $("#closeBtn").click(function(){
+                            $("#usersLikedBigBanner").remove();
+                             var darkLayer = document.getElementById("shadow");
+                             darkLayer.parentNode.removeChild(darkLayer);
+                             var modalWin = document.getElementById('popupWin');
+                             modalWin.style.display = 'none';
+                             while (modalWin.firstChild) modalWin.removeChild(modalWin.firstChild);
+                        })
 
                         $.ajax({
                             url: "/loadAllUsersWhoLikedRecord/"+idRecord,
@@ -319,14 +345,6 @@
                         })
                     })
 
-                    $("#closeBtn").click(function(){
-                        $("#usersLikedBigBanner").remove();
-                        var darkLayer = document.getElementById("shadow");
-                        darkLayer.parentNode.removeChild(darkLayer);
-                        var modalWin = document.getElementById('popupWin');
-                        modalWin.style.display = 'none';
-                        while (modalWin.firstChild) modalWin.removeChild(modalWin.firstChild);
-                    })
                 }
             })
         }
