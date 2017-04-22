@@ -123,5 +123,18 @@ public abstract class BaseMethods {
         jsonObject.putOnce("liked",liked);
         return jsonObject;
     }
+
+    public JSONArray fillArrayWithUsers(List<User> usersLiked){
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < usersLiked.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.putOnce("urlImage",usersLiked.get(i).getNewestImageSrc());
+            jsonObject.putOnce("id",usersLiked.get(i).getId());
+            jsonObject.putOnce("name",usersLiked.get(i).getFirstName());
+            jsonObject.putOnce("lastName",usersLiked.get(i).getLastName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray;
+    }
 }
 

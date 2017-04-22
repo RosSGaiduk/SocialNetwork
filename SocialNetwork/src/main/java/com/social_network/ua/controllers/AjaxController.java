@@ -665,18 +665,19 @@ public class AjaxController extends BaseMethods {
     public String loadAllUsersWhoLikedImage(@PathVariable("imageId")String imageId){
         User_Images user_images = imageService.findOne(Long.parseLong(imageId));
         List<User> usersLiked = userService.getAllUsersThatLikedImage(user_images);
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < usersLiked.size(); i++){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.putOnce("urlImage",usersLiked.get(i).getNewestImageSrc());
-            jsonObject.putOnce("id",usersLiked.get(i).getId());
-            jsonObject.putOnce("name",usersLiked.get(i).getFirstName());
-            jsonObject.putOnce("lastName",usersLiked.get(i).getLastName());
-            jsonArray.put(jsonObject);
-        }
+        JSONArray jsonArray = fillArrayWithUsers(usersLiked);
         return jsonArray.toString();
     }
 
+
+    @RequestMapping(value = "/loadAllUsersWhoLikedRecord/{recordId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadAllUsersWhoLikedRecord(@PathVariable("recordId")String imageId){
+        Record record = recordService.findOne(Long.parseLong(imageId));
+        List<User> usersLiked = userService.selectAllUsersWhoLikedRecord(record);
+        JSONArray jsonArray = fillArrayWithUsers(usersLiked);
+        return jsonArray.toString();
+    }
 
     @RequestMapping(value = "/updateOnlineUser/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody

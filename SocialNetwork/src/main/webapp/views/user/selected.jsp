@@ -284,6 +284,49 @@
                         })
                         $("#blockUser_" + v.id).fadeIn();
                     })
+                    $("#littleWindowWithLikesId_" + idRecord).append("<p style='clear: left'/><font id = 'openUsersLikedRecord' style='float: left; margin-left: 20px; color: blue;font-size: 10px;'>Ще</font>");
+                    $("#openUsersLikedRecord").click(function(){
+                        //alert(this);
+                        $("#"+idRecord+"_div").prop('onclick',null).off('click');
+                        header();
+                        $("#popupWin").append("<div id = 'usersLikedBigBanner' class = 'bigBannerWithLikes'><button id = 'closeBtn' style='width: 10%; height: 5%; margin-left: 89%;'>Close</button><p style='clear: left'/></div>");
+
+                        $.ajax({
+                            url: "/loadAllUsersWhoLikedRecord/"+idRecord,
+                            method: "get",
+                            async: false,
+                            dataType: "json",
+                            data: ({
+                            }),
+                            success: function(data){
+                                //alert(data.length);
+                                $.each(data,function(k,v){
+                                    var aMain = document.createElement("a");
+                                    aMain.href = "/user/"+ v.id;
+                                    var mainDiv = document.createElement("div");
+                                    mainDiv.setAttribute("class","userThatLikedImageDiv");
+                                    var divImage = document.createElement("div");
+                                    divImage.setAttribute("class","userThatLikedImageImg");
+                                    divImage.style = "background-image: url("+v.urlImage +");";
+                                    var pInfo= document.createElement("p");
+                                    pInfo.innerHTML = v.name+" "+ v.lastName;
+                                    mainDiv.appendChild(divImage);
+                                    mainDiv.appendChild(pInfo);
+                                    aMain.appendChild(mainDiv);
+                                    document.getElementById("usersLikedBigBanner").appendChild(aMain);
+                                })
+                            }
+                        })
+                    })
+
+                    $("#closeBtn").click(function(){
+                        $("#usersLikedBigBanner").remove();
+                        var darkLayer = document.getElementById("shadow");
+                        darkLayer.parentNode.removeChild(darkLayer);
+                        var modalWin = document.getElementById('popupWin');
+                        modalWin.style.display = 'none';
+                        while (modalWin.firstChild) modalWin.removeChild(modalWin.firstChild);
+                    })
                 }
             })
         }
@@ -696,6 +739,5 @@
     }
     //defineBrowser();
 </script>
-
 </body>
 </html>
