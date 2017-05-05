@@ -41,6 +41,11 @@
 <textarea id = "textAr" style="height: 50px; width:50%; float: left" onkeyup="doAj()" placeholder="Введіть повідомлення: "></textarea>
 <button onclick="sendMessage()"  class="sendButtonStyle">Send</button>
 
+<p style="clear: left"/>
+<form id = "formForLoadingItemsToMessages" action="/loadItemToMessages/${idOfUser}?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
+    <input id = "fileId" type="file" name="file1"  style="float: left;margin-left:20%;"/>
+    <button type="submit" style="float: left;margin-top: 3px;" style="float: left;" class="buttonFileStyle" <%--onclick="loadItemToMessages()"--%>>Upload</button>
+<form>
 <%--
 Якщо у функцію ajax ми хочемо передати значення з тегів p,span,h1,h2,...h6,font,...
 тобто з тегів, які містять текст, то передавати потрібно в data document.getElementById("id").innerHtml.
@@ -48,6 +53,23 @@
 --%>
 
 <script>
+    function loadItemToMessages(){
+        alert($("#fileId").val());
+        $.ajax({
+            url: "/loadItemToMessages",
+            method: "get",
+            dataType: "json",
+            data: ({
+                idUserTo: $("#selct").val(),
+                file: $("#fileId").val()
+            }),
+            success: function(data){
+
+            }
+        })
+    }
+
+
     function setSelect(){
         var element = document.getElementById('selct');
         element.value = ${idOfUser};
@@ -127,6 +149,22 @@
                     }
 
                     myDivMessages.appendChild(elem);
+                    if (v.type=="IMAGE")
+                    {
+                        var divOutOfImage = document.createElement("div");
+                        if (v.fromUser)
+                        divOutOfImage.style = "float:left; width:300px;height:300px;";
+                        else divOutOfImage.style = "float:left; width:300px;height:300px;margin-left:20%;";
+
+                        var image = document.createElement("img");
+                        image.src = v.url;
+                        image.style = "width:100%; height:100%;";
+                        divOutOfImage.appendChild(image);
+                        myDivMessages.appendChild(divOutOfImage);
+                        var pClear = document.createElement("p");
+                        pClear.style = "clear:left";
+                        myDivMessages.appendChild(pClear);
+                    }
                     //якщо повідомлення надіслав даний користувач
                     if (value==true) {
                         myDivMessages.scrollTop = myDivMessages.scrollHeight;
@@ -206,8 +244,6 @@
 
                         elem.appendChild(divNew);
                         var myDivMessages = document.getElementById('messages');
-
-
                         myDivMessages.appendChild(elem);
 
                         var second = document.getElementById("messages").childNodes[2];

@@ -197,17 +197,29 @@
                         </c:if>
 
                         <c:if test="${records.getJSONObject(index).getString('type')=='VIDEO'}">
+                            <font id = "fontVideo_${records.getJSONObject(index).getLong('id')}" style="visibility: hidden;">${records.getJSONObject(index).getBoolean('autoplay')}</font>
+                        <c:if test="${records.getJSONObject(index).getBoolean('autoplay')}">
                             <video id='my-video-${records.getJSONObject(index).getLong('id')}' controls preload='auto' poster='' style='margin-left: -50px; cursor: hand; float: left; width: 400px; margin-top: 10px;'  onclick="playVideoFromRecord(this.id)" autoplay muted>
                                 <source src="${records.getJSONObject(index).getString('url')}" type='video/mp4'></video><h1 style='text-align: left;'>${records.getJSONObject(index).getString('name')}</h1>
                         </c:if>
-
+                            <c:if test="${!records.getJSONObject(index).getBoolean('autoplay')}">
+                                <video id='my-video-${records.getJSONObject(index).getLong('id')}' controls preload='auto' poster='' style='margin-left: -50px; cursor: hand; float: left; width: 400px; margin-top: 10px;'  onclick="playVideoFromRecord(this.id)">
+                                    <source src="${records.getJSONObject(index).getString('url')}" type='video/mp4'></video><h1 style='text-align: left;'>${records.getJSONObject(index).getString('name')}</h1>
+                            </c:if>
+                        </c:if>
                         <p id = "${records.getJSONObject(index).getLong('id')}" style="visibility: hidden">${records.getJSONObject(index).getLong('id')}</p>
                     </div>
                     <c:if test="${user.id == userAuth.id}">
                         <button onclick="deleteRecord(${records.getJSONObject(index).getLong("id")})">Delete</button>
-                    </c:if>
+                        <p style="clear: left;"/>
+                        <c:if test="${records.getJSONObject(index).getString('type')=='VIDEO'}">
+                        <form onchange="changedAutoPlay(this)" id = "autoplay_${records.getJSONObject(index).getLong("id")}">
+                        <input type="radio" name="autoplay" value="auto_on" style="float:left; margin-left: 30px; margin-top: 20px;" onc><font style="float: left; margin-top: 20px;">Autoplay ON</font>
+                        <input type="radio" name="autoplay" value="auto_off" style="float:left; margin-top: 20px;"><font style="float: left; margin-top: 20px;">Autoplay OFF</font>
+                        </form>
+                        </c:if>
+                        </c:if>
                     <p style="clear: left"/>
-
 
                     <div id = "littleWindowWithLikesRealmId_${records.getJSONObject(index).getLong('id')}" class="littleWindowsWithLikesRealm" onmouseover="mouseOverBlock(${records.getJSONObject(index).getLong('id')})" onmouseleave="mouseOutBlock(${records.getJSONObject(index).getLong('id')})">
                     <div class="littleWindowsWithLikes" id="littleWindowWithLikesId_${records.getJSONObject(index).getLong('id')}"></div>
@@ -260,6 +272,38 @@
         if ($("#"+id).get(0).paused) $("#"+id).get(0).play();
         else $("#"+id).get(0).pause();
     }
+
+    function changedAutoPlay(form){
+        //alert($('input[name=autoplay]:checked', '#'+form.id).val()+", "+form.id.split("_")[1]);
+        $.ajax({
+            url: "/changeAutoPlayOfRecord/"+form.id.split("_")[1],
+            async: false,
+            method: "get",
+            data:({
+                auto: $('input[name=autoplay]:checked', '#'+form.id).val()
+            }),
+            success: function(data){
+                if ($('input[name=autoplay]:checked', '#'+form.id).val()=="auto_on")
+                    $("#my-video-"+form.id.split("_")[1]).get(0).play();
+                else {
+                    var vid = document.getElementById("my-video-"+form.id.split("_")[1]);
+                    vid.currentTime = 0;
+                    $("#my-video-"+form.id.split("_")[1]).get(0).pause();
+                }
+            }
+        })
+    }
+    function setSelectedValuesForAutoplays(){
+        var forms = $( "form[id^='autoplay_']");
+        $.each(forms,function(k,v){
+            if ($("#fontVideo_"+ v.id.split("_")[1]).html()=="true") {
+               $("#"+ v.id+" input[value=auto_on]").attr("checked","checked");
+            } else {
+                $("#"+ v.id+" input[value=auto_off]").attr("checked","checked");
+            }
+        })
+    }
+    setSelectedValuesForAutoplays();
 </script>
 
 <script>

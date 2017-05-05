@@ -34,6 +34,10 @@ public class Message implements Comparable<Message>{
     private String userFromNameLastNamePattern;
     @Column
     private String userToNameLastNamePattern;
+    @Column
+    private String urlOfItem;
+    @Column
+    private String type;
 
     public Message(){}
 
@@ -159,5 +163,21 @@ public class Message implements Comparable<Message>{
 
     public void setUserToNameLastNamePattern(String userToNameLastNamePattern) {
         this.userToNameLastNamePattern = userToNameLastNamePattern;
+    }
+
+    public String getUrlOfItem() {
+        return urlOfItem;
+    }
+
+    public void setUrlOfItem(String urlOfItem) {
+        this.urlOfItem = urlOfItem;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

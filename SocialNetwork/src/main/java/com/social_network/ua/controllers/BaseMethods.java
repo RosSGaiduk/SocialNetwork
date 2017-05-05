@@ -119,6 +119,7 @@ public abstract class BaseMethods {
         jsonObject.putOnce("countLikes",record.getCountLikes());
         jsonObject.putOnce("name",record.getNameRecord()!=null?record.getNameRecord():"");
         jsonObject.putOnce("urlUserImagePattern",record.getUrlUserImagePattern());
+        jsonObject.putOnce("autoplay",record.getAutoplay());
         //jsonObject.putOnce("liked",likeService.userLikedRecord(user,record)!=null);
         jsonObject.putOnce("liked",liked);
         return jsonObject;

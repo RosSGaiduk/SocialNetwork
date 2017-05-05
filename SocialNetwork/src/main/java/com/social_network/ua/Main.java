@@ -673,7 +673,7 @@ public class Main {
             System.out.println("false");
         }*/
 
-        User user = entityManager.find(User.class,1l);
+        /*User user = entityManager.find(User.class,1l);
         Record record = entityManager.find(Record.class,847l);
         //List<User> users = entityManager.createQuery("select l.user from LLike l where l.record = ?1 group by l.id").setParameter(1,record).getResultList();
         List<Object> objects = entityManager.createNativeQuery("select l.user_id from LLike l where l.record_id = ?1 group by l.id DESC").setParameter(1,record.getId()).setMaxResults(3).getResultList();
@@ -682,7 +682,13 @@ public class Main {
             BigInteger b = (BigInteger) o;
             users.add(entityManager.find(User.class,b.longValue()));
             System.out.println(users.get(users.size()-1).getLastName());
-        }
+        }*/
+
+        //BufferedImage image = ImageIO.read(new File("/resources/users/imageOF_1_53890588.png"));
+        List<Record> records = entityManager.createQuery("from Record ").getResultList();
+        for (Record r:records)
+            System.out.println(r.getAutoplay());
+
         entityManager.close();
         entityManagerFactory.close();
     }

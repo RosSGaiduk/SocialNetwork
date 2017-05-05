@@ -31,6 +31,8 @@ public class Record implements Comparable<Record>{
     //якщо це зображення, тоді nameRecord = ""
     @Column
     private int countLikes = 0;
+    @Column
+    private boolean autoplay = false;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
@@ -158,5 +160,13 @@ public class Record implements Comparable<Record>{
 
     public void setCountLikes(int countLikes) {
         this.countLikes = countLikes;
+    }
+
+    public boolean getAutoplay() {
+        return autoplay;
+    }
+
+    public void setAutoplay(boolean autoplay) {
+        this.autoplay = autoplay;
     }
 }

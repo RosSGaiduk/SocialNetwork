@@ -6,6 +6,9 @@ import com.social_network.ua.enums.AlbumName;
 import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +18,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -108,6 +121,8 @@ public class AjaxController extends BaseMethods {
                     if (userService.getUserOfMessage(messages.get(i).getId()).getId() == userAuthId)
                         jsonObject.putOnce("fromUser", true);
                     else jsonObject.putOnce("fromUser", false);
+                    jsonObject.putOnce("url", messages.get(i).getUrlOfItem()!=null?messages.get(i).getUrlOfItem():"");
+                    jsonObject.putOnce("type", messages.get(i).getType()!=null?messages.get(i).getType():"");
                     jsonArray.put(jsonObject);
                 }
             }
@@ -342,6 +357,8 @@ public class AjaxController extends BaseMethods {
             if (userService.getUserOfMessage(messages.get(i).getId()).getId() == authId)
                 jsonObject.putOnce("fromUser", true);
             else jsonObject.putOnce("fromUser", false);
+            jsonObject.putOnce("url", messages.get(i).getUrlOfItem()!=null?messages.get(i).getUrlOfItem():"");
+            jsonObject.putOnce("type", messages.get(i).getType()!=null?messages.get(i).getType():"");
             jsonArray.put(jsonObject);
         }
 
@@ -859,4 +876,17 @@ public class AjaxController extends BaseMethods {
         }
         return jsonArray.toString();
     }
+
+    @RequestMapping(value = "/changeAutoPlayOfRecord/{recId}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String changeAutoPlay(@PathVariable("recId") String recordId,@RequestParam String auto){
+        System.out.println("Record id: "+recordId);
+        Record record = recordService.findOne(Long.parseLong(recordId));
+        if (auto.equals("auto_on"))
+            record.setAutoplay(true);
+        else record.setAutoplay(false);
+        recordService.edit(record);
+        return "success";
+    }
+
 }
