@@ -889,4 +889,79 @@ public class AjaxController extends BaseMethods {
         return "success";
     }
 
+
+    @RequestMapping(value = "/loadFilesToMessagesPage/{typeFiles}",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadFilesToMessagePage(@PathVariable("typeFiles") String typeFiles){
+        JSONArray jsonArray = new JSONArray();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findOne(Long.parseLong(authentication.getName()));
+        System.out.println(typeFiles);
+        if (typeFiles.equals("music")){
+            List<Music> audios = userService.getAllMusicOfUser(user.getId());
+            for (int i = 0; i < audios.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.putOnce("name", audios.get(i).getNameOfSong());
+                jsonObject.putOnce("id", audios.get(i).getId());
+                jsonObject.putOnce("url",audios.get(i).getUrlOfSong());
+                jsonArray.put(jsonObject);
+            }
+        } else if (typeFiles.equals("photos")){
+            List<User_Images> images = imageService.findAllByUser(user);
+            for (int i = 0; i < images.size(); i++){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.putOnce("url",images.get(i).getUrlOfImage());
+                jsonObject.putOnce("width",images.get(i).getWidth());
+                jsonObject.putOnce("height",images.get(i).getHeight());
+                jsonObject.putOnce("id",images.get(i).getId());
+                jsonArray.put(jsonObject);
+            }
+        } else {
+            List<Video> videos = videoService.findAllByUser(user);
+            for (int i = 0; i < videos.size(); i++){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.putOnce("id",videos.get(i).getId());
+                jsonObject.putOnce("url",videos.get(i).getUrl());
+                jsonObject.putOnce("urlBanner",videos.get(i).getUrlImageBanner());
+                jsonObject.putOnce("name",videos.get(i).getName());
+                jsonObject.putOnce("height",videos.get(i).getHeightPhoto());
+                jsonObject.putOnce("width",videos.get(i).getWidthPhoto());
+                jsonArray.put(jsonObject);
+            }
+        }
+        return jsonArray.toString();
+    }
+
+
+    @RequestMapping(value = "/loadItemToMessages",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
+    @ResponseBody
+    public String loadFilesToMessagePage(@RequestParam String idUserTo,@RequestParam String type,@RequestParam String id,@RequestParam String text){
+        System.out.println("type: "+type+" id: "+id);
+        User user = userService.findOne(Long.parseLong(idUserTo));
+        Message message = new Message();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User userAuth = userService.findOne(Long.parseLong(authentication.getName()));
+
+        if (type.equals("image")){
+            User_Images image = imageService.findOne(Long.parseLong(id));
+            message.setUserFrom(userAuth);
+            message.setUserTo(user);
+            message.setDateOfMessage(new Date(System.currentTimeMillis()));
+            message.setType(RecordType.IMAGE.toString());
+            message.setUrlOfItem(image.getUrlOfImage());
+            message.setText(text);
+            messageService.add(message);
+        }
+
+
+        MessagesUpdator messagesUpdator = messagesUpdatorService.findOneBy2Ids(userAuth.getId(),user.getId());
+        if (messagesUpdator == null) {
+            messagesUpdatorService.add(new MessagesUpdator(userAuth.getId(),user.getId()));
+        }
+        else {
+            messagesUpdator.setCountMessages(messagesUpdator.getCountMessages()+1);
+            messagesUpdatorService.edit(messagesUpdator);
+        }
+        return "success";
+    }
 }

@@ -72,9 +72,8 @@
     var remembered = false;
     var check = true;
     function openPhotoUser(urlPhoto,idPhoto){
-        var element = document.getElementById("popupWin");
-        while(element.firstChild) element.removeChild(element.firstChild);
-
+        //var element = document.getElementById("popupWin");
+        //while(element.firstChild) element.removeChild(element.firstChild);
 
         var imageDetails = getDetailsOfPhoto(idPhoto);
         var width = 384*imageDetails.ratio;

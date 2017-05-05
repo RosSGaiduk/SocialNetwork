@@ -44,27 +44,31 @@
 <p style="clear: left"/>
 <form id = "formForLoadingItemsToMessages" action="/loadItemToMessages/${idOfUser}?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" cssStyle="float: left;">
     <input id = "fileId" type="file" name="file1"  style="float: left;margin-left:20%;"/>
-    <button type="submit" style="float: left;margin-top: 3px;" style="float: left;" class="buttonFileStyle" <%--onclick="loadItemToMessages()"--%>>Upload</button>
-<form>
-<%--
-Якщо у функцію ajax ми хочемо передати значення з тегів p,span,h1,h2,...h6,font,...
-тобто з тегів, які містять текст, то передавати потрібно в data document.getElementById("id").innerHtml.
-Якщо ми використовуємо двні з тегів без тексту, тікі як select,div,inpuut,textarea..., тоді $('#id').val()
---%>
+    <button type="submit" style="float: left;margin-top: 3px;" class="buttonFileStyle" <%--onclick="loadItemToMessages()"--%>>Upload</button>
+</form>
+<button type="button" style="float: left;margin-top: 3px; margin-left: 10px;" class="buttonFileStyle" onclick="openLocalFiles()">Open own files</button>
+
+<div style="text-align: center; overflow: scroll; cursor: default; float:left;" id="popupWin" class="modalwin">
+</div>
+
+
 
 <script>
-    function loadItemToMessages(){
-        alert($("#fileId").val());
+    function loadItemToMessages(typeFile,idFile){
         $.ajax({
             url: "/loadItemToMessages",
             method: "get",
-            dataType: "json",
             data: ({
                 idUserTo: $("#selct").val(),
-                file: $("#fileId").val()
+                type: typeFile,
+                id: idFile,
+                text: $("#textAr").val()
             }),
             success: function(data){
-
+                $("#textAr").val("");
+            },
+            error: function(){
+                $("#textAr").val("");
             }
         })
     }
@@ -75,6 +79,65 @@
         element.value = ${idOfUser};
     }
     setSelect();
+
+
+    function openLocalFiles(){
+        header();
+        $("#popupWin").append("<h1 id = 'music' style='text-align: left; float: left; cursor: hand; margin-left: 10%;' onclick='loadLocalFiles(this.id)'>Музика</h1>" +
+                " <h1 id = 'photos' style='text-align: left; float: left; margin-left: 10px; cursor: hand;' onclick='loadLocalFiles(this.id)'>Зображення</h1>" +
+                " <h1 id = 'videos' style='text-align: left; float: left; margin-left: 10px; cursor: hand;' onclick='loadLocalFiles(this.id)'>Відео</h1><p style='clear: left'/>" +
+                "<div id = 'popupMainBlock' style='width: 80%; height: 90%; border: 1px solid blue; float: left; margin-left: 10%; overflow: scroll;'></div>");
+    }
+
+    function loadLocalFiles(type){
+        $("#popupMainBlock").html("");
+        $.ajax({
+            url: "/loadFilesToMessagesPage/"+type,
+            async: false,
+            method: "get",
+            data: ({
+
+            }),
+            dataType: "json",
+            success: function(data){
+                $.each(data,function(k,v){
+                    switch (type){
+                        case "music": {
+                            $("#popupMainBlock").append("<p style='clear: left'/>"+
+                            "<p style='margin-top: 10px; text-align: left; margin-left: 10px;'>"+v.name+"</p>"+
+                            "<audio controls style='margin-top: 10px; float: left; margin-left: 10px;'>"+
+                            "<source src='"+v.url+"' type='audio/mpeg'>Your browser does not support the audio element.</audio>"+
+                            "<button id = 'music_"+ v.id+"' style='float: left; margin-top: 10px; margin-left: 10px; cursor: hand;' onclick='addFileToMessages(this.id)'>+</button>");
+                        } break;
+
+                        case "photos":{
+                            $("#popupMainBlock").append("<div class='albumPhotos'>"+
+                            "<img id = 'image_"+ v.id+"' src='"+ v.url+"' style='width: 100%; height: 100%;' onclick='sendPhoto(this)'>"
+                            );
+                        } break;
+
+                        case "videos":{
+                            $("#popupMainBlock").append("<h1 style='text-align: left;'>"+ v.name+"</h1><video id='my-video-"+v.id+"' controls preload='auto' poster='' style='cursor: hand; float: left; width: 400px; margin-top: 10px; float: left;'><source src='"+ v.url+"' type='video/mp4'></video><p style='clear: left'/>");
+                        } break;
+                    }
+                })
+            }
+        })
+    }
+
+    function sendPhoto(img){
+        var darkLayer = document.getElementById("shadow");
+        var modalWin = document.getElementById('popupWin');
+        darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
+        modalWin.style.display = 'none'; // делаем окно невидимым
+        $("#popupWin").html("");
+        loadItemToMessages("image",img.id.split("_")[1]);
+    }
+
+    function addFileToMessages(id){
+        var type = id.split("_")[0];
+        var idMes = id.split("_")[1];
+    }
 </script>
 
 <script>
@@ -88,14 +151,8 @@
                     userToId: $("#selct").val()
                 }),
                 async: false,
-                /*dataType: "json",*/
                 success: function (data) {
                     document.getElementById("textAr").value = "";
-                    //$("#messages").children('div').eq(0).remove();
-                    //$("#messages").children('p').eq(0).remove();
-                    //changedSelect();
-                    //alert(document.getElementById("minId").innerHTML);
-                    //alert(document.getElementById("maxId").innerHTML);
                     update(true,false);
                 }
             });
@@ -149,8 +206,7 @@
                     }
 
                     myDivMessages.appendChild(elem);
-                    if (v.type=="IMAGE")
-                    {
+                    if (v.type=="IMAGE") {
                         var divOutOfImage = document.createElement("div");
                         if (v.fromUser)
                         divOutOfImage.style = "float:left; width:300px;height:300px;";
