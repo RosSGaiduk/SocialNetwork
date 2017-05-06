@@ -683,12 +683,10 @@ public class Main {
             users.add(entityManager.find(User.class,b.longValue()));
             System.out.println(users.get(users.size()-1).getLastName());
         }*/
-
         //BufferedImage image = ImageIO.read(new File("/resources/users/imageOF_1_53890588.png"));
-        List<Record> records = entityManager.createQuery("from Record ").getResultList();
+        /*List<Record> records = entityManager.createQuery("from Record ").getResultList();
         for (Record r:records)
-            System.out.println(r.getAutoplay());
-
+            System.out.println(r.getAutoplay());*/
         entityManager.close();
         entityManagerFactory.close();
     }

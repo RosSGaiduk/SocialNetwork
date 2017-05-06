@@ -38,6 +38,8 @@ public class Message implements Comparable<Message>{
     private String urlOfItem;
     @Column
     private String type;
+    @Column
+    private String nameOfItem;
 
     public Message(){}
 
@@ -179,5 +181,13 @@ public class Message implements Comparable<Message>{
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getNameOfItem() {
+        return nameOfItem;
+    }
+
+    public void setNameOfItem(String nameOfItem) {
+        this.nameOfItem = nameOfItem;
     }
 }

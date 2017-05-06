@@ -107,7 +107,7 @@
                             "<p style='margin-top: 10px; text-align: left; margin-left: 10px;'>"+v.name+"</p>"+
                             "<audio controls style='margin-top: 10px; float: left; margin-left: 10px;'>"+
                             "<source src='"+v.url+"' type='audio/mpeg'>Your browser does not support the audio element.</audio>"+
-                            "<button id = 'music_"+ v.id+"' style='float: left; margin-top: 10px; margin-left: 10px; cursor: hand;' onclick='addFileToMessages(this.id)'>+</button>");
+                            "<button id = 'music_"+ v.id+"' style='float: left; margin-top: 10px; margin-left: 10px; cursor: hand;' onclick='addFileToMessages(this)'>+</button>");
                         } break;
 
                         case "photos":{
@@ -134,9 +134,13 @@
         loadItemToMessages("image",img.id.split("_")[1]);
     }
 
-    function addFileToMessages(id){
-        var type = id.split("_")[0];
-        var idMes = id.split("_")[1];
+    function addFileToMessages(audio){
+        var darkLayer = document.getElementById("shadow");
+        var modalWin = document.getElementById('popupWin');
+        darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
+        modalWin.style.display = 'none'; // делаем окно невидимым
+        $("#popupWin").html("");
+        loadItemToMessages("audio",audio.id.split("_")[1]);
     }
 </script>
 
@@ -176,9 +180,6 @@
             success: function(data){
                 var heightValue = document.getElementById('messages').scrollHeight;
                 $.each(data,function(k,v){
-                    /*if (parseInt(was1)==0) {
-                        document.getElementById("minId").innerHTML = v.id;
-                    }*/
                     was1++;
                     var elem = document.createElement("div");
                     var elemData = document.createElement("p");
@@ -211,7 +212,6 @@
                         if (v.fromUser)
                         divOutOfImage.style = "float:left; width:300px;height:300px;";
                         else divOutOfImage.style = "float:left; width:300px;height:300px;margin-left:20%;";
-
                         var image = document.createElement("img");
                         image.src = v.url;
                         image.style = "width:100%; height:100%;";
@@ -219,6 +219,28 @@
                         myDivMessages.appendChild(divOutOfImage);
                         var pClear = document.createElement("p");
                         pClear.style = "clear:left";
+                        myDivMessages.appendChild(pClear);
+                    } else if (v.type == "AUDIO"){
+                        var pAud = document.createElement("p");
+                        if (v.fromUser)
+                            pAud.style = "float:left; margin-top:10px;";
+                        else  pAud.style = "float:left; margin-left:20%; margin-top:10px;";
+                        pAud.innerHTML = v.name;
+
+                        var pClear = document.createElement("p");
+                        pClear.style = "clear:left;";
+                        var audio = document.createElement("audio");
+                        if (v.fromUser)
+                            audio.style = "float:left; width:300px; margin-top:10px;";
+                        else audio.style = "float:left; width:300px; margin-left:20%; margin-top:10px;";
+                        audio.controls = "controls";
+                        var source = document.createElement("source");
+                        source.src = v.url;
+                        source.type = "audio/mpeg";
+                        audio.appendChild(source);
+                        myDivMessages.appendChild(pAud);
+                        myDivMessages.appendChild(pClear);
+                        myDivMessages.appendChild(audio);
                         myDivMessages.appendChild(pClear);
                     }
                     //якщо повідомлення надіслав даний користувач

@@ -123,6 +123,7 @@ public class AjaxController extends BaseMethods {
                     else jsonObject.putOnce("fromUser", false);
                     jsonObject.putOnce("url", messages.get(i).getUrlOfItem()!=null?messages.get(i).getUrlOfItem():"");
                     jsonObject.putOnce("type", messages.get(i).getType()!=null?messages.get(i).getType():"");
+                    jsonObject.putOnce("name", messages.get(i).getNameOfItem()!=null?messages.get(i).getNameOfItem():"");
                     jsonArray.put(jsonObject);
                 }
             }
@@ -951,8 +952,17 @@ public class AjaxController extends BaseMethods {
             message.setUrlOfItem(image.getUrlOfImage());
             message.setText(text);
             messageService.add(message);
+        } else if (type.equals("audio")){
+            Music music = musicService.findOne(Long.parseLong(id));
+            message.setUserFrom(userAuth);
+            message.setUserTo(user);
+            message.setDateOfMessage(new Date(System.currentTimeMillis()));
+            message.setType(RecordType.AUDIO.toString());
+            message.setUrlOfItem(music.getUrlOfSong());
+            message.setNameOfItem(music.getNameOfSong());
+            message.setText(text);
+            messageService.add(message);
         }
-
 
         MessagesUpdator messagesUpdator = messagesUpdatorService.findOneBy2Ids(userAuth.getId(),user.getId());
         if (messagesUpdator == null) {
