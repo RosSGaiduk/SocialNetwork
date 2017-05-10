@@ -687,6 +687,16 @@ public class Main {
         /*List<Record> records = entityManager.createQuery("from Record ").getResultList();
         for (Record r:records)
             System.out.println(r.getAutoplay());*/
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(0);
+        Integer[] array = new Integer[1];
+        array = list.toArray(array);
+        System.out.println(list.get(1));
+        int a = 0;
+        boolean b;
+         if (b = true)
+             System.out.println("dssdfsd");
         entityManager.close();
         entityManagerFactory.close();
     }

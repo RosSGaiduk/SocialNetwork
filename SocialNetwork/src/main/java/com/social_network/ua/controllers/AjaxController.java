@@ -82,7 +82,7 @@ public class AjaxController extends BaseMethods {
         Message newMessage = new Message();
         newMessage.setUserFrom(userService.findOne(authId));
         newMessage.setUserTo(userService.findOne(Long.parseLong(userToId)));
-
+        newMessage.setType(RecordType.TEXT.toString());
         newMessage.setText(message);
         //newMessage.setText(stringUTF_8Encode(message));
 
@@ -107,7 +107,7 @@ public class AjaxController extends BaseMethods {
         //і просто збільшувати її на 1 між даними 2 користувачами, тоді, запит робитиметься одразу
 
         JSONArray jsonArray = new JSONArray();
-
+        System.out.println("updating in 2 methods");
         long maxIdFromDb = messageService.findLastIdOfMessageBetweenUsers(userToId,userAuthId);
             if (maxIdFromDb>maxId) {
                 List<Message> messages = messageService.findAllByIdsAndMaxId(userToId, userAuthId, maxId);
@@ -122,8 +122,10 @@ public class AjaxController extends BaseMethods {
                         jsonObject.putOnce("fromUser", true);
                     else jsonObject.putOnce("fromUser", false);
                     jsonObject.putOnce("url", messages.get(i).getUrlOfItem()!=null?messages.get(i).getUrlOfItem():"");
-                    jsonObject.putOnce("type", messages.get(i).getType()!=null?messages.get(i).getType():"");
+                    jsonObject.putOnce("type", messages.get(i).getType());
                     jsonObject.putOnce("name", messages.get(i).getNameOfItem()!=null?messages.get(i).getNameOfItem():"");
+                    jsonObject.putOnce("urlImageUser", messages.get(i).getNewestUserFromUrlImagePattern());
+                    System.out.println(messages.get(i).getType());
                     jsonArray.put(jsonObject);
                 }
             }
@@ -960,6 +962,16 @@ public class AjaxController extends BaseMethods {
             message.setType(RecordType.AUDIO.toString());
             message.setUrlOfItem(music.getUrlOfSong());
             message.setNameOfItem(music.getNameOfSong());
+            message.setText(text);
+            messageService.add(message);
+        } else if (type.equals("video")){
+            Video video = videoService.findOne(Long.parseLong(id));
+            message.setUserFrom(userAuth);
+            message.setUserTo(user);
+            message.setDateOfMessage(new Date(System.currentTimeMillis()));
+            message.setType(RecordType.VIDEO.toString());
+            message.setUrlOfItem(video.getUrl());
+            message.setNameOfItem(video.getName());
             message.setText(text);
             messageService.add(message);
         }

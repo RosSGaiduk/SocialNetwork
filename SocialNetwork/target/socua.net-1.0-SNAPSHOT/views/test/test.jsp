@@ -117,7 +117,7 @@
                         } break;
 
                         case "videos":{
-                            $("#popupMainBlock").append("<h1 style='text-align: left;'>"+ v.name+"</h1><video id='my-video-"+v.id+"' controls preload='auto' poster='' style='cursor: hand; float: left; width: 400px; margin-top: 10px; float: left;'><source src='"+ v.url+"' type='video/mp4'></video><p style='clear: left'/>");
+                            $("#popupMainBlock").append("<h1 style='text-align: left;'>"+ v.name+"</h1><video id='my-video-"+v.id+"' controls preload='auto' poster='' style='cursor: hand; float: left; width: 400px; margin-top: 10px; float: left;' onclick='addVideoToMessages(this.id)'><source src='"+ v.url+"' type='video/mp4'></video><p style='clear: left'/>");
                         } break;
                     }
                 })
@@ -141,6 +141,16 @@
         modalWin.style.display = 'none'; // делаем окно невидимым
         $("#popupWin").html("");
         loadItemToMessages("audio",audio.id.split("_")[1]);
+    }
+
+    function addVideoToMessages(idVideoTag){
+        //alert(idVideoTag.split("-")[2]);
+        var darkLayer = document.getElementById("shadow");
+        var modalWin = document.getElementById('popupWin');
+        darkLayer.parentNode.removeChild(darkLayer); // удаляем затемнение
+        modalWin.style.display = 'none'; // делаем окно невидимым
+        $("#popupWin").html("");
+        loadItemToMessages("video",idVideoTag.split("-")[2]);
     }
 </script>
 
@@ -181,16 +191,28 @@
                 var heightValue = document.getElementById('messages').scrollHeight;
                 $.each(data,function(k,v){
                     was1++;
+
+                    var imgUser = document.createElement("img");
+                    imgUser.style = "width:50px; height:50px; background-size; cover; float:left; margin-top:20px;";
+                    imgUser.src = v.urlImageUser;
+
+                    var pClear = document.createElement("p");
+                    pClear.style = "clear:left";
+
                     var elem = document.createElement("div");
                     var elemData = document.createElement("p");
-                    elemData.style = "font-size:12px;margin-top:20px;margin-left:10%;float:left;margin-botom:20px;"
+                    elemData.style = "font-size:12px;margin-top:20px; margin-botom:20px;"
                     elemData.innerHTML = v.data;
-                    document.getElementById("messages").appendChild(elemData);
 
-                    if (v.fromUser) {
-                        elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px;";
-                    }
-                    else elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px; margin-left:20%";
+                    document.getElementById("messages").appendChild(imgUser);
+                    document.getElementById("messages").appendChild(pClear);
+                    document.getElementById("messages").appendChild(elemData);
+                    //document.getElementById("messages").appendChild(pClear);
+
+
+                    if (!v.fromUser)
+                    elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:50px;";
+                    else elem.style = "background-color: #FFE4C4; width:70%; height:auto;float:left; margin-top:50px;";
 
                     var divNew = document.createElement("div");
                     divNew.style = "padding: 14px;border-left: 1px solid #cfdae1;float: left;color: black; width: 214px;";
@@ -205,13 +227,12 @@
                     if (updateMinId) {
                         document.getElementById("minId").innerHTML = v.minId;
                     }
-
                     myDivMessages.appendChild(elem);
                     if (v.type=="IMAGE") {
                         var divOutOfImage = document.createElement("div");
-                        if (v.fromUser)
+
                         divOutOfImage.style = "float:left; width:300px;height:300px;";
-                        else divOutOfImage.style = "float:left; width:300px;height:300px;margin-left:20%;";
+
                         var image = document.createElement("img");
                         image.src = v.url;
                         image.style = "width:100%; height:100%;";
@@ -220,19 +241,20 @@
                         var pClear = document.createElement("p");
                         pClear.style = "clear:left";
                         myDivMessages.appendChild(pClear);
-                    } else if (v.type == "AUDIO"){
+                    }
+                    if (v.type == "AUDIO"){
                         var pAud = document.createElement("p");
-                        if (v.fromUser)
+
                             pAud.style = "float:left; margin-top:10px;";
-                        else  pAud.style = "float:left; margin-left:20%; margin-top:10px;";
+
                         pAud.innerHTML = v.name;
 
                         var pClear = document.createElement("p");
                         pClear.style = "clear:left;";
                         var audio = document.createElement("audio");
-                        if (v.fromUser)
-                            audio.style = "float:left; width:300px; margin-top:10px;";
-                        else audio.style = "float:left; width:300px; margin-left:20%; margin-top:10px;";
+
+                            audio.style = "width:300px; margin-top:10px;";
+
                         audio.controls = "controls";
                         var source = document.createElement("source");
                         source.src = v.url;
@@ -243,6 +265,35 @@
                         myDivMessages.appendChild(audio);
                         myDivMessages.appendChild(pClear);
                     }
+                    if (v.type == "VIDEO"){
+                        //alert("sadasd");
+                       var videoThis = document.createElement("video");
+                        videoThis.id = "my-video-"+ v.id;
+
+                         videoThis.style  = "cursor: hand; float: left; width: 300px;";
+
+
+                         videoThis.controls = "controls";
+                         videoThis.preload = "auto";
+                        var source = document.createElement("source");
+                        source.type="video/mp4";
+                        source.src = v.url;
+                        videoThis.appendChild(source);
+
+                        var pClear = document.createElement("p");
+                        pClear.style = "clear:left;";
+                        var nameH = document.createElement("h3");
+
+                        nameH.style = "text-align: left; float: left;";
+
+                        nameH.innerHTML = v.name;
+
+                        myDivMessages.appendChild(videoThis);
+                        myDivMessages.appendChild(pClear);
+                        myDivMessages.appendChild(nameH);
+                        myDivMessages.appendChild(pClear);
+                    }
+                    myDivMessages.appendChild(pClear);
                     //якщо повідомлення надіслав даний користувач
                     if (value==true) {
                         myDivMessages.scrollTop = myDivMessages.scrollHeight;
@@ -308,10 +359,9 @@
                         document.getElementById("messages").insertBefore(elemData, first);
 
 
-                        if (v.fromUser) {
+
                             elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px;";
-                        }
-                        else elem.style = "background-color: #e4eaee; width:70%; height:auto;float:left; margin-top:10px; margin-left:20%";
+
 
                         var divNew = document.createElement("div");
                         divNew.style = "padding: 14px;border-left: 1px solid #cfdae1;float: left;color: black; width: 214px;";
