@@ -53,4 +53,9 @@ public class MusicDaoImpl implements MusicDao {
         }
         return musics;
     }
+
+    @Transactional
+    public List<Music> findAllByUrl(String url) {
+        return entityManager.createQuery("from Music where urlOfSong = ?1").setParameter(1,url).getResultList();
+    }
 }

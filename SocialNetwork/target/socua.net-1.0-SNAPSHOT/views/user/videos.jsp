@@ -38,8 +38,6 @@
             </c:if>
             <h3 style="float: left; margin-top: 5px;">${vid.name}</h3>
         </div>
-        <%--</a>--%>
-        <%--<button id = "button ${vid.id}"onclick="addVideoToUser(${vid.id})">Add</button>--%>
     </c:forEach>
 
     <div style="text-align: center; overflow: scroll; cursor: default; float:left;" id="popupWin" class="modalwin">

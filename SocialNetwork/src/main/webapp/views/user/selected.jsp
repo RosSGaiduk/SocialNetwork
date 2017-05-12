@@ -10,6 +10,7 @@
   Time: 23:33
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang = "en" ng-app = "app">
 <head>
@@ -684,6 +685,7 @@
                 userTo: document.getElementById("userId").innerHTML
             }),
             dataType: "json",
+            contentType: "charset=utf-8",
             async:false,
             success: function(v){
                 var elem = document.createElement("div");

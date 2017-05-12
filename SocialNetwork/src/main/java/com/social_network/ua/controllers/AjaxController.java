@@ -1,34 +1,17 @@
 package com.social_network.ua.controllers;
-
-
 import com.social_network.ua.entity.*;
 import com.social_network.ua.enums.AlbumName;
 import com.social_network.ua.enums.RecordType;
 import com.social_network.ua.services.*;
 import com.social_network.ua.services.implementation.MessagesUpdatorImpl;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -76,9 +59,9 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/sendMessage",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String sendMessage(@RequestParam String message,@RequestParam String userToId){
+        message = stringUTF_8Encode(message);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         long authId = Long.parseLong(authentication.getName());
-
         Message newMessage = new Message();
         newMessage.setUserFrom(userService.findOne(authId));
         newMessage.setUserTo(userService.findOne(Long.parseLong(userToId)));
@@ -205,11 +188,11 @@ public class AjaxController extends BaseMethods {
                                 @RequestParam String userFrom,
                                 @RequestParam String userTo
                                 ){
+        newRecord = stringUTF_8Encode(newRecord);
         long idUser = Long.parseLong(userFrom);
         long idUserTo = Long.parseLong(userTo);
         User user = userService.findOne(idUser);
         User userToMess = userService.findOne(idUserTo);
-
         Record record = new Record();
         record.setText(newRecord);
         Date date = new Date(System.currentTimeMillis());
@@ -296,10 +279,6 @@ public class AjaxController extends BaseMethods {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         user.setIsOnline(false);
-        /*DateFormat dateFormat = new SimpleDateFormat("MM/dd");
-        Date date = new Date();
-        dateFormat.format(date);
-        */
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime localDate = LocalDateTime.now();
         String date = dtf.format(localDate);
@@ -386,6 +365,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/findVideos",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String findVideosByInput(@RequestParam String text){
+        text = stringUTF_8Encode(text);
         System.out.println("Text of video: "+text);
         JSONArray jsonArray = new JSONArray();
         List<Video> sameVideo = videoService.findAllByInput(text);
@@ -494,9 +474,11 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/leaveComment/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String leaveComment(@PathVariable("id")String id,@RequestParam String text){
+        text = stringUTF_8Encode(text);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         User_Images image = imageService.findOne(Long.parseLong(id));
+        System.out.println("comment: "+text);
         Comment comment = new Comment();
         comment.setText(text);
         comment.setUser(user);
@@ -514,6 +496,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/leaveCommentUnderVideo/{id}",method = RequestMethod.GET, produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String leaveCommentUnderVideo(@PathVariable("id")String id,@RequestParam String text){
+        text = stringUTF_8Encode(text);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findOne(Long.parseLong(authentication.getName()));
         Video video = videoService.findOne(Long.parseLong(id));
@@ -939,6 +922,7 @@ public class AjaxController extends BaseMethods {
     @RequestMapping(value = "/loadItemToMessages",method = RequestMethod.GET,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     @ResponseBody
     public String loadFilesToMessagePage(@RequestParam String idUserTo,@RequestParam String type,@RequestParam String id,@RequestParam String text){
+        text = stringUTF_8Encode(text);
         System.out.println("type: "+type+" id: "+id);
         User user = userService.findOne(Long.parseLong(idUserTo));
         Message message = new Message();

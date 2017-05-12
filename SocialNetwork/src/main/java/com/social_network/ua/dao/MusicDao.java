@@ -13,4 +13,5 @@ public interface MusicDao {
     Music findOne(long id);
     List<Music> findAll();
     List<Music> findAllByCommunityId(long communityId,int limit);
+    List<Music> findAllByUrl(String url);
 }

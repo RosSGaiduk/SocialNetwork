@@ -44,4 +44,9 @@ public class MusicServiceImpl implements MusicService {
     public List<Music> findAll() {
         return musicDao.findAll();
     }
+
+    @Override
+    public List<Music> findAllByUrl(String url) {
+        return musicDao.findAllByUrl(url);
+    }
 }

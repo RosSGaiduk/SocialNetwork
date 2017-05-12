@@ -8,6 +8,7 @@
   Time: 23:33
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -191,7 +192,6 @@
                 var heightValue = document.getElementById('messages').scrollHeight;
                 $.each(data,function(k,v){
                     was1++;
-
                     var imgUser = document.createElement("img");
                     imgUser.style = "width:50px; height:50px; background-size; cover; float:left; margin-top:20px;";
                     imgUser.src = v.urlImageUser;

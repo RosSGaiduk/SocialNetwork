@@ -52,8 +52,12 @@ public class UserController extends BaseMethods{
                              BindingResult bindingResult
     ){
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        newUser.setFirstName(stringUTF_8Encode(newUser.getFirstName()));
-        newUser.setLastName(stringUTF_8Encode(newUser.getLastName()));
+        System.out.println(newUser.getFirstName());
+        System.out.println(newUser.getLastName());
+        //newUser.setFirstName(stringUTF_8Encode(newUser.getFirstName()));
+        //newUser.setLastName(stringUTF_8Encode(newUser.getLastName()));
+        System.out.println(newUser.getFirstName());
+        System.out.println(newUser.getLastName());
 
         /*newUser.setFirstName(newUser.getFirstName());
         newUser.setLastName(newUser.getLastName());*/

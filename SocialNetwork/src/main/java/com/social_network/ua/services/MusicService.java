@@ -13,4 +13,5 @@ public interface MusicService {
     Music findOne(long id);
     List<Music> findAllByCommunityId(long communityId,int limit);
     List<Music> findAll();
+    List<Music> findAllByUrl(String url);
 }

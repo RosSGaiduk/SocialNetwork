@@ -9,6 +9,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Rostyslav on 01.12.2016.
@@ -37,7 +39,7 @@ public class UploadMusicController extends BaseMethods{
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/musicToCommunity/{communityId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/musicToCommunity/{communityId}",method = RequestMethod.POST,produces = {"text/html; charset/UTF-8; charset=windows-1251"})
     public String saveToTheCommunity(HttpServletRequest request, @PathVariable("communityId")String communityId)
     {
         Music music = writeFile(request,"communities");
@@ -82,10 +84,23 @@ public class UploadMusicController extends BaseMethods{
                             extension.equalsIgnoreCase("wma")
                             ) {
                         //in this folder, which we created, write our images
-                        fileItem.write(new File(path + "/"+pathAfterResources+"/" + fileItem.getName()));
+                        String url = "audioAddedBy_"+ SecurityContextHolder.getContext().getAuthentication().getName()+"_1."+extension;
+                        Random random = new Random();
                         music = new Music();
+                        boolean b = true;
+                        while (b){
+                            if (musicService.findAllByUrl("/resources/"+pathAfterResources+"/"+url).size() == 0){
+                                System.out.println("null");
+                                music.setUrlOfSong("/resources/"+pathAfterResources+"/"+url);
+                                b = false;
+                                break;
+                            } else {
+                                System.out.println("not null");
+                                url = "audioAddedBy_"+SecurityContextHolder.getContext().getAuthentication().getName()+"_"+random.nextInt(Integer.MAX_VALUE-1)+"."+extension;
+                            }
+                        }
+                        fileItem.write(new File(path+"/"+pathAfterResources+"/"+url));
                         music.setNameOfSong(fileItem.getName());
-                        music.setUrlOfSong("/resources/"+pathAfterResources+"/" + fileItem.getName());
                         musicService.add(music);
                     }
                 }
